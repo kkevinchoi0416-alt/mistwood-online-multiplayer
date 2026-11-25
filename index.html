@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#081b1b" />
+<title>MISTWOOD ONLINE · Multiplayer Forest Drive</title>
+<style>
+:root{--bg:#071817;--panel:rgba(7,25,25,.88);--line:rgba(196,236,220,.17);--mint:#a7f3ce;--gold:#ffe08a;--red:#ff7777;--text:#f4fff9;--muted:#a9c5b8}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#10271e;color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Malgun Gothic",sans-serif}button,input{font:inherit}button{cursor:pointer}#gameCanvas{position:fixed;inset:0;width:100%;height:100%;display:block;outline:none}
+.overlay{position:fixed;z-index:30;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;background:linear-gradient(145deg,rgba(2,12,13,.82),rgba(4,17,16,.88));backdrop-filter:blur(10px);overflow:auto}
+.panel{width:min(1060px,100%);max-height:calc(100dvh - 32px);overflow:auto;border:1px solid #b8ead033;border-radius:24px;background:linear-gradient(145deg,rgba(13,42,36,.98),rgba(5,19,20,.98));box-shadow:0 24px 90px #0009;padding:clamp(18px,3vw,30px)}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}.eyebrow{font-size:10px;font-weight:950;letter-spacing:.22em;color:var(--mint)}h1{font-size:clamp(27px,5vw,44px);line-height:1.05;margin:7px 0 5px;letter-spacing:-.04em}.sub{color:var(--muted);font-size:13px;line-height:1.6}.pill{border:1px solid #a7f3ce44;border-radius:999px;padding:7px 11px;color:var(--mint);font-size:11px;font-weight:850;white-space:nowrap;background:#a7f3ce0f}
+.top-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:14px;margin:16px 0}.box{border:1px solid var(--line);background:#ffffff08;border-radius:16px;padding:14px;text-align:left}.box-title{font-size:12px;font-weight:900;color:var(--mint);margin-bottom:9px;letter-spacing:.08em}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.field{width:100%;min-width:0;padding:11px 12px;border-radius:11px;border:1px solid #bfe8d044;background:#071d1a;color:white;outline:none}.field:focus{border-color:var(--mint);box-shadow:0 0 0 3px #a7f3ce16}.small-field{max-width:170px;text-transform:uppercase}.btn{border:1px solid #b7e9d044;border-radius:11px;padding:11px 15px;background:#a7f3ce;color:#0b2b20;font-weight:950}.btn.secondary{background:#ffffff10;color:#eafff4;border-color:#ffffff24}.btn.warn{background:#ff7777;color:#310c10;border-color:#ff9e9e}.btn:disabled{opacity:.42;cursor:not-allowed}.status{font-size:11px;color:#bad6c9;min-height:19px;margin-top:7px}.device-row{display:flex;gap:8px;margin-top:10px}.device-btn{flex:1;padding:9px;border:1px solid #ffffff24;background:#ffffff08;border-radius:10px;color:#d9eee4;font-size:12px;font-weight:850}.device-btn.active{border-color:var(--mint);color:var(--mint);background:#a7f3ce17}
+.garage-head{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:18px 0 9px}.garage-head strong{font-size:14px}.garage-head span{color:var(--muted);font-size:11px}.garage{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.car-card{position:relative;min-width:0;text-align:left;border:1px solid #ffffff1b;border-radius:13px;padding:10px;background:linear-gradient(145deg,#ffffff0d,#ffffff05);color:white;transition:.15s;min-height:120px}.car-card:hover{transform:translateY(-2px);border-color:#a7f3ce66}.car-card.selected{border-color:var(--mint);box-shadow:inset 0 0 0 1px #a7f3ce55;background:#a7f3ce17}.car-card.locked{opacity:.68}.car-card b{display:block;font-size:12px;line-height:1.3;margin:5px 0}.car-card small{display:block;color:#b4cfc1;font-size:10px;line-height:1.4}.car-tag{display:inline-flex;padding:3px 6px;border-radius:999px;font-size:9px;font-weight:900;letter-spacing:.04em;background:#ffffff12;color:#b9d8c9}.car-tag.vip{background:#a78bfa22;color:#d6c7ff}.car-tag.admin{background:#f3c76e22;color:#ffe08a}.car-tag.normal{background:#a7f3ce16;color:#a7f3ce}.lock{position:absolute;right:8px;top:8px;font-size:9px;color:#ffe08a;font-weight:900}.selected-info{margin-top:10px;padding:11px 13px;border-radius:12px;border:1px solid #a7f3ce26;background:#a7f3ce0b;color:#d9f3e5;font-size:11px;line-height:1.55}.unlock-row{display:none;margin-top:10px;gap:8px;align-items:center}.unlock-row.show{display:flex}.unlock-row input{max-width:210px}.lobby{display:none;margin-top:16px;padding:15px;border-radius:16px;background:#061b19;border:1px solid #a7f3ce32}.lobby.show{display:block}.lobby-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.room-code{font-size:25px;font-weight:1000;letter-spacing:.18em;color:var(--gold)}.players{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:12px 0}.player-chip{border:1px solid #ffffff18;background:#ffffff08;border-radius:10px;padding:9px;font-size:11px;min-width:0}.player-chip strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.player-chip span{color:#a9c5b8;font-size:10px}.fineprint{font-size:10px;color:#9fbaad;line-height:1.55;margin-top:12px}
+#connectionPill{font-size:10px;padding:6px 9px;border-radius:999px;background:#ff77771a;color:#ffaaaa;border:1px solid #ff777744}#connectionPill.online{background:#a7f3ce13;color:var(--mint);border-color:#a7f3ce44}
+#pinOverlay{z-index:45;display:none}#pinOverlay.show{display:flex}.pin-panel{width:min(400px,100%);padding:22px;border:1px solid #c9ead44a;border-radius:18px;background:#0b2824;box-shadow:0 20px 70px #000a;text-align:center}.pin-panel h2{margin:4px 0 8px}.pin-panel p{color:#b5d0c4;font-size:12px;line-height:1.6}
+.hud{position:fixed;z-index:8;top:12px;left:12px;display:none;gap:7px;pointer-events:none;max-width:calc(100vw - 24px);flex-wrap:wrap}.hud.show{display:flex}.hud-card{min-width:86px;padding:8px 10px;border-radius:12px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(8px)}.hud-card small{display:block;color:#b4cfc1;font-size:9px;letter-spacing:.08em}.hud-card strong{font-size:19px;font-weight:950;font-variant-numeric:tabular-nums}.hud-card strong.mint{color:var(--mint)}.right-hud{position:fixed;z-index:8;top:12px;right:12px;display:none;min-width:150px;max-width:220px;padding:10px 12px;border-radius:13px;background:var(--panel);border:1px solid var(--line);pointer-events:none}.right-hud.show{display:block}.right-hud strong{color:var(--mint);font-size:11px}.online-list{margin-top:5px;font-size:10px;line-height:1.6;color:#d3e8dc}.game-buttons{position:fixed;z-index:9;right:12px;bottom:12px;display:none;gap:7px}.game-buttons.show{display:flex}.mini-btn{border:1px solid #ffffff35;background:#071b1bd9;color:#effff6;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:850;backdrop-filter:blur(8px)}
+.mobile-controls{position:fixed;z-index:10;left:0;right:0;bottom:max(14px,env(safe-area-inset-bottom));display:none;align-items:end;justify-content:space-between;padding:0 16px;pointer-events:none}.mobile-controls.show{display:flex}.dpad{display:grid;grid-template-columns:repeat(3,54px);grid-template-rows:repeat(2,54px);gap:5px;pointer-events:auto}.touch-btn{border:1px solid #c8f6dc66;border-radius:14px;background:rgba(4,22,20,.72);color:#eafff4;font-size:18px;font-weight:950;touch-action:none;user-select:none;backdrop-filter:blur(8px)}.touch-btn:active,.touch-btn.pressed{background:#a7f3ce;color:#0b2b20}.d-up{grid-column:2}.d-left{grid-column:1;grid-row:2}.d-down{grid-column:2;grid-row:2}.d-right{grid-column:3;grid-row:2}.touch-actions{display:flex;flex-direction:column;gap:7px;pointer-events:auto}.touch-actions .touch-btn{min-width:74px;min-height:48px;padding:7px 10px;font-size:11px}.touch-actions .boost{border-color:#ffe08a88;color:#ffe08a}
+#toast{position:fixed;z-index:50;top:18%;left:50%;transform:translate(-50%,-10px);opacity:0;pointer-events:none;background:#071d1aeb;border:1px solid #a7f3ce55;color:#eafff4;border-radius:999px;padding:10px 16px;font-size:12px;font-weight:850;transition:.18s;max-width:90vw;text-align:center}#toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:850px){.garage{grid-template-columns:repeat(3,minmax(0,1fr))}.top-grid{grid-template-columns:1fr}.panel{padding:16px}.players{grid-template-columns:repeat(2,minmax(0,1fr))}.right-hud{top:auto;right:8px;bottom:125px;max-width:150px}.hud{top:7px;left:7px;gap:4px}.hud-card{min-width:68px;padding:6px 7px}.hud-card strong{font-size:16px}.hud-card small{font-size:8px}.game-buttons{top:7px;right:7px;bottom:auto}.mini-btn{padding:7px 9px}.mobile-controls.show{display:flex}}
+@media(max-width:480px){.garage{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.car-card{min-height:108px;padding:8px}.car-card b{font-size:11px}.players{grid-template-columns:repeat(2,minmax(0,1fr))}.brand{align-items:start}.brand .pill{font-size:9px}.room-code{font-size:22px}.dpad{grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,48px)}.touch-actions .touch-btn{min-width:66px;min-height:43px}}
+</style>
+</head>
+<body>
+<canvas id="gameCanvas"></canvas>
+<div id="startOverlay" class="overlay">
+ <main class="panel">
+  <div class="brand"><div><div class="eyebrow">MISTWOOD MOTORSPORT · SEPARATE ONLINE GAME</div><h1>MISTWOOD <span style="color:#a7f3ce">ONLINE</span></h1><div class="sub">친구와 같은 숲속 서킷에서 함께 달리는 온라인 멀티플레이 게임</div></div><span id="connectionPill">서버 연결 중...</span></div>
+  <div class="top-grid">
+   <section class="box">
+    <div class="box-title">① 플레이어 설정</div>
+    <input id="playerName" class="field" maxlength="14" placeholder="게임에서 사용할 닉네임" value="Driver" />
+    <div class="device-row"><button id="pcChoice" class="device-btn active">⌨ PC 조작</button><button id="mobileChoice" class="device-btn">📱 모바일 조작</button></div>
+    <div class="fineprint">PC: W/A/S/D 또는 방향키 · Space 브레이크 · F 특수 부스트<br>모바일: 화면 방향키와 부스트 버튼</div>
+   </section>
+   <section class="box">
+    <div class="box-title">② 친구와 방 만들기 / 참가하기</div>
+    <button id="createRoomBtn" class="btn" style="width:100%" disabled>새 온라인 방 만들기</button>
+    <div class="row" style="margin-top:9px"><input id="roomCodeInput" class="field small-field" maxlength="5" placeholder="방 코드" /><button id="joinRoomBtn" class="btn secondary" disabled>방 참가</button></div>
+    <div id="connectionStatus" class="status">온라인 서버에 연결하는 중입니다.</div>
+   </section>
+  </div>
+  <div class="garage-head"><strong>③ 차량 선택 · 총 21종</strong><span>잠금 차량은 VIP / 관리자 인증 후 선택</span></div>
+  <div id="garage" class="garage"></div>
+  <div id="selectedInfo" class="selected-info"></div>
+  <div id="unlockRow" class="unlock-row"><input id="pinInput" class="field" type="password" autocomplete="off" placeholder="비밀번호 입력" /><button id="unlockBtn" class="btn">해금</button><button id="cancelUnlockBtn" class="btn secondary">취소</button></div>
+  <div id="roomLobby" class="lobby">
+   <div class="lobby-head"><div><div class="box-title" style="margin:0 0 4px">ONLINE ROOM</div><div class="room-code" id="roomCodeLabel">-----</div><div class="fineprint" style="margin:3px 0 0">친구에게 이 방 코드를 알려 주세요.</div></div><div class="row"><button id="copyCodeBtn" class="btn secondary">코드 복사</button><button id="leaveRoomBtn" class="btn secondary">나가기</button></div></div>
+   <div id="playerList" class="players"></div>
+   <div class="row"><button id="startRoomBtn" class="btn" disabled>드라이브 시작</button><span id="hostHint" class="fineprint">방장이 게임을 시작할 수 있어요.</span></div>
+  </div>
+  <div class="fineprint">이 게임은 기존 MISTWOOD MOTORSPORT와 별도로 실행됩니다. 인터넷에서 친구와 플레이하려면 이 게임용 Node.js 서버를 온라인 호스팅에 배포해야 합니다. GitHub Pages만으로는 실시간 연결 서버를 실행할 수 없습니다.</div>
+ </main>
+</div>
+<div id="pinOverlay" class="overlay"><div class="pin-panel"><div class="eyebrow">VEHICLE ACCESS</div><h2 id="pinTitle">VIP 차량 잠금</h2><p id="pinDescription">해금 비밀번호를 입력해 주세요.</p><input id="pinModalInput" class="field" type="password" autocomplete="off" placeholder="비밀번호" /><div class="row" style="justify-content:center;margin-top:10px"><button id="pinModalSubmit" class="btn">확인</button><button id="pinModalCancel" class="btn secondary">취소</button></div><div id="pinModalStatus" class="status"></div></div></div>
+<div id="gameHud" class="hud"><div class="hud-card"><small>SPEED</small><strong class="mint"><span id="speedValue">0</span><span style="font-size:10px"> km/h</span></strong></div><div class="hud-card"><small>ROOM</small><strong id="hudRoomCode" style="font-size:16px">-----</strong></div><div class="hud-card"><small>DRIVERS</small><strong id="driverCount">1/8</strong></div></div>
+<div id="rightHud" class="right-hud"><strong>ONLINE DRIVERS</strong><div id="onlineList" class="online-list"></div></div>
+<div id="gameButtons" class="game-buttons"><button id="returnLobbyBtn" class="mini-btn">대기실로</button></div>
+<div id="mobileControls" class="mobile-controls"><div class="dpad"><button class="touch-btn d-up" data-control="forward">▲</button><button class="touch-btn d-left" data-control="left">◀</button><button class="touch-btn d-down" data-control="reverse">▼</button><button class="touch-btn d-right" data-control="right">▶</button></div><div class="touch-actions"><button id="mobileBrake" class="touch-btn" data-control="brake">BRAKE</button><button id="mobileBoost" class="touch-btn boost">BOOST</button></div></div>
+<div id="toast"></div>
+<script type="module">
+const VEHICLES = [{"id":"grandeur","name":"2023 현대 그랜저","short":"그랜저","kind":"대형 세단 · 균형형","maxSpeed":30,"acceleration":11,"steering":1.45,"brake":24,"reverse":8,"mass":"보통","color":12108744,"body":"sedan","scale":1,"specialAbility":"가속·최고속도·조향이 고르게 균형 잡힌 기본 세단"},{"id":"tesla3","name":"테슬라 모델 3","short":"모델 3","kind":"전기 세단 · 가속형","maxSpeed":35,"acceleration":15.2,"steering":1.62,"brake":26,"reverse":9,"mass":"보통","color":10135476,"body":"sedan","scale":0.97,"specialAbility":"전기 모터의 빠른 초반 가속과 매끄러운 속도 유지"},{"id":"ioniq6","name":"현대 아이오닉 6","short":"아이오닉 6","kind":"전기 세단 · 안정형","maxSpeed":33,"acceleration":13,"steering":1.48,"brake":25,"reverse":8,"mass":"보통","color":5464427,"body":"streamline","scale":1,"specialAbility":"안정적인 직진 주행과 부드러운 속도 조절"},{"id":"ev6","name":"기아 EV6","short":"EV6","kind":"전기 크로스오버 · 다목적형","maxSpeed":31,"acceleration":13.4,"steering":1.42,"brake":24,"reverse":8,"mass":"약간 무거움","color":7440255,"body":"crossover","scale":1,"specialAbility":"높은 차체와 안정적인 조향으로 다목적 주행에 적합"},{"id":"taycan","name":"포르쉐 타이칸","short":"타이칸","kind":"전기 스포츠 세단 · 고속형","maxSpeed":39,"acceleration":17,"steering":1.82,"brake":29,"reverse":9,"mass":"보통","color":3767226,"body":"sports","scale":0.94,"specialAbility":"높은 최고속도와 강한 가속으로 긴 직선 구간에 강함"},{"id":"supra","name":"토요타 GR 수프라","short":"GR 수프라","kind":"스포츠 쿠페 · 민첩형","maxSpeed":37,"acceleration":15.5,"steering":1.95,"brake":27,"reverse":8,"mass":"가벼움","color":14240562,"body":"coupe","scale":0.92,"specialAbility":"가벼운 차체와 민첩한 조향으로 코너 공략에 유리"},{"id":"toyotaPriusHybrid","name":"토요타 프리우스 하이브리드","short":"프리우스","kind":"하이브리드 해치백 · 전기/연료 자동 전환","maxSpeed":34,"acceleration":13.8,"steering":1.55,"brake":26,"reverse":8,"mass":"보통","color":7248515,"body":"hatchback","scale":0.98,"hybrid":true,"specialAbility":"70km/h 이상에서 연료 모드 · 낮은 속도에서는 랜덤 전환"},{"id":"jeepWrangler","name":"지프 랭글러 루비콘","short":"랭글러","kind":"정통 오프로드 SUV · 높은 차체와 안정감","maxSpeed":29,"acceleration":10.5,"steering":1.34,"brake":27,"reverse":7,"mass":"무거움","color":12684101,"body":"offroad","scale":1.04,"specialAbility":"높은 차체와 큰 타이어 · 거친 길에 어울리는 안정형"},{"id":"mazdaMx5","name":"마쓰다 MX-5 미아타","short":"MX-5","kind":"경량 2인승 로드스터 · 민첩한 코너링","maxSpeed":36,"acceleration":16.5,"steering":2.08,"brake":30,"reverse":9,"mass":"매우 가벼움","color":12005186,"body":"lightRoadster","scale":0.92,"specialAbility":"가벼운 차체와 빠른 조향 반응"},{"id":"eventTruck","name":"숲속 탐험 트럭","short":"이벤트 트럭","kind":"이벤트 전용 · 무겁고 안정적","maxSpeed":22,"acceleration":6.8,"steering":0.92,"brake":28,"reverse":5,"mass":"매우 무거움","color":14001732,"body":"truck","scale":1.13,"event":true,"specialAbility":"무거운 차체로 주행이 안정적이지만 가속과 회전은 느림"},{"id":"eventCrusher","name":"포레스트 크러셔","short":"크러셔","kind":"이벤트 전용 · 장애물 파괴 특화","maxSpeed":27,"acceleration":10.8,"steering":1.12,"brake":27,"reverse":6,"mass":"매우 무거움","color":2982518,"body":"crusher","scale":1.12,"event":true,"smash":true,"specialAbility":"속도를 내고 일반 장애물을 들이받아 파괴"},{"id":"speedster","name":"포레스트 스프린터","short":"스프린터","kind":"초고속 스포츠카 · 최고속도 특화","maxSpeed":54,"acceleration":26,"steering":1.78,"brake":33,"reverse":12,"mass":"가벼움","color":2402520,"body":"sports","scale":0.93,"fast":true,"specialAbility":"매우 빠른 가속과 높은 최고 속도"},{"id":"eventTank","name":"포레스트 탱크","short":"이벤트 탱크","kind":"이벤트 전용 · 에너지 포탄과 궤도 주행","maxSpeed":23,"acceleration":7.4,"steering":0.92,"brake":27,"reverse":5,"mass":"최고 중량","color":5467465,"body":"tank","scale":1.12,"event":true,"tank":true,"specialAbility":"F 포탄 · 장애물 30개 파괴 후 G 궁극기"},{"id":"forestBike","name":"포레스트 레이서 바이크","short":"레이서 바이크","kind":"이벤트 바이크 · 빠르지만 균형 잡기 어려움","maxSpeed":43,"acceleration":20,"steering":1.95,"brake":29,"reverse":5,"mass":"매우 가벼움","color":14962236,"body":"motorcycle","scale":0.98,"event":true,"motorcycle":true,"specialAbility":"F 부스터 · 2초 동안 실제 이동 속도 2배 · 재사용 10초"},{"id":"teslaRoadster","name":"테슬라 로드스터","short":"로드스터","kind":"전기 슈퍼카 · 5초 비행 능력","maxSpeed":45,"acceleration":19,"steering":1.86,"brake":34,"reverse":11,"mass":"가벼움","color":10233679,"body":"roadster","scale":0.94,"roadster":true,"event":true,"specialAbility":"F 비행 · 5초 공중 주행과 바닥 연기 · 재사용 15초"},{"id":"adminPolice","name":"관리자 경찰차","short":"경찰차","kind":"관리자 전용 · 사이렌과 전면 범퍼","maxSpeed":38,"acceleration":17,"steering":1.72,"brake":32,"reverse":10,"mass":"보통","color":14476781,"body":"police","scale":1,"event":true,"adminOnly":true,"police":true,"specialAbility":"F 사이렌 전환 · 범퍼로 장애물과 AI 차량 밀기"},{"id":"adminHelicopter","name":"관리자 헬리콥터","short":"헬리콥터","kind":"관리자 전용 · 회전 로터와 자유 비행","maxSpeed":32,"acceleration":10,"steering":1.35,"brake":22,"reverse":5,"mass":"무거움","color":4034434,"body":"helicopter","scale":1,"event":true,"adminOnly":true,"helicopter":true,"specialAbility":"X 키로 무제한 이륙·착륙 · 메인/테일 로터 회전"},{"id":"adminExcavator","name":"관리자 포레스트 굴삭기","short":"관리자 굴삭기","kind":"관리자 전용 · 회전 캐빈과 대형 굴착 암","maxSpeed":25,"acceleration":8.5,"steering":1.02,"brake":30,"reverse":6,"mass":"최고 중량","color":14853422,"body":"excavator","scale":1.08,"event":true,"adminOnly":true,"excavator":true,"specialAbility":"F 버킷 스윙 · G 지면 정리 · C 2배 부스트 · X 자유 비행"},{"id":"subaruWRX","name":"스바루 WRX STI 랠리","short":"WRX 랠리","kind":"AWD 랠리 세단 · 접지력과 가속 특화","maxSpeed":41,"acceleration":18.2,"steering":1.88,"brake":31,"reverse":10,"mass":"보통","color":2652375,"body":"sedan","scale":0.98,"rally":true,"specialAbility":"사륜구동 랠리 세팅 · 코너 탈출 가속과 접지력 강화"},{"id":"vipRevuelto","name":"람보르기니 레부엘토","short":"레부엘토","kind":"VIP 하이브리드 슈퍼카 · 오버부스트","maxSpeed":47,"acceleration":20.5,"steering":1.96,"brake":35,"reverse":11,"mass":"보통","color":10276408,"body":"supercar","scale":0.94,"hybrid":true,"vipOverboost":true,"specialAbility":"하이브리드 자동 전환 · F 오버부스트 4초 · 재사용 18초"},{"id":"adminFireTruck","name":"관리자 포레스트 레스큐 소방차","short":"레스큐 소방차","kind":"관리자 전용 · 물대포와 전개식 사다리","maxSpeed":27,"acceleration":9.2,"steering":1.05,"brake":30,"reverse":6,"mass":"매우 무거움","color":14234418,"body":"firetruck","scale":1.05,"event":true,"adminOnly":true,"firetruck":true,"specialAbility":"F 물대포 · G 사다리 전개/접기 · C 2배 속도 · X 자유 비행"}];
+const VIP_VEHICLE_IDS = new Set(['eventCrusher','speedster','eventTank','forestBike','teslaRoadster','vipRevuelto']);
+const ADMIN_PIN_NOTE = '관리자 전용';
+const VIP_PIN_NOTE = 'VIP 전용';
+const TRACK_RX = 180, TRACK_RZ = 260;
+let THREE = null, RoundedBoxGeometry = null;
+let scene, camera, renderer, clock;
+let car = null;
+let localRoot = null, localModel = null, localNameSprite = null;
+let localPlayerId = null;
+let selectedVehicleId = 'grandeur';
+let selectedVehicle = VEHICLES[0];
+let selectedDevice = 'pc';
+let pendingUnlockRole = null;
+let pendingVehicleId = null;
+let socket = null;
+let connected = false;
+let roomCode = '';
+let hostId = '';
+let roomStarted = false;
+let unlocked = { vip:false, admin:false };
+let remotePlayers = new Map();
+let latestPlayers = [];
+let targetLocal = null;
+let controls = { forward:false, reverse:false, left:false, right:false, brake:false };
+let lastInputAt = 0;
+let toastTimer = null;
+let cameraInitialized = false;
+const keyMap = { KeyW:'forward', ArrowUp:'forward', KeyS:'reverse', ArrowDown:'reverse', KeyA:'left', ArrowLeft:'left', KeyD:'right', ArrowRight:'right', Space:'brake' };
+
+function el(id){ return document.getElementById(id); }
+function send(data){ if(socket && socket.readyState===WebSocket.OPEN) socket.send(JSON.stringify(data)); else setStatus('서버와 연결되지 않았습니다. 서버 주소와 배포 상태를 확인해 주세요.'); }
+function setStatus(message){ el('connectionStatus').textContent=message; }
+function showToast(message){ const t=el('toast'); t.textContent=message; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2100); }
+function isVehicleUnlocked(v){ return (!v.adminOnly || unlocked.admin) && (!VIP_VEHICLE_IDS.has(v.id) || unlocked.vip); }
+function vehicleRole(v){ return v.adminOnly?'admin':VIP_VEHICLE_IDS.has(v.id)?'vip':null; }
+function renderGarage(){
+ const garage=el('garage');
+ garage.innerHTML=VEHICLES.map(v=>{
+  const role=vehicleRole(v); const locked=role && !isVehicleUnlocked(v); const chosen=v.id===selectedVehicleId;
+  const tag=role==='admin'?'<span class="car-tag admin">ADMIN</span>':role==='vip'?'<span class="car-tag vip">VIP</span>':'<span class="car-tag normal">AVAILABLE</span>';
+  return `<button class="car-card ${chosen?'selected':''} ${locked?'locked':''}" data-car="${v.id}">${tag}${locked?`<span class="lock">🔒 ${role.toUpperCase()}</span>`:''}<b>${v.name}</b><small>${v.kind}</small><small>최고속도 ${Math.round(v.maxSpeed*3.6)} km/h · 가속 ${v.acceleration}</small></button>`;
+ }).join('');
+ garage.querySelectorAll('[data-car]').forEach(btn=>btn.addEventListener('click',()=>chooseVehicle(btn.dataset.car)));
+ updateSelectedInfo();
+}
+function updateSelectedInfo(){
+ const v=VEHICLES.find(x=>x.id===selectedVehicleId)||VEHICLES[0]; selectedVehicle=v;
+ el('selectedInfo').innerHTML=`<strong>${v.name}</strong> · ${v.kind}<br>특성: ${v.specialAbility||'균형 잡힌 기본 주행'}<br><span style="color:#a7f3ce">최고속도 ${Math.round(v.maxSpeed*3.6)} km/h · 가속 ${v.acceleration} · 조향 ${v.steering}</span>`;
+}
+function chooseVehicle(id){
+ const v=VEHICLES.find(x=>x.id===id); if(!v)return;
+ const role=vehicleRole(v);
+ if(role && !isVehicleUnlocked(v)){ openUnlock(role,id); return; }
+ selectedVehicleId=id; selectedVehicle=v; renderGarage();
+ if(roomCode) send({type:'select-vehicle',vehicleId:id});
+}
+function openUnlock(role,id){
+ pendingUnlockRole=role; pendingVehicleId=id;
+ el('pinTitle').textContent=role==='admin'?'관리자 차량 잠금':'VIP 차량 잠금';
+ el('pinDescription').textContent=role==='admin'?'관리자 비밀번호를 입력하면 관리자 차량을 선택할 수 있습니다.':'VIP 비밀번호를 입력하면 VIP 차량을 선택할 수 있습니다.';
+ el('pinModalInput').value=''; el('pinModalStatus').textContent='비밀번호는 온라인 서버에서 확인됩니다.';
+ el('pinOverlay').classList.add('show'); setTimeout(()=>el('pinModalInput').focus(),50);
+}
+function closeUnlock(){ el('pinOverlay').classList.remove('show'); pendingUnlockRole=null; pendingVehicleId=null; }
+function submitUnlock(){
+ const pin=el('pinModalInput').value; if(!pin){el('pinModalStatus').textContent='비밀번호를 입력해 주세요.';return;}
+ el('pinModalStatus').textContent='서버에서 확인 중...'; send({type:'unlock',role:pendingUnlockRole,pin});
+}
+function connectServer(){
+ const protocol=location.protocol==='https:'?'wss:':'ws:';
+ const url=`${protocol}//${location.host}`;
+ try{ socket=new WebSocket(url); }catch(e){setStatus('연결을 시작하지 못했습니다.');return;}
+ socket.addEventListener('open',()=>{connected=true;el('connectionPill').textContent='ONLINE SERVER CONNECTED';el('connectionPill').classList.add('online');el('createRoomBtn').disabled=false;el('joinRoomBtn').disabled=false;setStatus('서버 연결 완료! 차량을 선택하고 방을 만들거나 참가하세요.');});
+ socket.addEventListener('message',event=>{let msg;try{msg=JSON.parse(event.data)}catch{return;} handleServerMessage(msg);});
+ socket.addEventListener('close',()=>{connected=false;el('connectionPill').textContent='SERVER OFFLINE';el('connectionPill').classList.remove('online');el('createRoomBtn').disabled=true;el('joinRoomBtn').disabled=true;setStatus('서버 연결이 끊어졌습니다. 페이지를 새로고침해 주세요.');});
+ socket.addEventListener('error',()=>{setStatus('서버에 연결할 수 없습니다. 아직 Node.js 서버를 배포하지 않았거나 서버가 꺼져 있을 수 있습니다.');});
+}
+function handleServerMessage(msg){
+ if(msg.type==='connected'){setStatus(msg.message||'연결 완료');return;}
+ if(msg.type==='error'){setStatus(msg.message);showToast(msg.message);return;}
+ if(msg.type==='unlock-result'){
+  if(msg.ok){unlocked[msg.role]=true;el('pinModalStatus').textContent=msg.message;renderGarage();setTimeout(()=>{const id=pendingVehicleId;closeUnlock();if(id)chooseVehicle(id);},450);}
+  else el('pinModalStatus').textContent=msg.message;
+  return;
+ }
+ if(msg.type==='room-created'||msg.type==='room-joined'){roomCode=msg.roomCode;localPlayerId=msg.playerId;el('roomCodeLabel').textContent=roomCode;showToast(msg.type==='room-created'?'온라인 방을 만들었습니다!':'방에 참가했습니다!');return;}
+ if(msg.type==='left-room'){resetToGarage();return;}
+ if(msg.type==='room-state'){
+  roomCode=msg.roomCode;hostId=msg.hostId;roomStarted=!!msg.started;latestPlayers=msg.players||[];
+  if(!localPlayerId){const me=latestPlayers.find(p=>p.name===el('playerName').value.trim());if(me)localPlayerId=me.id;}
+  updateLobby(msg); if(roomStarted) enterGame(); else returnToLobbyView();
+  syncPlayerVisuals(latestPlayers);return;
+ }
+ if(msg.type==='snapshot'){latestPlayers=msg.players||[];syncPlayerVisuals(latestPlayers);return;}
+ if(msg.type==='ability-result'){showToast(msg.message);return;}
+}
+function updateLobby(state){
+ el('roomLobby').classList.add('show');el('roomCodeLabel').textContent=state.roomCode;
+ const list=state.players||[];
+ el('playerList').innerHTML=list.map(p=>`<div class="player-chip"><strong>${escapeHtml(p.name)} ${p.host?'👑':''}</strong><span>${escapeHtml((VEHICLES.find(v=>v.id===p.vehicleId)||VEHICLES[0]).short)}${p.id===localPlayerId?' · 나':''}</span></div>`).join('');
+ const isHost=state.hostId===localPlayerId;
+ el('startRoomBtn').style.display=isHost?'inline-block':'none';el('startRoomBtn').disabled=!isHost;
+ el('hostHint').textContent=isHost?'방장입니다. 친구가 들어오면 시작하세요.':'방장이 게임을 시작할 때까지 기다려 주세요.';
+ setStatus(`${list.length}/${state.maxPlayers||8}명 참가 · 방 코드 ${state.roomCode}`);
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function createRoom(){if(!connected)return;send({type:'create-room',name:el('playerName').value,vehicleId:selectedVehicleId});}
+function joinRoom(){if(!connected)return;const code=el('roomCodeInput').value.trim().toUpperCase();if(code.length!==5){setStatus('방 코드는 다섯 글자입니다.');return;}send({type:'join-room',name:el('playerName').value,vehicleId:selectedVehicleId,roomCode:code});}
+function enterGame(){
+ el('startOverlay').style.display='none';el('gameHud').classList.add('show');el('rightHud').classList.add('show');el('gameButtons').classList.add('show');
+ el('mobileControls').classList.toggle('show',selectedDevice==='mobile');el('hudRoomCode').textContent=roomCode;showToast('친구들과 함께 드라이브를 시작합니다!');
+}
+function returnToLobbyView(){
+ el('startOverlay').style.display='flex';el('gameHud').classList.remove('show');el('rightHud').classList.remove('show');el('gameButtons').classList.remove('show');el('mobileControls').classList.remove('show');controls={forward:false,reverse:false,left:false,right:false,brake:false};
+}
+function resetToGarage(){roomCode='';localPlayerId=null;hostId='';roomStarted=false;latestPlayers=[];for(const p of remotePlayers.values())scene?.remove(p.root);remotePlayers.clear();if(localRoot){scene?.remove(localRoot);localRoot=null;}el('roomLobby').classList.remove('show');returnToLobbyView();setStatus('방에서 나왔습니다. 새 방을 만들거나 다른 방에 참가할 수 있습니다.');}
+function copyRoomCode(){if(!roomCode)return;const text=roomCode;if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>showToast('방 코드를 복사했습니다.')).catch(()=>showToast(`방 코드: ${text}`));else showToast(`방 코드: ${text}`);}
+
+function setControl(name,value){controls[name]=value;}
+window.addEventListener('keydown',e=>{
+ if(e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement||!roomStarted)return;
+ const key=keyMap[e.code];if(key){e.preventDefault();setControl(key,true);} 
+ if(e.code==='KeyF'&&!e.repeat){e.preventDefault();send({type:'ability'});}
+});
+window.addEventListener('keyup',e=>{const key=keyMap[e.code];if(key)setControl(key,false);});
+window.addEventListener('blur',()=>{controls={forward:false,reverse:false,left:false,right:false,brake:false};send({type:'input',controls});});
+document.querySelectorAll('[data-control]').forEach(btn=>{
+ const key=btn.dataset.control;
+ const down=e=>{e.preventDefault();btn.classList.add('pressed');setControl(key,true);try{btn.setPointerCapture(e.pointerId)}catch{}};
+ const up=e=>{e.preventDefault();btn.classList.remove('pressed');setControl(key,false);};
+ btn.addEventListener('pointerdown',down);btn.addEventListener('pointerup',up);btn.addEventListener('pointercancel',up);btn.addEventListener('lostpointercapture',up);
+});
+el('mobileBoost').addEventListener('click',()=>send({type:'ability'}));
+setInterval(()=>{if(roomStarted&&socket?.readyState===WebSocket.OPEN&&Date.now()-lastInputAt>35){send({type:'input',controls});lastInputAt=Date.now();}},40);
+
+el('pcChoice').addEventListener('click',()=>{selectedDevice='pc';el('pcChoice').classList.add('active');el('mobileChoice').classList.remove('active');});
+el('mobileChoice').addEventListener('click',()=>{selectedDevice='mobile';el('mobileChoice').classList.add('active');el('pcChoice').classList.remove('active');});
+el('createRoomBtn').addEventListener('click',createRoom);el('joinRoomBtn').addEventListener('click',joinRoom);el('startRoomBtn').addEventListener('click',()=>send({type:'start-room'}));el('copyCodeBtn').addEventListener('click',copyRoomCode);el('leaveRoomBtn').addEventListener('click',()=>send({type:'leave-room'}));el('returnLobbyBtn').addEventListener('click',()=>{if(hostId===localPlayerId)send({type:'stop-room'});else showToast('방장이 대기실로 돌아가면 함께 이동합니다.');});
+el('unlockBtn').addEventListener('click',submitUnlock);el('cancelUnlockBtn').addEventListener('click',closeUnlock);el('pinModalSubmit').addEventListener('click',submitUnlock);el('pinModalCancel').addEventListener('click',closeUnlock);el('pinModalInput').addEventListener('keydown',e=>{if(e.key==='Enter')submitUnlock();});
+renderGarage();connectServer();
+
+// ===== THREE.JS + MISTWOOD VEHICLE MODEL SYSTEM =====
+async function loadThree(){
+ const urls=[
+  'https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js',
+  'https://unpkg.com/three@0.187.0/build/three.module.js',
+  'https://esm.sh/three@0.187.0',
+  'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js'
+ ];
+ let lastError;
+ for(const url of urls){try{return await import(url)}catch(err){lastError=err;console.warn('Three.js CDN failed:',url,err);}}
+ throw lastError||new Error('Three.js 엔진을 불러오지 못했습니다.');
+}
+try{
+ THREE=await loadThree();
+ // 원본 차량 제작기의 RoundedBoxGeometry 자리에 기본 BoxGeometry를 둡니다. 모델별 비율과 부품 구성은 그대로 사용합니다.
+ RoundedBoxGeometry=class extends THREE.BoxGeometry { constructor(width,height,depth,segments=1,radius=0){ const seg=Math.max(1,Math.floor(Number(segments)||1)); super(width,height,depth,seg,seg,seg); } };
+ initScene();
+ window.__MISTWOOD_ONLINE_READY__=true;
+}catch(err){console.error(err);setStatus('3D 엔진을 불러오지 못했습니다. 인터넷 연결 또는 CDN 차단 여부를 확인해 주세요.');showToast('3D 엔진 로딩 실패');}
+
+    function addPart(parent, geometry, material, x, y, z, rx = 0, ry = 0, rz = 0) {
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(x, y, z); mesh.rotation.set(rx, ry, rz);
+      mesh.castShadow = true; mesh.receiveShadow = true; parent.add(mesh); return mesh;
+    }
+    function buildSelectableVehicle(vehicle) {
+      const group = new THREE.Group();
+      const bodyMat = new THREE.MeshPhysicalMaterial({ color:vehicle.color, metalness:0.78, roughness:0.19, clearcoat:1.0, clearcoatRoughness:0.12, envMapIntensity:1.35 });
+      const darkMat = new THREE.MeshStandardMaterial({ color:0x11191c, metalness:0.35, roughness:0.36 });
+      const glassMat = new THREE.MeshPhysicalMaterial({ color:0x172d39, metalness:0.22, roughness:0.13, clearcoat:1, transparent:true, opacity:0.96 });
+      const trimMat = new THREE.MeshStandardMaterial({ color:0xc8d2d5, metalness:0.92, roughness:0.2 });
+      const lampMat = new THREE.MeshStandardMaterial({ color:0xffffff, emissive:0xc5f6ff, emissiveIntensity:1.65, roughness:0.2 });
+      const rearMat = new THREE.MeshStandardMaterial({ color:0xe72f38, emissive:0x8e101a, emissiveIntensity:1.4 });
+      const rubberMat = new THREE.MeshStandardMaterial({ color:0x101416, roughness:0.92 });
+      const rimMat2 = new THREE.MeshStandardMaterial({ color:0xd8dfe1, metalness:0.92, roughness:0.2 });
+      const brakeDiscMat = new THREE.MeshStandardMaterial({color:0x899697,metalness:0.9,roughness:0.34});
+      const brakeCaliperMat = new THREE.MeshStandardMaterial({color:vehicle.id==='taycan'||vehicle.id==='supra'?0xc64737:0x647b83,metalness:0.35,roughness:0.34});
+      const localWheels = [];
+      const add = (geo, mat, x,y,z, rx=0,ry=0,rz=0) => addPart(group,geo,mat,x,y,z,rx,ry,rz);
+      const isTruck = vehicle.body==='truck';
+      const isCrusher = vehicle.body==='crusher';
+      const isTank = vehicle.body==='tank';
+      const isMotorcycle = vehicle.body==='motorcycle';
+      const isRoadster = vehicle.body==='roadster';
+      const isPolice = vehicle.body==='police';
+      const isHelicopter = vehicle.body==='helicopter';
+      const isExcavator = vehicle.body==='excavator';
+      const isFireTruck = vehicle.body==='firetruck';
+      const isHeavy = isTruck || isCrusher || isTank || isExcavator || isFireTruck;
+      // 차종마다 실제 차량의 비율을 참고해 길이·폭·바퀴 위치를 별도로 정합니다.
+      // 값은 게임용 축소 모델의 단위이며 실제 차량 제원은 아닙니다.
+      const dimensions = {
+        tesla3:       { length:4.90, width:1.98, height:0.58, wheelZ:[-1.58,1.58] },
+        ioniq6:       { length:5.16, width:1.96, height:0.60, wheelZ:[-1.70,1.70] },
+        ev6:          { length:4.78, width:2.12, height:0.82, wheelZ:[-1.55,1.55] },
+        taycan:       { length:4.96, width:2.02, height:0.56, wheelZ:[-1.63,1.63] },
+        supra:        { length:4.48, width:2.04, height:0.52, wheelZ:[-1.48,1.48] },
+        speedster:    { length:4.72, width:2.16, height:0.48, wheelZ:[-1.60,1.60] },
+        teslaRoadster:{ length:4.62, width:1.98, height:0.48, wheelZ:[-1.53,1.53] },
+        adminPolice:  { length:5.02, width:2.04, height:0.66, wheelZ:[-1.62,1.62] },
+        toyotaPriusHybrid:{ length:4.65, width:1.84, height:0.76, wheelZ:[-1.48,1.48] },
+        jeepWrangler: { length:4.35, width:1.96, height:1.12, wheelZ:[-1.38,1.38] },
+        mazdaMx5:     { length:3.92, width:1.76, height:0.48, wheelZ:[-1.28,1.28] },
+        subaruWRX:    { length:4.72, width:1.96, height:0.66, wheelZ:[-1.52,1.52] },
+        vipRevuelto:  { length:4.78, width:2.08, height:0.46, wheelZ:[-1.58,1.58] },
+        adminFireTruck:{ length:6.85, width:2.62, height:1.18, wheelZ:[-2.35,0,2.35] }
+      };
+      const modelSize = dimensions[vehicle.id] || null;
+      const bodyLength = isHelicopter ? 5.1 : (isMotorcycle ? 3.15 : (isFireTruck ? 6.85 : (isTank || isExcavator ? 6.25 : (isHeavy ? (isCrusher ? 6.25 : 5.9) : (modelSize?.length || 5.0)))));
+      const bodyWidth = isHelicopter ? 1.65 : (isMotorcycle ? 0.92 : (isFireTruck ? 2.62 : (isTank ? 3.25 : (isExcavator ? 3.15 : (isCrusher ? 2.5 : (isTruck ? 2.35 : (modelSize?.width || (vehicle.body==='crossover' ? 2.12 : 2.0))))))));
+      const bodyHeight = isHelicopter ? 1.35 : (isMotorcycle ? 0.45 : (isFireTruck ? 1.18 : (isTank ? 1.1 : (isExcavator ? 1.22 : (isCrusher ? 1.04 : (isTruck ? 0.92 : (modelSize?.height || 0.68)))))));
+      const wheelZ = (isTank || isMotorcycle || isHelicopter || isExcavator) ? [] : (isFireTruck ? [-2.35,0,2.35] : (isTruck ? [-1.9,1.82] : (isCrusher ? [-2.05,0,2.05] : (modelSize?.wheelZ || [-1.55,1.55]))));
+      const wheelRadius = ({tesla3:0.43,ioniq6:0.46,ev6:0.54,taycan:0.46,supra:0.48,speedster:0.50,teslaRoadster:0.48,adminPolice:0.47,toyotaPriusHybrid:0.42,jeepWrangler:0.68,mazdaMx5:0.42,subaruWRX:0.50,vipRevuelto:0.50,adminFireTruck:0.59})[vehicle.id] || (isCrusher?0.62:(isTruck?0.57:0.43));
+      // 오토바이는 자동차처럼 넓은 차체가 없으므로 전용 프레임과 바퀴를 따로 만듭니다.
+      if (isHelicopter) {
+        // 관리자 전용 헬리콥터: 동체, 유리 캐빈, 꼬리 붐, 착륙 스키드, 회전 로터를 따로 만듭니다.
+        const heliBodyMat = new THREE.MeshPhysicalMaterial({color:vehicle.color,metalness:0.58,roughness:0.28,clearcoat:0.75});
+        const heliDarkMat = new THREE.MeshStandardMaterial({color:0x172521,metalness:0.62,roughness:0.42});
+        const heliGlassMat = new THREE.MeshPhysicalMaterial({color:0x193d50,metalness:0.25,roughness:0.12,clearcoat:1,transparent:true,opacity:0.94});
+        const rotorMat = new THREE.MeshStandardMaterial({color:0x26343a,metalness:0.72,roughness:0.28});
+        const heliLight = new THREE.MeshStandardMaterial({color:0xbff8ff,emissive:0x50dfff,emissiveIntensity:1.8});
+        const fuselage = add(new THREE.SphereGeometry(1,32,20),heliBodyMat,0,1.08,0.05);
+        fuselage.scale.set(0.88,0.78,1.72);
+        const nose = add(new THREE.SphereGeometry(1,28,18),heliGlassMat,0,1.25,-1.12);
+        nose.scale.set(0.72,0.58,0.78);
+        const windshieldBar = add(new RoundedBoxGeometry(1.38,0.075,0.10,4,0.03),heliDarkMat,0,1.60,-1.42);
+        for (const side of [-1,1]) {
+          const sideWindow = add(new THREE.SphereGeometry(1,20,14),heliGlassMat,side*0.72,1.25,-0.10);
+          sideWindow.scale.set(0.16,0.43,0.76);
+          add(new RoundedBoxGeometry(0.10,0.62,0.10,3,0.025),heliDarkMat,side*0.83,1.23,0.03);
+          add(new THREE.BoxGeometry(0.09,0.08,0.08),heliLight,side*0.84,1.02,-1.28);
+          // 좌우 착륙 스키드와 이를 지지하는 다리
+          add(new THREE.CylinderGeometry(0.075,0.075,4.25,12),heliDarkMat,side*0.80,0.22,0,Math.PI/2,0,0);
+          for (const z of [-0.78,0.82]) add(new THREE.CylinderGeometry(0.055,0.065,0.74,10),rotorMat,side*0.80,0.53,z,0,0,side*0.16);
+        }
+        // 꼬리 붐은 원통을 Z방향으로 눕혀 배치합니다.
+        add(new THREE.CylinderGeometry(0.15,0.32,3.65,16),heliBodyMat,0,1.24,2.45,Math.PI/2,0,0);
+        add(new RoundedBoxGeometry(0.14,1.02,0.12,3,0.04),heliBodyMat,0,1.63,4.02);
+        add(new RoundedBoxGeometry(1.32,0.12,0.46,4,0.04),heliBodyMat,0,1.34,3.48);
+        add(new THREE.BoxGeometry(0.08,0.18,0.18),heliLight,0,1.96,4.02);
+        // 메인 로터: 4개의 블레이드를 별도 그룹에 넣어 매 프레임 회전시킵니다.
+        const mainRotor = new THREE.Group();
+        mainRotor.position.set(0,2.12,0.10);
+        addPart(mainRotor,new THREE.CylinderGeometry(0.08,0.11,0.55,12),rotorMat,0,0.20,0);
+        addPart(mainRotor,new THREE.SphereGeometry(0.22,16,12),trimMat,0,0.46,0);
+        for (let blade=0; blade<4; blade++) {
+          const bladeMesh = new THREE.Mesh(new RoundedBoxGeometry(0.22,0.065,5.8,3,0.03),rotorMat);
+          bladeMesh.position.set(0,0.51,0); bladeMesh.rotation.y=blade*Math.PI/2; bladeMesh.castShadow=true; mainRotor.add(bladeMesh);
+          const tip = new THREE.Mesh(new RoundedBoxGeometry(0.22,0.07,0.34,3,0.02),heliLight);
+          tip.position.set(0,0.51,-2.73); tip.rotation.y=blade*Math.PI/2; mainRotor.add(tip);
+        }
+        group.add(mainRotor);
+        // 꼬리 로터는 세로 면에서 회전합니다.
+        const tailRotor = new THREE.Group();
+        tailRotor.position.set(0.18,1.55,4.10);
+        addPart(tailRotor,new THREE.CylinderGeometry(0.07,0.07,0.34,12),trimMat,0,0,0,Math.PI/2,0,0);
+        for (let blade=0; blade<3; blade++) {
+          const bladeMesh=new THREE.Mesh(new RoundedBoxGeometry(0.12,1.22,0.075,3,0.025),rotorMat);
+          bladeMesh.rotation.z=blade*Math.PI*2/3; tailRotor.add(bladeMesh);
+        }
+        group.add(tailRotor);
+        group.userData.mainRotor=mainRotor;
+        group.userData.tailRotor=tailRotor;
+        group.userData.helicopter=true;
+      } else if (!isMotorcycle) {
+        if (isExcavator) {
+          // 관리자 전용 굴삭기: 하부 궤도, 회전 캐빈, 붐/암/버킷을 따로 만들어 움직임을 표현합니다.
+          const trackMat = new THREE.MeshStandardMaterial({color:0x20292a,metalness:.30,roughness:.88});
+          const trackEdgeMat = new THREE.MeshStandardMaterial({color:0x69777a,metalness:.72,roughness:.36});
+          const glassExcMat = new THREE.MeshPhysicalMaterial({color:0x163b4d,metalness:.24,roughness:.14,clearcoat:1,transparent:true,opacity:.95});
+          const safetyMat = new THREE.MeshStandardMaterial({color:0xffd45d,emissive:0x8b4e08,emissiveIntensity:.35,metalness:.38,roughness:.33});
+          // 하부 플랫폼과 좌우 고무 궤도.
+          add(new RoundedBoxGeometry(2.45,.72,4.85,5,.18),darkMat,0,.66,.15);
+          for (const side of [-1,1]) {
+            add(new RoundedBoxGeometry(.66,1.08,4.95,5,.22),trackMat,side*1.43,.58,.10);
+            add(new RoundedBoxGeometry(.12,.16,4.55,3,.05),trackEdgeMat,side*1.78,.60,.10);
+            for (let i=0;i<6;i++) {
+              const roller = new THREE.Group();
+              roller.position.set(side*1.79,.58,-1.88+i*.78);
+              group.add(roller);
+              addPart(roller,new THREE.CylinderGeometry(.32,.32,.18,18),trackEdgeMat,0,0,0,0,0,Math.PI/2);
+              addPart(roller,new THREE.CylinderGeometry(.12,.12,.20,12),trimMat,0,0,0,0,0,Math.PI/2);
+              localWheels.push(roller);
+            }
+            for (let i=0;i<15;i++) add(new RoundedBoxGeometry(.08,.11,.23,2,.02),trackEdgeMat,side*1.79,1.12,-2.30+i*.32);
+          }
+          const upper = new THREE.Group();
+          upper.position.set(0,1.10,.28);
+          group.add(upper);
+          addPart(upper,new RoundedBoxGeometry(2.10,.72,2.72,5,.18),bodyMat,0,.55,.65);
+          addPart(upper,new RoundedBoxGeometry(1.12,1.62,1.48,5,.16),safetyMat,-.52,1.55,.72);
+          addPart(upper,new RoundedBoxGeometry(.92,1.30,1.22,5,.12),glassExcMat,-.52,1.60,.65);
+          addPart(upper,new RoundedBoxGeometry(.08,1.36,.08,3,.025),darkMat,-1.02,1.58,.65);
+          addPart(upper,new RoundedBoxGeometry(.08,1.36,.08,3,.025),darkMat,-.02,1.58,.65);
+          addPart(upper,new RoundedBoxGeometry(1.04,.10,1.30,3,.03),darkMat,-.52,2.29,.65);
+          addPart(upper,new RoundedBoxGeometry(.82,.20,1.20,4,.05),bodyMat,.60,.94,1.16);
+          // 노란 회전 경광등.
+          const beaconMat = new THREE.MeshStandardMaterial({color:0xffc24d,emissive:0xf08a15,emissiveIntensity:1.4,roughness:.25});
+          addPart(upper,new THREE.CylinderGeometry(.15,.15,.18,16),beaconMat,-.48,2.42,.45);
+          // 굴착 팔은 두 개의 관절과 버킷으로 구성합니다.
+          const boomPivot = new THREE.Group();
+          boomPivot.position.set(0,1.22,-.48);
+          upper.add(boomPivot);
+          addPart(boomPivot,new RoundedBoxGeometry(.48,.52,3.28,4,.10),bodyMat,0,0,-1.52,-.34,0,0);
+          addPart(boomPivot,new RoundedBoxGeometry(.16,.64,2.78,3,.05),safetyMat,.28,.02,-1.48,-.34,0,0);
+          addPart(boomPivot,new THREE.CylinderGeometry(.12,.12,1.15,12),trimMat,.33,-.12,-.72,Math.PI/2.8,0,0);
+          const stickPivot = new THREE.Group();
+          stickPivot.position.set(0,-.02,-2.92);
+          boomPivot.add(stickPivot);
+          addPart(stickPivot,new RoundedBoxGeometry(.38,.42,2.62,4,.08),bodyMat,0,0,-1.18,.18,0,0);
+          addPart(stickPivot,new RoundedBoxGeometry(.13,.52,2.10,3,.04),safetyMat,.23,.01,-1.16,.18,0,0);
+          const bucketPivot = new THREE.Group();
+          bucketPivot.position.set(0,-.08,-2.28);
+          stickPivot.add(bucketPivot);
+          addPart(bucketPivot,new RoundedBoxGeometry(.98,.20,.72,3,.08),darkMat,0,-.22,-.20,.22,0,0);
+          addPart(bucketPivot,new RoundedBoxGeometry(.94,.64,.18,3,.06),bodyMat,0,-.48,-.48,.28,0,0);
+          for (const side of [-1,1]) addPart(bucketPivot,new RoundedBoxGeometry(.18,.62,.62,3,.06),bodyMat,side*.43,-.25,-.20,.22,0,side*.10);
+          for (let tooth=0;tooth<4;tooth++) addPart(bucketPivot,new THREE.ConeGeometry(.075,.30,8),trimMat,-.33+tooth*.22,-.62,-.64,Math.PI/2,0,0);
+          upper.userData.excavatorTurret = upper;
+          group.userData.excavatorParts = {upper,boom:boomPivot,stick:stickPivot,bucket:bucketPivot,beaconMat};
+        } else if (isHeavy) {
+          // 작업 트럭·크러셔·궤도 차량은 튼튼한 하부 섀시를 공유합니다.
+          add(new RoundedBoxGeometry(bodyWidth,bodyHeight,bodyLength,5,0.16),bodyMat,0,1.03,0);
+          add(new RoundedBoxGeometry(bodyWidth*0.96,0.2,0.38,3,0.06),darkMat,0,0.75,-bodyLength/2+0.03);
+          add(new RoundedBoxGeometry(bodyWidth*0.96,0.18,0.34,3,0.05),darkMat,0,0.75,bodyLength/2-0.03);
+        } else {
+          // 승용차는 차종별로 다른 실루엣을 만들기 위해 차체 기본 형태부터 분리합니다.
+          if (vehicle.id === 'tesla3') {
+            const shell=add(new THREE.SphereGeometry(1,32,20),bodyMat,0,0.82,0); shell.scale.set(1.02,0.36,2.55);
+            add(new RoundedBoxGeometry(1.72,0.16,3.75,5,0.10),darkMat,0,0.48,0.02);
+          } else if (vehicle.id === 'ioniq6') {
+            const shell=add(new THREE.SphereGeometry(1,36,22),bodyMat,0,0.82,0); shell.scale.set(1.03,0.34,2.70);
+            add(new RoundedBoxGeometry(1.78,0.17,4.55,5,0.08),darkMat,0,0.49,0.05);
+          } else if (vehicle.id === 'ev6') {
+            add(new RoundedBoxGeometry(2.08,0.72,4.76,6,0.20),bodyMat,0,0.88,0);
+            add(new RoundedBoxGeometry(1.96,0.20,1.22,5,0.08),bodyMat,0,1.25,-1.58);
+          } else if (vehicle.id === 'taycan') {
+            add(new RoundedBoxGeometry(2.00,0.58,4.96,6,0.18),bodyMat,0,0.78,0);
+            add(new RoundedBoxGeometry(1.84,0.16,1.72,5,0.08),bodyMat,0,1.08,-1.52);
+            add(new RoundedBoxGeometry(1.88,0.14,0.94,5,0.07),bodyMat,0,0.99,1.83);
+          } else if (vehicle.id === 'supra') {
+            add(new RoundedBoxGeometry(2.03,0.52,4.48,6,0.18),bodyMat,0,0.76,0);
+            add(new RoundedBoxGeometry(1.92,0.22,2.08,5,0.09),bodyMat,0,0.98,-1.12);
+            add(new RoundedBoxGeometry(1.78,0.18,0.82,5,0.08),bodyMat,0,0.94,1.72);
+          } else if (vehicle.id === 'speedster') {
+            add(new RoundedBoxGeometry(2.16,0.48,4.72,6,0.18),bodyMat,0,0.73,0);
+            const nose=add(new THREE.SphereGeometry(1,28,18),bodyMat,0,0.70,-1.82); nose.scale.set(0.78,0.24,0.92);
+          } else if (vehicle.id === 'teslaRoadster') {
+            add(new RoundedBoxGeometry(1.98,0.48,4.62,6,0.18),bodyMat,0,0.72,0);
+            add(new RoundedBoxGeometry(1.76,0.18,1.86,5,0.08),bodyMat,0,0.96,-1.36);
+            add(new RoundedBoxGeometry(1.80,0.17,1.00,5,0.08),bodyMat,0,0.91,1.72);
+          } else if (vehicle.id === 'adminPolice') {
+            add(new RoundedBoxGeometry(2.04,0.66,5.02,6,0.16),bodyMat,0,0.82,0);
+            add(new RoundedBoxGeometry(1.86,0.17,1.36,5,0.07),bodyMat,0,1.13,-1.65);
+          } else if (vehicle.id === 'toyotaPriusHybrid') {
+            // 프리우스: 높은 해치백 지붕과 뒤로 길게 떨어지는 공기역학적 차체.
+            add(new RoundedBoxGeometry(1.84,0.76,4.65,6,0.18),bodyMat,0,0.82,0);
+            add(new RoundedBoxGeometry(1.68,0.18,1.38,5,0.08),bodyMat,0,1.20,-1.35);
+            add(new RoundedBoxGeometry(1.74,0.14,0.94,5,0.07),bodyMat,0,1.05,1.74);
+          } else if (vehicle.id === 'jeepWrangler') {
+            // 랭글러: 각진 프레임, 짧은 오버행, 높은 SUV 차체.
+            add(new RoundedBoxGeometry(1.96,1.12,4.35,5,0.12),bodyMat,0,0.95,0);
+            add(new RoundedBoxGeometry(1.78,0.16,1.32,4,0.06),bodyMat,0,1.60,-0.32);
+            add(new RoundedBoxGeometry(1.82,0.18,1.20,4,0.06),bodyMat,0,1.56,1.12);
+          } else if (vehicle.id === 'mazdaMx5') {
+            // MX-5: 짧고 낮은 2인승 차체와 오픈톱 비율.
+            add(new RoundedBoxGeometry(1.76,0.48,3.92,6,0.16),bodyMat,0,0.72,0);
+            add(new RoundedBoxGeometry(1.56,0.16,1.24,5,0.07),bodyMat,0,0.98,-1.38);
+            add(new RoundedBoxGeometry(1.58,0.14,0.76,5,0.06),bodyMat,0,0.94,1.42);
+          } else {
+            add(new RoundedBoxGeometry(bodyWidth,bodyHeight,bodyLength,5,0.16),bodyMat,0,0.82,0);
+          }
+        }
+      }
+      if (isMotorcycle) {
+        // 오토바이 바퀴는 앞뒤 두 개만 있고, 실제 탑승자를 단순한 3D 모형으로 표현합니다.
+        const frameMat = new THREE.MeshStandardMaterial({color:0x283943,metalness:0.78,roughness:0.3});
+        const riderMat = new THREE.MeshStandardMaterial({color:0x182633,roughness:0.75});
+        const helmetMat = new THREE.MeshStandardMaterial({color:0xffc35b,metalness:0.25,roughness:0.28});
+        const bikeWheelZ = [-1.16,1.05];
+        for (const z of bikeWheelZ) {
+          const wheelGroup = new THREE.Group();
+          wheelGroup.position.set(0,0.56,z);
+          const tire = new THREE.Mesh(new THREE.TorusGeometry(0.49,0.105,12,28),rubberMat);
+          tire.rotation.y = Math.PI/2; wheelGroup.add(tire);
+          const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.16,0.16,0.20,18),rimMat2);
+          hub.rotation.z = Math.PI/2; wheelGroup.add(hub);
+          const hubCore = new THREE.Mesh(new THREE.CylinderGeometry(0.075,0.075,0.23,14),trimMat);
+          hubCore.rotation.z = Math.PI/2; wheelGroup.add(hubCore);
+          group.add(wheelGroup); localWheels.push(wheelGroup);
+        }
+        // 중앙 엔진, 연료 탱크, 안장, 뒤 펜더와 앞 펜더
+        add(new RoundedBoxGeometry(0.58,0.54,0.72,4,0.12),darkMat,0,0.94,0.26);
+        add(new RoundedBoxGeometry(0.60,0.42,0.78,5,0.16),bodyMat,0,1.29,-0.20,-0.08,0,0);
+        add(new RoundedBoxGeometry(0.56,0.15,0.72,4,0.07),darkMat,0,1.55,0.45);
+        add(new RoundedBoxGeometry(0.78,0.12,0.68,4,0.05),bodyMat,0,0.77,1.08);
+        add(new THREE.CylinderGeometry(0.055,0.055,1.12,10),frameMat,0,1.05,-0.77,-0.38,0,0);
+        // 앞 포크와 핸들바
+        for (const side of [-1,1]) add(new THREE.CylinderGeometry(0.045,0.055,1.12,10),trimMat,side*0.12,1.12,-1.02,-0.30,0,side*0.035);
+        add(new THREE.CylinderGeometry(0.045,0.045,0.92,12),frameMat,0,1.59,-1.24,0,0,Math.PI/2);
+        add(new THREE.SphereGeometry(0.19,16,12),lampMat,0,1.42,-1.46);
+        add(new THREE.BoxGeometry(0.26,0.10,0.08),rearMat,0,1.12,1.38);
+        // 탑승자: 헬멧, 몸통, 팔과 다리를 간단한 도형으로 연결합니다.
+        const riderBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.23,0.48,4,10),riderMat);
+        riderBody.position.set(0,1.69,0.13); riderBody.rotation.x=0.34; group.add(riderBody);
+        const riderHead = new THREE.Mesh(new THREE.SphereGeometry(0.25,18,14),helmetMat);
+        riderHead.position.set(0,2.15,-0.30); group.add(riderHead);
+        const visor = new THREE.Mesh(new THREE.SphereGeometry(0.17,14,10),glassMat);
+        visor.scale.set(1,0.66,0.42); visor.position.set(0,2.16,-0.49); group.add(visor);
+        const addLimb = (start,end,radius,material) => {
+          const a = new THREE.Vector3(...start), b = new THREE.Vector3(...end);
+          const direction = new THREE.Vector3().subVectors(b,a);
+          const limb = new THREE.Mesh(new THREE.CylinderGeometry(radius,radius,direction.length(),8),material);
+          limb.position.copy(a).add(b).multiplyScalar(0.5);
+          limb.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),direction.normalize());
+          group.add(limb);
+        };
+        addLimb([-0.19,1.83,-0.02],[-0.34,1.55,-1.08],0.075,riderMat);
+        addLimb([0.19,1.83,-0.02],[0.34,1.55,-1.08],0.075,riderMat);
+        addLimb([-0.15,1.52,0.34],[-0.33,0.84,0.22],0.09,riderMat);
+        addLimb([0.15,1.52,0.34],[0.33,0.84,0.22],0.09,riderMat);
+      } else if (isExcavator) {
+        // 굴삭기 차체와 작업 장치는 앞 단계에서 전용 구조로 생성했습니다.
+      } else if (isTank) {
+        // 이벤트 탱크: 실제 무기 설계가 아닌 아케이드 게임용 장갑 차량 모형입니다.
+        // 차체와 양쪽 궤도, 회전 포탑, 빛나는 에너지 포구를 단순한 도형으로 만듭니다.
+        const trackMat = new THREE.MeshStandardMaterial({color:0x202a27,metalness:0.28,roughness:0.88});
+        const trackRimMat = new THREE.MeshStandardMaterial({color:0x748078,metalness:0.68,roughness:0.38});
+        const accentMat = new THREE.MeshStandardMaterial({color:0xa3c78b,metalness:0.58,roughness:0.35});
+        add(new RoundedBoxGeometry(2.48,0.82,5.45,5,0.16),bodyMat,0,1.13,0);
+        add(new RoundedBoxGeometry(2.20,0.30,4.85,4,0.09),darkMat,0,1.67,0.08);
+        // 좌우 궤도 벨트와 여러 개의 작은 바퀴로 탱크 느낌을 표현합니다.
+        for (const side of [-1,1]) {
+          add(new RoundedBoxGeometry(0.62,1.16,5.85,5,0.22),trackMat,side*1.45,0.63,0);
+          add(new RoundedBoxGeometry(0.12,0.18,5.35,3,0.06),trackRimMat,side*1.78,0.64,0);
+          for (let wheelIndex=0; wheelIndex<7; wheelIndex++) {
+            const wheelZPos = -2.35 + wheelIndex*0.78;
+            const roller = add(new THREE.CylinderGeometry(0.36,0.36,0.18,18),trackRimMat,side*1.78,0.58,wheelZPos,0,0,Math.PI/2);
+            add(new THREE.CylinderGeometry(0.12,0.12,0.20,12),accentMat,side*1.80,0.58,wheelZPos,0,0,Math.PI/2);
+            localWheels.push(roller);
+          }
+          // 궤도 위쪽을 따라 작은 돌기를 배치해 움직이는 벨트처럼 보이게 합니다.
+          for (let segment=0; segment<13; segment++) {
+            add(new THREE.BoxGeometry(0.08,0.11,0.30),trackRimMat,side*1.80,1.20,-2.55+segment*0.42);
+          }
+        }
+        // 포탑은 차체 중앙 위에 놓고, 앞쪽(-Z)을 향하도록 고정합니다.
+        const turret = new THREE.Group();
+        turret.position.set(0,1.78,0.15);
+        group.add(turret);
+        addPart(turret,new THREE.CylinderGeometry(1.05,1.18,0.42,16),darkMat,0,0.08,0);
+        addPart(turret,new RoundedBoxGeometry(1.72,0.72,2.0,5,0.18),bodyMat,0,0.50,0.10);
+        addPart(turret,new RoundedBoxGeometry(0.42,0.16,0.34,4,0.06),accentMat,0,0.96,0.28);
+        const barrelMat = new THREE.MeshStandardMaterial({color:0x34413b,metalness:0.78,roughness:0.3});
+        const energyMat = new THREE.MeshStandardMaterial({color:0x8af5ef,emissive:0x31bcb8,emissiveIntensity:2.0,metalness:0.3,roughness:0.2});
+        addPart(turret,new THREE.CylinderGeometry(0.17,0.22,2.05,14),barrelMat,0,0.55,-1.52,-Math.PI/2,0,0);
+        addPart(turret,new THREE.TorusGeometry(0.22,0.055,8,18),accentMat,0,0.55,-2.56,Math.PI/2,0,0);
+        addPart(turret,new THREE.SphereGeometry(0.10,12,12),energyMat,0,0.55,-2.60);
+        for (const side of [-1,1]) {
+          add(new RoundedBoxGeometry(0.22,0.18,0.65,3,0.05),accentMat,side*0.92,1.56,-1.75);
+          add(new THREE.BoxGeometry(0.22,0.16,0.34),lampMat,side*1.12,1.42,-2.78);
+        }
+      } else if (isTruck) {
+        // 이벤트 트럭: 높은 운전석, 긴 적재함, 난간과 후미등
+        add(new RoundedBoxGeometry(1.95,1.05,2.05,4,0.13),bodyMat,0,1.72,-1.35);
+        add(new RoundedBoxGeometry(2.12,0.58,2.65,3,0.08),darkMat,0,1.30,1.43);
+        for (const side of [-1,1]) add(new THREE.BoxGeometry(0.09,0.52,2.65),trimMat,side*1.02,1.62,1.43);
+        add(new THREE.BoxGeometry(1.95,0.08,0.08),trimMat,0,1.92,2.73);
+        add(new THREE.BoxGeometry(1.52,0.68,0.06),glassMat,0,1.86,-2.40);
+        for (const side of [-1,1]) {
+          add(new THREE.BoxGeometry(0.42,0.16,0.05),lampMat,side*0.82,1.38,-2.39);
+          add(new THREE.BoxGeometry(0.22,0.28,0.05),rearMat,side*0.91,1.02,2.98);
+        }
+      } else if (isCrusher) {
+        // 포레스트 크러셔: 6륜 오프로드 차체, 보호 케이지, 전면 강철 푸셔 블레이드
+        add(new RoundedBoxGeometry(2.12,1.12,2.28,5,0.14),bodyMat,0,1.78,-0.62);
+        add(new RoundedBoxGeometry(1.94,0.78,0.08,4,0.06),glassMat,0,1.88,-1.79);
+        add(new RoundedBoxGeometry(1.94,0.72,0.08,4,0.06),glassMat,0,1.83,0.56);
+        add(new RoundedBoxGeometry(2.22,0.16,2.34,4,0.06),darkMat,0,2.39,-0.62);
+        // 운전석 보호 프레임
+        for (const side of [-1,1]) {
+          add(new THREE.CylinderGeometry(0.055,0.055,1.5,10),trimMat,side*1.06,1.95,-1.52,0,0,0.08);
+          add(new THREE.CylinderGeometry(0.055,0.055,1.5,10),trimMat,side*1.06,1.95,0.34,0,0,-0.08);
+          add(new THREE.BoxGeometry(0.08,0.08,2.05),trimMat,side*1.08,2.53,-0.58);
+        }
+        // 넓은 전면 블레이드와 충격 보호대
+        const bladeMat = new THREE.MeshStandardMaterial({color:0x38464a,metalness:0.82,roughness:0.28});
+        const bladeEdgeMat = new THREE.MeshStandardMaterial({color:0xb4c5c6,metalness:0.92,roughness:0.22});
+        add(new RoundedBoxGeometry(3.05,0.62,0.28,5,0.07),bladeMat,0,0.72,-3.12,0,0,0.02);
+        add(new RoundedBoxGeometry(3.12,0.09,0.32,4,0.035),bladeEdgeMat,0,0.43,-3.15);
+        for (const side of [-1,1]) {
+          add(new THREE.BoxGeometry(0.16,0.78,0.38),bladeMat,side*1.43,0.91,-3.04,0,0,side*0.12);
+          add(new THREE.CylinderGeometry(0.09,0.09,0.82,10),trimMat,side*0.94,1.12,-2.72,Math.PI/2,0,0);
+          add(new THREE.CylinderGeometry(0.08,0.08,0.42,10),trimMat,side*0.88,1.4,-2.83,0,0,Math.PI/2);
+        }
+        // 노란 경광등과 밝은 작업등
+        const beaconMat = new THREE.MeshStandardMaterial({color:0xffc34f,emissive:0xff8c16,emissiveIntensity:1.25});
+        for (const side of [-1,1]) {
+          add(new THREE.CylinderGeometry(0.14,0.14,0.18,12),beaconMat,side*0.78,2.56,-0.62);
+          add(new RoundedBoxGeometry(0.3,0.13,0.08,3,0.03),lampMat,side*0.88,1.63,-1.84);
+        }
+        add(new RoundedBoxGeometry(1.15,0.16,0.12,3,0.04),darkMat,0,1.03,-1.91);
+      } else if (isFireTruck) {
+        // 관리자 포레스트 레스큐 소방차: 전용 캡, 물탱크, 점멸등, 물대포, 접이식 사다리.
+        const rescueWhite = new THREE.MeshStandardMaterial({color:0xf4f4ee,metalness:.28,roughness:.42});
+        const hoseMat = new THREE.MeshStandardMaterial({color:0x202c31,metalness:.55,roughness:.55});
+        const beaconRed = new THREE.MeshStandardMaterial({color:0xff283c,emissive:0xff001c,emissiveIntensity:.2,roughness:.22});
+        const beaconBlue = new THREE.MeshStandardMaterial({color:0x258cff,emissive:0x005cff,emissiveIntensity:.2,roughness:.22});
+        // 앞쪽 운전석과 넓은 앞유리
+        add(new RoundedBoxGeometry(2.26,1.34,2.12,5,.15),bodyMat,0,1.66,-1.72);
+        add(new RoundedBoxGeometry(1.96,.74,.09,4,.04),glassMat,0,1.94,-2.80,-.10,0,0);
+        add(new RoundedBoxGeometry(2.06,.12,.16,4,.04),rescueWhite,0,1.04,-2.82);
+        for (const side of [-1,1]) {
+          add(new RoundedBoxGeometry(.08,.76,1.38,3,.03),rescueWhite,side*1.15,1.60,-1.67);
+          add(new RoundedBoxGeometry(.08,.60,.88,3,.03),glassMat,side*1.19,1.91,-1.67);
+          add(new THREE.CylinderGeometry(.045,.045,.30,8),hoseMat,side*1.20,1.36,-1.18,0,0,Math.PI/2);
+          add(new RoundedBoxGeometry(.36,.13,.10,3,.03),lampMat,side*.86,1.25,-2.83);
+        }
+        // 뒤쪽 장비함과 물탱크
+        add(new RoundedBoxGeometry(2.38,1.34,3.36,5,.14),bodyMat,0,1.52,1.22);
+        add(new RoundedBoxGeometry(2.42,.10,3.18,4,.04),rescueWhite,0,2.23,1.22);
+        add(new RoundedBoxGeometry(2.18,.12,2.75,4,.04),darkMat,0,2.30,1.22);
+        for (const side of [-1,1]) {
+          add(new RoundedBoxGeometry(.06,.80,2.60,3,.02),rescueWhite,side*1.22,1.50,1.25);
+          for(let panel=0;panel<3;panel++) add(new RoundedBoxGeometry(.035,.42,.56,3,.02),darkMat,side*1.26,1.55,.20+panel*.86);
+          add(new THREE.TorusGeometry(.22,.055,8,20),hoseMat,side*1.20,1.18,2.55,0,Math.PI/2,0);
+        }
+        // 루프 경광등
+        add(new RoundedBoxGeometry(1.05,.10,.30,3,.04),darkMat,0,2.39,-1.65);
+        const fireRed = add(new THREE.BoxGeometry(.34,.20,.28),beaconRed,-.30,2.52,-1.65);
+        const fireBlue = add(new THREE.BoxGeometry(.34,.20,.28),beaconBlue,.30,2.52,-1.65);
+        // 전방 물대포: 발사 중에만 반투명한 물줄기가 보입니다.
+        const waterPivot = new THREE.Group(); waterPivot.position.set(0,1.67,-2.62); group.add(waterPivot);
+        addPart(waterPivot,new THREE.CylinderGeometry(.18,.24,.62,14),hoseMat,0,0,0,Math.PI/2,0,0);
+        const waterMat = new THREE.MeshStandardMaterial({color:0x9feeff,emissive:0x43cfff,emissiveIntensity:1.3,transparent:true,opacity:0,roughness:.12,metalness:.18,depthWrite:false});
+        const waterJet = new THREE.Mesh(new THREE.CylinderGeometry(.10,.22,4.6,14,1,true),waterMat);
+        waterJet.rotation.x=-Math.PI/2; waterJet.position.set(0,0,-2.70); waterJet.visible=false; waterPivot.add(waterJet);
+        // 접이식 사다리: 별도 피벗으로 움직임을 표현합니다.
+        const ladderPivot = new THREE.Group(); ladderPivot.position.set(0,2.26,1.52); group.add(ladderPivot);
+        const ladderRailMat = new THREE.MeshStandardMaterial({color:0xd8e1e4,metalness:.86,roughness:.26});
+        addPart(ladderPivot,new RoundedBoxGeometry(.14,.13,3.65,3,.04),ladderRailMat,-.36,.08,1.70);
+        addPart(ladderPivot,new RoundedBoxGeometry(.14,.13,3.65,3,.04),ladderRailMat,.36,.08,1.70);
+        for(let rung=0;rung<10;rung++) addPart(ladderPivot,new THREE.CylinderGeometry(.045,.045,.75,8),ladderRailMat,0,.08,.12+rung*.36,0,0,Math.PI/2);
+        addPart(ladderPivot,new RoundedBoxGeometry(.90,.15,.42,3,.05),bodyMat,0,.08,3.48);
+        group.userData.fireTruckParts={waterPivot,waterJet,waterMat,ladderPivot,fireRed,fireBlue};
+      } else if (!isHelicopter) {
+        // 이 구역은 승용차 전용 디자인입니다. 같은 색만 바꾸는 방식이 아니라
+        // 차종별 지붕 높이, 앞부분, 뒷부분, 유리창, 램프를 각각 다르게 만듭니다.
+        const addEllipsoid = (sx,sy,sz,material,x,y,z) => {
+          const mesh=add(new THREE.SphereGeometry(1,28,18),material,x,y,z);
+          mesh.scale.set(sx,sy,sz); return mesh;
+        };
+        const addSidePanel = (side, material, y, z, width, height, depth=0.055) =>
+          add(new RoundedBoxGeometry(depth,height,width,3,0.025),material,side*(bodyWidth/2+0.035),y,z);
+        const addMirror = (side, z=-0.72) => {
+          add(new THREE.CylinderGeometry(0.035,0.045,0.24,8),darkMat,side*(bodyWidth/2+0.08),1.18,z,0,0,side*0.45);
+          add(new RoundedBoxGeometry(0.20,0.12,0.28,4,0.04),bodyMat,side*(bodyWidth/2+0.16),1.26,z-0.04,0,side*0.12,0);
+        };
+        const addFrontLed = (x,y,z,w=0.46) => add(new RoundedBoxGeometry(w,0.075,0.12,4,0.035),lampMat,x,y,z,0,Math.sign(x)*-0.12,0);
+        const addRearLed = (x,y,z,w=0.52) => add(new RoundedBoxGeometry(w,0.075,0.10,4,0.035),rearMat,x,y,z,0,Math.sign(x)*0.10,0);
+
+        if (vehicle.id === 'tesla3') {
+          // Model 3: 막힌 듯 매끈한 노즈, 얇고 사선인 헤드램프, 파노라마 루프.
+          const canopy=addEllipsoid(0.82,0.43,1.62,glassMat,0,1.26,0.05);
+          const roof=addEllipsoid(0.73,0.105,1.25,darkMat,0,1.60,0.10);
+          add(new RoundedBoxGeometry(1.62,0.09,0.18,4,0.035),darkMat,0,0.55,-2.40);
+          addFrontLed(-0.69,1.02,-2.42,0.54); addFrontLed(0.69,1.02,-2.42,0.54);
+          add(new RoundedBoxGeometry(1.05,0.12,0.08,4,0.03),darkMat,0,0.60,-2.43);
+          add(new RoundedBoxGeometry(1.74,0.07,0.08,4,0.03),darkMat,0,0.91,2.43);
+          addRearLed(-0.66,1.03,2.44,0.45); addRearLed(0.66,1.03,2.44,0.45);
+          add(new RoundedBoxGeometry(1.50,0.045,0.04,3,0.018),rearMat,0,1.03,2.47);
+          for (const side of [-1,1]) {
+            addSidePanel(side,glassMat,1.30,0.08,1.42,0.40);
+            addSidePanel(side,darkMat,1.08,0.62,0.46,0.035,0.035); // 매립형 손잡이
+            addMirror(side,-0.78);
+          }
+        } else if (vehicle.id === 'ioniq6') {
+          // IONIQ 6: 물방울처럼 이어지는 Streamliner 지붕과 픽셀 램프.
+          const canopy=addEllipsoid(0.80,0.43,1.82,glassMat,0,1.22,0.34);
+          addEllipsoid(0.70,0.085,1.38,darkMat,0,1.60,0.37);
+          add(new RoundedBoxGeometry(1.55,0.10,0.36,4,0.05),bodyMat,0,1.02,-2.17);
+          // 앞 픽셀 조명을 작은 사각 LED 여러 개로 표현합니다.
+          for (const side of [-1,1]) for (let i=0;i<4;i++) {
+            add(new THREE.BoxGeometry(0.13,0.085,0.06),lampMat,side*(0.48+i*0.105),1.02,-2.48);
+          }
+          add(new RoundedBoxGeometry(1.78,0.08,0.08,4,0.03),darkMat,0,0.56,-2.44);
+          // 뒤쪽 픽셀 스트립과 낮은 덕테일.
+          add(new RoundedBoxGeometry(1.84,0.08,0.20,4,0.03),bodyMat,0,0.98,2.24);
+          for (let i=0;i<8;i++) add(new THREE.BoxGeometry(0.12,0.075,0.055),rearMat,-0.50+i*0.145,1.08,2.48);
+          for (const side of [-1,1]) {
+            addSidePanel(side,glassMat,1.22,0.36,1.45,0.38);
+            addSidePanel(side,trimMat,0.98,0.82,0.38,0.045,0.035);
+            addMirror(side,-0.64);
+          }
+        } else if (vehicle.id === 'ev6') {
+          // EV6: 차체가 높은 크로스오버, 두꺼운 휠 아치, 각진 뒤 해치.
+          add(new RoundedBoxGeometry(1.78,0.98,2.48,5,0.18),glassMat,0,1.54,0.18);
+          add(new RoundedBoxGeometry(1.66,0.105,2.24,5,0.05),darkMat,0,2.08,0.18);
+          add(new RoundedBoxGeometry(1.86,0.15,1.26,4,0.08),bodyMat,0,1.14,1.72);
+          add(new RoundedBoxGeometry(1.76,0.12,1.20,4,0.05),darkMat,0,0.50,-1.92);
+          add(new RoundedBoxGeometry(1.65,0.12,0.08,4,0.03),lampMat,0,1.20,-2.44);
+          add(new RoundedBoxGeometry(1.86,0.095,0.09,4,0.03),rearMat,0,1.19,2.43);
+          // EV6의 뒷 램프 끝을 바깥쪽으로 올려 감싸는 모양으로 배치합니다.
+          for (const side of [-1,1]) {
+            add(new RoundedBoxGeometry(0.10,0.40,0.08,4,0.03),rearMat,side*0.91,1.28,2.29,0,0,side*-0.18);
+            addSidePanel(side,glassMat,1.60,0.20,1.35,0.64);
+            add(new THREE.SphereGeometry(1,20,14),darkMat,side*0.93,0.64,-1.55).scale.set(0.31,0.50,0.66);
+            add(new THREE.SphereGeometry(1,20,14),darkMat,side*0.93,0.64,1.55).scale.set(0.31,0.50,0.66);
+            addMirror(side,-0.80);
+          }
+        } else if (vehicle.id === 'taycan') {
+          // Taycan: 낮은 스포츠 세단, 볼륨 있는 휀더와 네 점 주간 주행등.
+          add(new RoundedBoxGeometry(1.70,0.80,2.18,5,0.16),glassMat,0,1.31,0.16);
+          add(new RoundedBoxGeometry(1.58,0.085,1.84,5,0.04),darkMat,0,1.75,0.18);
+          for (const side of [-1,1]) {
+            addEllipsoid(0.35,0.23,0.78,bodyMat,side*0.83,0.91,-1.52);
+            addEllipsoid(0.36,0.22,0.78,bodyMat,side*0.83,0.90,1.48);
+            // 타이칸 특유의 네 점형 램프 느낌.
+            for (let i=0;i<4;i++) add(new THREE.BoxGeometry(0.10,0.085,0.08),lampMat,side*(0.47+i*0.11),1.02,-2.48);
+            addSidePanel(side,glassMat,1.32,0.16,1.58,0.40);
+            addSidePanel(side,darkMat,0.91,0.98,0.88,0.16,0.06);
+            addMirror(side,-0.78);
+          }
+          add(new RoundedBoxGeometry(1.55,0.12,0.08,4,0.03),darkMat,0,0.57,-2.47);
+          add(new RoundedBoxGeometry(1.82,0.07,0.07,4,0.03),rearMat,0,1.10,2.48);
+          add(new RoundedBoxGeometry(1.70,0.10,0.36,4,0.05),darkMat,0,0.43,2.34);
+        } else if (vehicle.id === 'supra') {
+          // GR Supra: 긴 보닛, 짧은 2인승 캐빈, 넓은 뒤 휀더와 리어 스포일러.
+          add(new RoundedBoxGeometry(1.56,0.72,1.58,5,0.17),glassMat,0,1.22,0.24);
+          add(new RoundedBoxGeometry(1.42,0.10,1.42,5,0.05),darkMat,0,1.61,0.24);
+          for (const side of [-1,1]) {
+            addEllipsoid(0.40,0.30,0.84,bodyMat,side*0.82,0.82,1.18);
+            addSidePanel(side,glassMat,1.23,0.26,1.06,0.40);
+            addSidePanel(side,darkMat,0.88,0.94,0.80,0.22,0.08);
+            addMirror(side,-0.52);
+          }
+          // 넓은 다중 흡기구와 얇은 헤드램프.
+          for (const x of [-0.69,0,0.69]) add(new RoundedBoxGeometry(0.48,0.26,0.07,4,0.04),darkMat,x,0.69,-2.28);
+          addFrontLed(-0.73,1.00,-2.28,0.34); addFrontLed(0.73,1.00,-2.28,0.34);
+          add(new RoundedBoxGeometry(1.72,0.08,0.08,4,0.03),rearMat,0,1.10,2.22);
+          // 낮고 넓은 리어 윙
+          add(new THREE.BoxGeometry(0.09,0.30,0.12),darkMat,-0.68,1.28,1.88);
+          add(new THREE.BoxGeometry(0.09,0.30,0.12),darkMat,0.68,1.28,1.88);
+          add(new RoundedBoxGeometry(2.02,0.10,0.38,4,0.04),bodyMat,0,1.44,1.90);
+        } else if (vehicle.id === 'speedster') {
+          // 스프린터: 낮고 넓은 하이퍼카, 좌우 공기 통로와 큰 리어 윙.
+          add(new RoundedBoxGeometry(1.26,0.60,1.50,5,0.16),glassMat,0,1.10,0.10);
+          add(new RoundedBoxGeometry(1.12,0.08,1.34,5,0.04),darkMat,0,1.43,0.10);
+          for (const side of [-1,1]) {
+            add(new RoundedBoxGeometry(0.54,0.36,2.12,5,0.12),bodyMat,side*0.80,0.72,0.36);
+            add(new RoundedBoxGeometry(0.28,0.22,1.08,4,0.05),darkMat,side*0.96,0.70,0.30);
+            add(new RoundedBoxGeometry(0.12,0.20,0.82,3,0.04),trimMat,side*1.08,0.71,0.34);
+          }
+          add(new RoundedBoxGeometry(2.22,0.10,0.52,4,0.04),darkMat,0,0.42,-2.12);
+          addFrontLed(-0.76,0.96,-2.31,0.50); addFrontLed(0.76,0.96,-2.31,0.50);
+          add(new RoundedBoxGeometry(1.86,0.08,0.08,4,0.03),rearMat,0,0.96,2.30);
+          add(new THREE.BoxGeometry(0.10,0.40,0.12),darkMat,-0.80,1.14,1.94);
+          add(new THREE.BoxGeometry(0.10,0.40,0.12),darkMat,0.80,1.14,1.94);
+          add(new RoundedBoxGeometry(2.22,0.12,0.34,4,0.04),bodyMat,0,1.34,1.96);
+        } else if (vehicle.id === 'teslaRoadster') {
+          // Roadster: 지붕이 열린 2인승 스포츠카, 낮은 앞 보닛과 분리된 뒤 데크.
+          add(new RoundedBoxGeometry(1.48,0.18,1.62,4,0.08),darkMat,0,0.98,0.02); // 실내 바닥
+          for (const side of [-1,1]) {
+            addEllipsoid(0.34,0.24,0.90,bodyMat,side*0.78,0.78,-1.48);
+            addEllipsoid(0.35,0.25,0.86,bodyMat,side*0.78,0.77,1.42);
+            addSidePanel(side,bodyMat,0.89,0.18,1.58,0.30);
+            addSidePanel(side,darkMat,0.93,0.62,0.72,0.20,0.06);
+            add(new RoundedBoxGeometry(0.48,0.42,0.52,4,0.10),darkMat,side*0.40,1.18,0.35); // 좌석
+            add(new RoundedBoxGeometry(0.42,0.50,0.12,4,0.05),bodyMat,side*0.40,1.35,0.70); // 헤드레스트
+            addMirror(side,-0.80);
+            // 두 개의 낮은 롤오버 바
+            add(new THREE.TorusGeometry(0.34,0.045,8,20,Math.PI),trimMat,side*0.42,1.52,0.86,0,0,Math.PI);
+          }
+          // 기울어진 앞 유리
+          add(new RoundedBoxGeometry(1.60,0.52,0.075,4,0.03),glassMat,0,1.28,-0.82,-0.38,0,0);
+          add(new RoundedBoxGeometry(1.72,0.18,1.38,5,0.07),bodyMat,0,0.98,-1.65);
+          add(new RoundedBoxGeometry(1.72,0.16,0.88,5,0.07),bodyMat,0,0.92,1.72);
+          addFrontLed(-0.70,1.00,-2.35,0.48); addFrontLed(0.70,1.00,-2.35,0.48);
+          add(new RoundedBoxGeometry(1.74,0.08,0.08,4,0.03),rearMat,0,1.05,2.35);
+          // 비행 중 빛나는 후방 추진 노즐: 연기 효과가 어디서 나오는지 알아보기 쉽습니다.
+          const flightGlow = new THREE.MeshStandardMaterial({color:0x9fefff,emissive:0x20bfff,emissiveIntensity:0.35,metalness:0.35,roughness:0.22});
+          for (const side of [-1,1]) {
+            add(new THREE.CylinderGeometry(0.13,0.19,0.34,16),flightGlow,side*0.54,0.58,2.12,Math.PI/2,0,0);
+            add(new THREE.TorusGeometry(0.15,0.035,8,20),trimMat,side*0.54,0.58,2.31,Math.PI/2,0,0);
+          }
+          group.userData.flightGlowMaterials=[flightGlow];
+        } else if (vehicle.id === 'toyotaPriusHybrid') {
+          // 프리우스: 뒤로 경사진 대형 유리창, 해치백 테일게이트, 얇은 LED 램프.
+          add(new RoundedBoxGeometry(1.54,0.62,2.38,5,0.14),glassMat,0,1.43,0.30,-0.16,0,0);
+          add(new RoundedBoxGeometry(1.42,0.08,1.68,4,0.04),darkMat,0,1.78,0.32,-0.12,0,0);
+          add(new RoundedBoxGeometry(1.58,0.09,0.36,4,0.04),bodyMat,0,1.12,-1.96);
+          add(new RoundedBoxGeometry(1.66,0.08,0.16,4,0.03),darkMat,0,0.58,-2.28);
+          addFrontLed(-0.68,1.00,-2.30,0.48); addFrontLed(0.68,1.00,-2.30,0.48);
+          add(new RoundedBoxGeometry(1.72,0.08,0.08,4,0.03),rearMat,0,1.13,2.32);
+          for (const side of [-1,1]) {
+            addSidePanel(side,glassMat,1.43,0.24,1.66,0.38);
+            addSidePanel(side,darkMat,1.02,0.60,0.42,0.035,0.03);
+            addMirror(side,-0.78);
+          }
+          const hybridBadgeMat = new THREE.MeshStandardMaterial({color:0x78e8b5,emissive:0x248b68,emissiveIntensity:0.65,metalness:0.5});
+          add(new THREE.BoxGeometry(0.20,0.08,0.035),hybridBadgeMat,0.90,0.91,1.88);
+        } else if (vehicle.id === 'jeepWrangler') {
+          // 랭글러: 세로형 앞유리, 각진 탈착식 지붕, 원형 헤드램프, 뒷문 스페어 타이어.
+          add(new RoundedBoxGeometry(1.72,0.88,1.90,4,0.10),glassMat,0,1.66,0.38);
+          add(new RoundedBoxGeometry(1.86,0.14,2.48,4,0.05),darkMat,0,2.16,0.32);
+          add(new RoundedBoxGeometry(1.70,0.08,0.12,3,0.03),bodyMat,0,1.26,-1.85,-0.10,0,0);
+          add(new RoundedBoxGeometry(1.82,0.08,0.28,3,0.03),bodyMat,0,1.32,1.91);
+          const roundLampMat = new THREE.MeshStandardMaterial({color:0xf8fbff,emissive:0xbfefff,emissiveIntensity:1.3});
+          for (const side of [-1,1]) {
+            add(new THREE.CylinderGeometry(0.20,0.20,0.09,24),roundLampMat,side*0.62,1.06,-2.18,Math.PI/2,0,0);
+            add(new RoundedBoxGeometry(0.12,0.60,1.34,4,0.04),darkMat,side*0.99,0.88,0.02);
+            addSidePanel(side,glassMat,1.68,0.25,1.28,0.45);
+            addMirror(side,-0.75);
+            // 두꺼운 휠 아치가 오프로드 SUV의 특징을 강조합니다.
+            for (const z of [-1.38,1.38]) add(new THREE.TorusGeometry(0.62,0.10,8,24,Math.PI),darkMat,side*0.94,0.70,z,0,Math.PI/2,0);
+          }
+          add(new THREE.CylinderGeometry(0.46,0.46,0.25,28),rubberMat,0,1.30,2.23,Math.PI/2,0,0);
+          add(new THREE.CylinderGeometry(0.25,0.25,0.28,24),rimMat2,0,1.30,2.23,Math.PI/2,0,0);
+          add(new RoundedBoxGeometry(2.10,0.18,0.34,4,0.05),darkMat,0,0.55,-2.28);
+        } else if (vehicle.id === 'mazdaMx5') {
+          // MX-5: 낮은 긴 보닛, 작은 2인승 캐빈, 열린 지붕과 뒤쪽 롤 후프.
+          add(new RoundedBoxGeometry(1.52,0.18,1.64,5,0.08),bodyMat,0,0.97,-1.05);
+          add(new RoundedBoxGeometry(1.42,0.40,1.10,5,0.10),glassMat,0,1.23,0.34,-0.22,0,0);
+          add(new RoundedBoxGeometry(1.68,0.15,0.70,4,0.06),bodyMat,0,0.91,1.42);
+          for (const side of [-1,1]) {
+            addSidePanel(side,bodyMat,0.92,0.15,1.38,0.26);
+            addMirror(side,-0.66);
+            add(new THREE.TorusGeometry(0.28,0.045,8,20,Math.PI),trimMat,side*0.46,1.52,0.78,0,0,Math.PI);
+          }
+          add(new RoundedBoxGeometry(1.56,0.08,0.08,4,0.03),darkMat,0,0.55,-1.98);
+          addFrontLed(-0.66,0.98,-2.00,0.40); addFrontLed(0.66,0.98,-2.00,0.40);
+          add(new RoundedBoxGeometry(1.48,0.07,0.07,4,0.03),rearMat,0,1.02,1.98);
+        } else if (vehicle.id === 'subaruWRX') {
+          // WRX 랠리카: 스포티한 세단 캐빈, 보닛 흡기구, 랠리 라이트와 큰 리어 윙.
+          add(new RoundedBoxGeometry(1.82,.66,4.72,6,.16),bodyMat,0,.80,0);
+          add(new RoundedBoxGeometry(1.70,.58,2.08,5,.12),glassMat,0,1.34,.18,-.12,0,0);
+          add(new RoundedBoxGeometry(1.58,.10,1.90,4,.04),darkMat,0,1.66,.18);
+          add(new RoundedBoxGeometry(.54,.12,.48,4,.04),darkMat,0,1.12,-1.76);
+          add(new RoundedBoxGeometry(.42,.18,.34,4,.04),bodyMat,0,1.22,-1.78);
+          for (const side of [-1,1]) {
+            addSidePanel(side,glassMat,1.35,.24,1.50,.38);
+            addSidePanel(side,darkMat,.91,.96,1.20,.16,.05);
+            addMirror(side,-.78);
+            // 랠리용 보조 램프와 휠 아치
+            add(new THREE.CylinderGeometry(.14,.14,.10,16),lampMat,side*.72,1.00,-2.36,Math.PI/2,0,0);
+            add(new THREE.TorusGeometry(.58,.075,8,24,Math.PI),darkMat,side*.98,.70,-1.50,0,Math.PI/2,0);
+            add(new THREE.TorusGeometry(.58,.075,8,24,Math.PI),darkMat,side*.98,.70,1.50,0,Math.PI/2,0);
+          }
+          addFrontLed(-.72,1.01,-2.38,.46); addFrontLed(.72,1.01,-2.38,.46);
+          add(new RoundedBoxGeometry(1.84,.10,.10,4,.03),rearMat,0,1.02,2.36);
+          add(new THREE.BoxGeometry(.10,.40,.12),darkMat,-.72,1.18,1.94);
+          add(new THREE.BoxGeometry(.10,.40,.12),darkMat,.72,1.18,1.94);
+          add(new RoundedBoxGeometry(2.02,.12,.42,4,.04),bodyMat,0,1.43,1.94);
+          add(new RoundedBoxGeometry(1.72,.10,.22,4,.04),darkMat,0,.48,2.30);
+        } else if (vehicle.id === 'vipRevuelto') {
+          // Revuelto: 낮고 날카로운 전면, 쐐기형 캐빈, 큰 측면 흡기구와 하이브리드 표시.
+          add(new RoundedBoxGeometry(2.08,.48,4.78,6,.16),bodyMat,0,.70,0);
+          add(new RoundedBoxGeometry(1.66,.58,1.70,5,.12),glassMat,0,1.08,.10,-.12,0,0);
+          add(new RoundedBoxGeometry(1.48,.08,1.46,4,.04),darkMat,0,1.38,.12);
+          add(new RoundedBoxGeometry(1.86,.26,1.38,5,.10),bodyMat,0,.82,-1.58,.04,0,0);
+          for (const side of [-1,1]) {
+            add(new RoundedBoxGeometry(.34,.34,1.10,4,.08),darkMat,side*.88,.84,.48,-.08,0,side*.10);
+            add(new RoundedBoxGeometry(.10,.30,.72,3,.04),trimMat,side*1.02,.84,.55,-.08,0,side*.10);
+            addSidePanel(side,glassMat,1.12,.10,1.06,.30);
+            addMirror(side,-.72);
+            add(new RoundedBoxGeometry(.44,.20,.10,4,.04),darkMat,side*.67,.66,-2.23);
+          }
+          addFrontLed(-.77,.96,-2.34,.54); addFrontLed(.77,.96,-2.34,.54);
+          add(new RoundedBoxGeometry(1.90,.10,.20,4,.04),darkMat,0,.45,-2.34);
+          add(new RoundedBoxGeometry(1.76,.08,.10,4,.03),rearMat,0,1.02,2.38);
+          add(new RoundedBoxGeometry(1.56,.12,.48,4,.05),darkMat,0,.48,2.15);
+          const hybridGlow = new THREE.MeshStandardMaterial({color:0xbaff72,emissive:0x79cc28,emissiveIntensity:.9,metalness:.3,roughness:.25});
+          add(new THREE.BoxGeometry(.22,.08,.04),hybridGlow,.92,.91,1.90);
+        } else if (vehicle.id === 'adminPolice') {
+          // 경찰차는 검정/흰색 투톤 도장, 도어 스트라이프, 루프 장비를 사용합니다.
+          add(new RoundedBoxGeometry(1.76,0.88,2.58,5,0.16),glassMat,0,1.38,0.10);
+          add(new RoundedBoxGeometry(1.58,0.09,2.18,5,0.04),darkMat,0,1.83,0.10);
+          add(new RoundedBoxGeometry(1.84,0.18,1.15,4,0.07),darkMat,0,1.12,-1.70);
+          for (const side of [-1,1]) {
+            addSidePanel(side,darkMat,0.98,0.55,1.58,0.22,0.06);
+            addSidePanel(side,trimMat,0.98,0.54,1.30,0.035,0.07);
+            addSidePanel(side,glassMat,1.42,0.08,1.56,0.47);
+            addMirror(side,-0.78);
+          }
+          addFrontLed(-0.70,1.02,-2.48,0.45); addFrontLed(0.70,1.02,-2.48,0.45);
+          add(new RoundedBoxGeometry(1.55,0.08,0.08,4,0.03),rearMat,0,1.05,2.48);
+          const bumperMat = new THREE.MeshStandardMaterial({color:0x263b4c,metalness:0.88,roughness:0.25});
+          add(new RoundedBoxGeometry(2.18,0.22,0.34,4,0.07),bumperMat,0,0.54,-bodyLength/2-0.18);
+          for (const side of [-1,1]) add(new THREE.CylinderGeometry(0.065,0.065,0.74,10),bumperMat,side*0.88,0.66,-bodyLength/2-0.25,Math.PI/2,0,0);
+          // 지붕의 빨간색·파란색 점멸등은 기존 F키 기능을 그대로 사용합니다.
+          const sirenRed = new THREE.MeshStandardMaterial({color:0xff2638,emissive:0xe30020,emissiveIntensity:0.1,roughness:0.24});
+          const sirenBlue = new THREE.MeshStandardMaterial({color:0x238dff,emissive:0x075ce8,emissiveIntensity:0.1,roughness:0.24});
+          add(new RoundedBoxGeometry(0.78,0.10,0.28,3,0.04),darkMat,0,1.91,0.10);
+          const redLamp = add(new THREE.BoxGeometry(0.28,0.16,0.24),sirenRed,-0.20,2.04,0.10);
+          const blueLamp = add(new THREE.BoxGeometry(0.28,0.16,0.24),sirenBlue,0.20,2.04,0.10);
+          group.userData.sirenMaterials = [sirenRed,sirenBlue];
+          group.userData.sirenLamps = [redLamp,blueLamp];
+        } else {
+          // 새 차량이 추가되어도 기본 승용차 외형을 그대로 복제하지 않도록 최소 구성만 제공합니다.
+          add(new RoundedBoxGeometry(bodyWidth*0.82,0.82,bodyLength*0.50,5,0.16),glassMat,0,1.30,0);
+          add(new RoundedBoxGeometry(bodyWidth*0.78,0.08,bodyLength*0.45,5,0.04),darkMat,0,1.72,0);
+          addFrontLed(-0.62,1.0,-bodyLength/2,0.42); addFrontLed(0.62,1.0,-bodyLength/2,0.42);
+          addRearLed(-0.62,1.0,bodyLength/2,0.42); addRearLed(0.62,1.0,bodyLength/2,0.42);
+        }
+      }
+      // 차체 아래쪽 스커트와 앞/뒤 디퓨저를 추가해 차가 바닥 위에 단단히 앉은 느낌을 줍니다.
+      if (!isMotorcycle && !isTank && !isHelicopter && !isExcavator) {
+        const underTrimMat = new THREE.MeshStandardMaterial({color:0x172124,metalness:0.55,roughness:0.42});
+        const highlightMat = new THREE.MeshStandardMaterial({color:0xd2e3e4,metalness:0.9,roughness:0.22});
+        for (const side of [-1,1]) {
+          add(new RoundedBoxGeometry(0.10,0.14,bodyLength*0.66,4,0.035),underTrimMat,side*(bodyWidth*0.48),0.40,0.02);
+          add(new THREE.BoxGeometry(0.025,0.035,bodyLength*0.55),highlightMat,side*(bodyWidth*0.49),0.50,0.02);
+        }
+        add(new RoundedBoxGeometry(bodyWidth*0.84,0.09,0.20,4,0.035),underTrimMat,0,0.39,-bodyLength*0.49);
+        add(new RoundedBoxGeometry(bodyWidth*0.72,0.10,0.18,4,0.035),underTrimMat,0,0.38,bodyLength*0.49);
+        for (let fin=-1;fin<=1;fin++) add(new THREE.BoxGeometry(0.055,0.09,0.30),highlightMat,fin*0.43,0.34,bodyLength*0.49-0.02);
+      }
+
+      // 바퀴와 금속 스포크. 이벤트 중장비는 더 크고 두꺼운 6륜 타이어를 사용합니다.
+      if (!isMotorcycle && !isTank && !isHelicopter && !isExcavator) for (const x of [-bodyWidth/2,bodyWidth/2]) for (const z of wheelZ) {
+        const wg = new THREE.Group(); wg.position.set(x, isHeavy?0.62:Math.max(0.46,wheelRadius+0.045),z); group.add(wg);
+        const r = wheelRadius;
+        addPart(wg,new THREE.CylinderGeometry(r,r,isHeavy?0.42:0.28,32),rubberMat,0,0,0,0,0,Math.PI/2);
+        addPart(wg,new THREE.CylinderGeometry(r*0.68,r*0.68,0.035,26),brakeDiscMat,0,0,0,0,0,Math.PI/2);
+        addPart(wg,new RoundedBoxGeometry(0.10,r*0.52,0.16,3,0.025),brakeCaliperMat,0,r*0.18,r*0.48);
+        addPart(wg,new THREE.TorusGeometry(r*0.72,0.04,10,36),rimMat2,0,0,0,0,Math.PI/2,0);
+        addPart(wg,new THREE.CylinderGeometry(r*0.25,r*0.25,isHeavy?0.45:0.31,18),rimMat2,0,0,0,0,0,Math.PI/2);
+        for(let k=0;k<8;k++) { const spoke=addPart(wg,new THREE.BoxGeometry(0.04,r*1.25,0.045),rimMat2,0,0,0); spoke.rotation.x=k*Math.PI/4; }
+        localWheels.push(wg);
+      }
+      group.scale.setScalar(vehicle.scale);
+      // 차량마다 타이어/궤도 반지름이 다르므로 바닥에 닿는 높이를 따로 맞춥니다.
+      const groundingOffset = isHelicopter ? -0.04 : (isMotorcycle ? -0.20 : (isFireTruck ? -0.12 : (isCrusher ? -0.13 : -0.18)));
+      group.position.y = groundingOffset;
+      group.userData.groundY = groundingOffset;
+      group.visible = false;
+      car.add(group);
+      return { group, wheels:localWheels };
+    }
+
+function initScene(){
+ const canvas=el('gameCanvas');scene=new THREE.Scene();scene.background=new THREE.Color(0x78918a);scene.fog=new THREE.Fog(0x78918a,300,760);
+ camera=new THREE.PerspectiveCamera(64,innerWidth/innerHeight,.1,1200);
+ renderer=new THREE.WebGLRenderer({canvas,antialias:innerWidth>700,powerPreference:'high-performance'});
+ renderer.setPixelRatio(Math.min(devicePixelRatio||1,selectedDevice==='mobile'?1.25:1.65));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=innerWidth>700;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.12;
+ scene.add(new THREE.HemisphereLight(0xdff7ec,0x26372c,2.0));
+ const sun=new THREE.DirectionalLight(0xffefcf,2.15);sun.position.set(-180,260,-160);sun.castShadow=innerWidth>700;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-360;sun.shadow.camera.right=360;sun.shadow.camera.top=360;sun.shadow.camera.bottom=-360;scene.add(sun);
+ const ground=new THREE.Mesh(new THREE.PlaneGeometry(1200,1400),new THREE.MeshStandardMaterial({color:0x315b3d,roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.18;ground.receiveShadow=true;scene.add(ground);
+ buildForestTrack();
+ clock=new THREE.Clock();window.addEventListener('resize',onResize);animate();
+}
+function makeOvalTrack(){
+ const segments=360,halfWidth=12,positions=[],indices=[],uv=[];
+ for(let i=0;i<=segments;i++){
+  const t=(i/segments)*Math.PI*2;const cx=TRACK_RX*Math.cos(t),cz=TRACK_RZ*Math.sin(t);const tx=-TRACK_RX*Math.sin(t),tz=TRACK_RZ*Math.cos(t);const len=Math.hypot(tx,tz);const nx=tz/len,nz=-tx/len;
+  for(const side of [-1,1]){positions.push(cx+nx*halfWidth*side,.015,cz+nz*halfWidth*side);uv.push(i/segments,side===-1?0:1);}
+ }
+ for(let i=0;i<segments;i++){const a=i*2,b=a+1,c=a+2,d=a+3;indices.push(a,c,b,b,c,d);}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(indices);g.computeVertexNormals();
+ const road=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:0x30383a,roughness:.93,side:THREE.DoubleSide}));road.receiveShadow=true;scene.add(road);
+ // 도로 가장자리의 밝은 선과 간격을 둔 중앙 차선 표시
+ const edgeMat=new THREE.MeshStandardMaterial({color:0xd8dfcf,roughness:.8});
+ for(const side of [-1,1]){
+  const pts=[];for(let i=0;i<=segments;i++){const t=i/segments*Math.PI*2;const cx=TRACK_RX*Math.cos(t),cz=TRACK_RZ*Math.sin(t),tx=-TRACK_RX*Math.sin(t),tz=TRACK_RZ*Math.cos(t),len=Math.hypot(tx,tz),nx=tz/len,nz=-tx/len;pts.push(new THREE.Vector3(cx+nx*halfWidth*side,.06,cz+nz*halfWidth*side));}
+  scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:0xdce4d6})))
+ }
+ const dashMat=new THREE.MeshStandardMaterial({color:0xf5e9be,emissive:0x332a15,roughness:.7});
+ for(let i=0;i<72;i++){const t=i/72*Math.PI*2;const cx=TRACK_RX*Math.cos(t),cz=TRACK_RZ*Math.sin(t),tx=-TRACK_RX*Math.sin(t),tz=TRACK_RZ*Math.cos(t);const yaw=Math.atan2(tx,tz);const dash=new THREE.Mesh(new THREE.BoxGeometry(.20,.035,3.1),dashMat);dash.position.set(cx,.065,cz);dash.rotation.y=yaw;scene.add(dash);}
+ const finish=new THREE.Mesh(new THREE.BoxGeometry(23,.10,1.5),new THREE.MeshStandardMaterial({color:0xdf2d36,emissive:0x4f0508,emissiveIntensity:.45}));finish.position.set(0,.085,-TRACK_RZ);scene.add(finish);
+ // 결승선의 흰색·빨간색 체크 패턴
+ const checkMatA=new THREE.MeshStandardMaterial({color:0xffffff}),checkMatB=new THREE.MeshStandardMaterial({color:0xb20f21});
+ for(let i=0;i<22;i++){const tile=new THREE.Mesh(new THREE.BoxGeometry(1.04,.025,1.48),i%2?checkMatA:checkMatB);tile.position.set(-11+i*1.04,.15,-TRACK_RZ);scene.add(tile);}
+}
+function buildForestTrack(){
+ makeOvalTrack();
+ const trunkGeo=new THREE.CylinderGeometry(.22,.34,3.7,7),leafGeo=new THREE.ConeGeometry(2.5,7.5,7);
+ const trunkMat=new THREE.MeshStandardMaterial({color:0x594330,roughness:1}),leafMat=new THREE.MeshStandardMaterial({color:0x1b5539,roughness:1});
+ const trunks=new THREE.InstancedMesh(trunkGeo,trunkMat,430),leaves=new THREE.InstancedMesh(leafGeo,leafMat,430);const dummy=new THREE.Object3D();let n=0;
+ for(let tries=0;tries<3000&&n<430;tries++){
+  const x=(Math.random()-.5)*980,z=(Math.random()-.5)*1180;const oval=Math.sqrt(x*x/(TRACK_RX*TRACK_RX)+z*z/(TRACK_RZ*TRACK_RZ));
+  if(oval>.84&&oval<1.20)continue;if(Math.abs(x)<28&&Math.abs(z+TRACK_RZ)<35)continue;
+  const scale=.75+Math.random()*1.25;dummy.position.set(x,1.5*scale,z);dummy.scale.setScalar(scale);dummy.rotation.y=Math.random()*Math.PI*2;dummy.updateMatrix();trunks.setMatrixAt(n,dummy.matrix);
+  dummy.position.y=6.1*scale;dummy.scale.setScalar(scale);dummy.updateMatrix();leaves.setMatrixAt(n,dummy.matrix);n++;
+ }
+ trunks.count=n;leaves.count=n;trunks.castShadow=false;leaves.castShadow=false;scene.add(trunks,leaves);
+ const mountains=new THREE.Mesh(new THREE.CylinderGeometry(700,780,80,48,1,true),new THREE.MeshStandardMaterial({color:0x49624d,side:THREE.BackSide,roughness:1}));mountains.position.y=5;scene.add(mountains);
+}
+function createNameSprite(name){
+ const c=document.createElement('canvas');c.width=512;c.height=128;const ctx=c.getContext('2d');ctx.fillStyle='rgba(4,20,19,.78)';roundRect(ctx,12,16,488,96,28);ctx.fill();ctx.strokeStyle='rgba(167,243,206,.65)';ctx.lineWidth=4;roundRect(ctx,12,16,488,96,28);ctx.stroke();ctx.fillStyle='#eafff4';ctx.font='bold 42px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(name.slice(0,18),256,64);const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false}));sprite.scale.set(7.5,1.9,1);sprite.position.y=5.0;return sprite;
+}
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function buildModel(root,vehicleId){
+ const vehicle=VEHICLES.find(v=>v.id===vehicleId)||VEHICLES[0];const oldCar=car;car=root;
+ let built;try{built=buildSelectableVehicle(vehicle);}finally{car=oldCar;}
+ built.group.visible=true;return built.group;
+}
+function makePlayerRoot(player){
+ const root=new THREE.Group();root.userData.playerId=player.id;root.userData.vehicleId=player.vehicleId;
+ const shadow=new THREE.Mesh(new THREE.CircleGeometry(2.6,32),new THREE.MeshBasicMaterial({color:0x08110d,transparent:true,opacity:.30,depthWrite:false}));shadow.rotation.x=-Math.PI/2;shadow.position.y=-.105;root.add(shadow);
+ const model=buildModel(root,player.vehicleId);const label=createNameSprite(player.name);root.add(label);root.userData.model=model;root.userData.label=label;scene.add(root);return root;
+}
+function updateVehicleOnRoot(root,vehicleId){
+ const current=root.userData.model;if(current)root.remove(current);const model=buildModel(root,vehicleId);root.userData.model=model;}
+function syncPlayerVisuals(players){
+ if(!scene||!players)return;
+ const seen=new Set();
+ for(const p of players){seen.add(p.id);
+  if(p.id===localPlayerId){if(!localRoot){localRoot=makePlayerRoot(p);localRoot.userData.isLocal=true;}if(localRoot.userData.vehicleId!==p.vehicleId){updateVehicleOnRoot(localRoot,p.vehicleId);localRoot.userData.vehicleId=p.vehicleId;}targetLocal={x:p.x,z:p.z,yaw:p.yaw,speed:p.speed};el('speedValue').textContent=String(Math.round(Math.abs(p.speed)*3.6));}
+  else{let entry=remotePlayers.get(p.id);if(!entry){const root=makePlayerRoot(p);root.userData.vehicleId=p.vehicleId;entry={root,target:{x:p.x,z:p.z,yaw:p.yaw},name:p.name};remotePlayers.set(p.id,entry);}if(entry.root.userData.vehicleId!==p.vehicleId){updateVehicleOnRoot(entry.root,p.vehicleId);entry.root.userData.vehicleId=p.vehicleId;}entry.target={x:p.x,z:p.z,yaw:p.yaw};entry.root.userData.label.material.rotation=0;}
+ }
+ for(const [id,entry] of remotePlayers){if(!seen.has(id)){scene.remove(entry.root);entry.root.traverse(o=>{if(o.isSprite)o.material.map?.dispose();});remotePlayers.delete(id);}}
+ const list=players.map(p=>`<div>${p.host?'👑 ':''}${escapeHtml(p.name)}${p.id===localPlayerId?' (나)':''}</div>`).join('');el('onlineList').innerHTML=list;el('driverCount').textContent=`${players.length}/8`;
+}
+function lerpAngle(a,b,t){let d=((b-a+Math.PI*3)%(Math.PI*2))-Math.PI;return a+d*t;}
+function animate(){requestAnimationFrame(animate);if(!renderer||!scene||!camera)return;const dt=Math.min(.05,clock.getDelta());
+ if(localRoot&&targetLocal){localRoot.position.x=THREE.MathUtils.lerp(localRoot.position.x,targetLocal.x,.42);localRoot.position.z=THREE.MathUtils.lerp(localRoot.position.z,targetLocal.z,.42);localRoot.rotation.y=lerpAngle(localRoot.rotation.y,targetLocal.yaw,.35);if(localRoot.userData.model?.userData?.mainRotor)localRoot.userData.model.userData.mainRotor.rotation.y+=dt*12;}
+ for(const entry of remotePlayers.values()){const t=entry.target;entry.root.position.x=THREE.MathUtils.lerp(entry.root.position.x,t.x,.34);entry.root.position.z=THREE.MathUtils.lerp(entry.root.position.z,t.z,.34);entry.root.rotation.y=lerpAngle(entry.root.rotation.y,t.yaw,.34);}
+ if(localRoot){const yaw=localRoot.rotation.y;const desired=new THREE.Vector3(localRoot.position.x-Math.sin(yaw)*13,7.3,localRoot.position.z+Math.cos(yaw)*13);camera.position.lerp(desired,.10);camera.lookAt(localRoot.position.x,1.5,localRoot.position.z);}
+ renderer.render(scene,camera);
+}
+function onResize(){if(!renderer||!camera)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio||1,innerWidth<850?1.25:1.65));}
+</script>
+</body></html>
