@@ -322,10 +322,10 @@ function updateTuneControls(tune){
 function updateMapDescription(){
  const map=TRACK_BY_ID.get(currentMapId)||TRACKS[0];
  el('mapDescription').textContent=map.description;
- el('mapMeta').textContent=`난이도: ${map.difficulty} · 도로 폭: ${map.width}m · 웨이포인트: ${map.points.length}개`;
+ el('mapMeta').textContent=`도로 폭: ${map.width}m · 코스 포인트: ${map.points.length}개`;
 }
 function fillMapSelector(){
- el('mapSelect').innerHTML=TRACKS.map(t=>`<option value="${t.id}">${t.name} · ${t.difficulty}</option>`).join('');
+ el('mapSelect').innerHTML=TRACKS.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
  el('mapSelect').value=currentMapId;updateMapDescription();
 }
 function chooseMap(mapId, fromServer=false){
