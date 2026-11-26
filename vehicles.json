@@ -13,7 +13,9 @@
     "color": 12108744,
     "body": "sedan",
     "scale": 1,
-    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일"
+    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
+    "collisionLength": 5.0,
+    "collisionWidth": 2.0
   },
   {
     "id": "tesla3",
@@ -29,7 +31,9 @@
     "color": 10135476,
     "body": "sedan",
     "scale": 0.97,
-    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일"
+    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
+    "collisionLength": 4.9,
+    "collisionWidth": 1.98
   },
   {
     "id": "ioniq6",
@@ -45,7 +49,9 @@
     "color": 5464427,
     "body": "streamline",
     "scale": 1,
-    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일"
+    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
+    "collisionLength": 5.16,
+    "collisionWidth": 1.96
   },
   {
     "id": "ev6",
@@ -61,7 +67,9 @@
     "color": 7440255,
     "body": "crossover",
     "scale": 1,
-    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일"
+    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
+    "collisionLength": 4.78,
+    "collisionWidth": 2.12
   },
   {
     "id": "taycan",
@@ -77,7 +85,9 @@
     "color": 3767226,
     "body": "sports",
     "scale": 0.94,
-    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일"
+    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
+    "collisionLength": 4.96,
+    "collisionWidth": 2.02
   },
   {
     "id": "supra",
@@ -93,7 +103,9 @@
     "color": 14240562,
     "body": "coupe",
     "scale": 0.92,
-    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일"
+    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
+    "collisionLength": 4.48,
+    "collisionWidth": 2.04
   },
   {
     "id": "toyotaPriusHybrid",
@@ -110,7 +122,9 @@
     "body": "hatchback",
     "scale": 0.98,
     "hybrid": true,
-    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일"
+    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
+    "collisionLength": 4.65,
+    "collisionWidth": 1.84
   },
   {
     "id": "jeepWrangler",
@@ -126,7 +140,9 @@
     "color": 12684101,
     "body": "offroad",
     "scale": 1.04,
-    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일"
+    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
+    "collisionLength": 4.35,
+    "collisionWidth": 1.96
   },
   {
     "id": "mazdaMx5",
@@ -142,7 +158,9 @@
     "color": 12005186,
     "body": "lightRoadster",
     "scale": 0.92,
-    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일"
+    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
+    "collisionLength": 3.92,
+    "collisionWidth": 1.76
   },
   {
     "id": "eventTruck",
@@ -158,7 +176,9 @@
     "color": 14001732,
     "body": "truck",
     "scale": 1.13,
-    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일"
+    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
+    "collisionLength": 5.9,
+    "collisionWidth": 2.35
   },
   {
     "id": "subaruWRX",
@@ -175,6 +195,8 @@
     "body": "sedan",
     "scale": 0.98,
     "rally": true,
-    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일"
+    "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
+    "collisionLength": 4.72,
+    "collisionWidth": 1.96
   }
 ]

@@ -32,10 +32,10 @@
 /* ===== RACING DASHBOARD: 오리지널 모터스포츠 스타일 계기판 ===== */
 .right-hud{top:245px;right:12px}.racing-dash{position:fixed;z-index:12;left:50%;bottom:14px;transform:translateX(-50%);width:min(610px,calc(100vw - 300px));min-width:420px;display:none;grid-template-columns:112px 1fr 112px;gap:12px;align-items:center;padding:12px 16px;border:1px solid #d6fff04a;border-radius:18px;background:linear-gradient(145deg,rgba(3,14,17,.94),rgba(9,34,32,.88));box-shadow:0 12px 42px #0008,inset 0 1px #ffffff18;backdrop-filter:blur(12px);pointer-events:none}
 .racing-dash.show{display:grid}.dash-side{display:flex;flex-direction:column;gap:7px}.dash-label{font-size:8px;letter-spacing:.16em;font-weight:950;color:#9bbcaf}.dash-value{font-size:15px;font-weight:950;color:#f1fff7;font-variant-numeric:tabular-nums}.dash-value.mint{color:#9df5c9}.dash-value.gold{color:#ffdf83}.dash-center{text-align:center;min-width:0}.dash-speed{font-size:64px;line-height:.95;font-weight:1000;letter-spacing:-.06em;color:#f5fff9;font-variant-numeric:tabular-nums;text-shadow:0 0 24px #a7f3ce32}.dash-unit{font-size:10px;letter-spacing:.2em;color:#a7c5b6;font-weight:900}.dash-rpm{height:7px;background:#ffffff18;border-radius:99px;overflow:hidden;margin:9px 4px 4px}.dash-rpm>span{display:block;height:100%;width:0;background:linear-gradient(90deg,#a7f3ce 0%,#ffe08a 72%,#ff7474 100%);border-radius:99px;transition:width .12s}.dash-meta{display:flex;justify-content:center;gap:12px;font-size:9px;color:#c4dbce}.dash-meta b{color:#fff}.dash-gear{font-size:28px;line-height:1;font-weight:1000;color:#ffe08a}.dash-mini{display:grid;grid-template-columns:1fr 1fr;gap:5px}.dash-mini>div{padding:5px 6px;border:1px solid #ffffff14;border-radius:7px;background:#ffffff08}.dash-mini .dash-label{font-size:7px}.dash-mini .dash-value{font-size:11px}
-.track-map{position:fixed;z-index:11;top:12px;right:12px;width:220px;padding:9px;border:1px solid #d6fff044;border-radius:15px;background:rgba(3,16,18,.88);box-shadow:0 10px 32px #0007;backdrop-filter:blur(10px);display:none;pointer-events:none}.track-map.show{display:block}.track-map-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}.track-map-head b{font-size:9px;letter-spacing:.14em;color:#dfffee}.track-map-head span{font-size:8px;color:#9bbcaf}.track-map canvas{width:100%;height:164px;display:block;border-radius:9px;background:radial-gradient(ellipse at center,#183b32,#081b1b)}.map-legend{display:flex;justify-content:space-between;gap:7px;margin-top:6px;font-size:8px;color:#c1d9cb}.map-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;background:#a7f3ce}.map-dot.other{background:#ffdc7a}
+.track-map{position:fixed;z-index:11;top:12px;right:12px;width:220px;padding:9px;border:1px solid #d6fff044;border-radius:15px;background:rgba(3,16,18,.88);box-shadow:0 10px 32px #0007;backdrop-filter:blur(10px);display:none;pointer-events:none}.track-map.show{display:block}.track-map-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}.track-map-head b{font-size:9px;letter-spacing:.14em;color:#dfffee}.track-map-head span{font-size:8px;color:#9bbcaf}.track-map canvas{width:100%;height:auto;aspect-ratio:440 / 328;display:block;border-radius:9px;background:radial-gradient(ellipse at center,#183b32,#081b1b)}.map-legend{display:flex;justify-content:space-between;gap:7px;margin-top:6px;font-size:8px;color:#c1d9cb}.map-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;background:#a7f3ce}.map-dot.other{background:#ffdc7a}
 .dash-driver-strip{position:fixed;z-index:10;left:12px;top:12px;display:none;max-width:180px;padding:8px 10px;border:1px solid #ffffff22;border-radius:12px;background:rgba(3,16,18,.82);backdrop-filter:blur(8px);pointer-events:none}.dash-driver-strip.show{display:block}.dash-driver-strip b{display:block;font-size:8px;letter-spacing:.12em;color:#a7f3ce}.dash-driver-strip span{display:block;font-size:10px;color:#e9fff2;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:850px){.track-map{top:7px;right:7px;width:146px;padding:6px}.track-map canvas{height:108px}.track-map-head b{font-size:8px}.map-legend{font-size:7px}.racing-dash{width:min(440px,calc(100vw - 18px));min-width:0;bottom:112px;grid-template-columns:64px 1fr 64px;gap:7px;padding:8px 10px}.dash-speed{font-size:44px}.dash-gear{font-size:22px}.dash-side{gap:4px}.dash-value{font-size:12px}.dash-mini{gap:3px}.dash-mini>div{padding:3px}.dash-mini .dash-value{font-size:9px}.dash-driver-strip{top:128px;left:7px;max-width:135px}.right-hud{top:220px;right:7px;bottom:auto;max-width:140px}}
-@media(max-width:480px){.race-hud{top:7px;left:7px;transform:none;width:calc(100vw - 145px);max-width:none;gap:3px}.race-hud>div{min-width:0;flex:1}.racing-dash{bottom:112px;width:calc(100vw - 12px);grid-template-columns:52px 1fr 58px;gap:5px;padding:7px}.dash-speed{font-size:38px}.dash-unit{font-size:8px}.dash-meta{gap:7px;font-size:8px}.dash-label{font-size:7px}.dash-value{font-size:10px}.dash-mini .dash-label{font-size:6px}.dash-mini .dash-value{font-size:8px}.track-map{width:126px}.track-map canvas{height:92px}.dash-driver-strip{display:none!important}.right-hud{top:178px;max-width:116px;padding:6px}.online-list{font-size:8px}}
+@media(max-width:850px){.track-map{top:7px;right:7px;width:146px;padding:6px}.track-map canvas{height:auto}.track-map-head b{font-size:8px}.map-legend{font-size:7px}.racing-dash{width:min(440px,calc(100vw - 18px));min-width:0;bottom:112px;grid-template-columns:64px 1fr 64px;gap:7px;padding:8px 10px}.dash-speed{font-size:44px}.dash-gear{font-size:22px}.dash-side{gap:4px}.dash-value{font-size:12px}.dash-mini{gap:3px}.dash-mini>div{padding:3px}.dash-mini .dash-value{font-size:9px}.dash-driver-strip{top:128px;left:7px;max-width:135px}.right-hud{top:220px;right:7px;bottom:auto;max-width:140px}}
+@media(max-width:480px){.race-hud{top:7px;left:7px;transform:none;width:calc(100vw - 145px);max-width:none;gap:3px}.race-hud>div{min-width:0;flex:1}.racing-dash{bottom:112px;width:calc(100vw - 12px);grid-template-columns:52px 1fr 58px;gap:5px;padding:7px}.dash-speed{font-size:38px}.dash-unit{font-size:8px}.dash-meta{gap:7px;font-size:8px}.dash-label{font-size:7px}.dash-value{font-size:10px}.dash-mini .dash-label{font-size:6px}.dash-mini .dash-value{font-size:8px}.track-map{width:126px}.track-map canvas{height:auto}.dash-driver-strip{display:none!important}.right-hud{top:178px;max-width:116px;padding:6px}.online-list{font-size:8px}}
 
 
 .lap-times-panel{position:fixed;z-index:10;top:64px;left:12px;min-width:120px;max-width:190px;padding:9px 11px;border:1px solid #c9ead42c;border-radius:11px;background:rgba(4,20,19,.82);backdrop-filter:blur(9px);color:#e7f7ee;font-size:10px;display:none;pointer-events:none}.lap-times-panel.show{display:block}.lap-times-panel>b{display:block;color:#a7f3ce;font-size:9px;letter-spacing:.08em;margin-bottom:5px}.lap-time-row{display:flex;justify-content:space-between;gap:12px;padding:2px 0}.lap-time-row span:last-child{font-variant-numeric:tabular-nums;font-weight:800}.start-countdown{position:fixed;z-index:50;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(2,10,12,.56);backdrop-filter:blur(5px);color:white;pointer-events:none}.start-countdown.show{display:flex}.countdown-kicker{font-size:11px;font-weight:900;letter-spacing:.2em;color:#a7f3ce}.start-countdown strong{font-size:clamp(100px,24vw,220px);line-height:1;font-weight:1000;text-shadow:0 8px 40px #000}.start-countdown span{font-size:16px;font-weight:800;letter-spacing:.15em}
@@ -146,12 +146,21 @@ let lastInputAt = 0;
 let toastTimer = null;
 let cameraInitialized = false;
 let lastRaceHudUpdate = 0;
+let serverClockOffsetMs = 0;
+let hasServerClock = false;
+let displayedRpm = 850;
+let countdownAnchorKey = null;
+let countdownStartedAtPerf = 0;
+let goBannerKey = null;
+let goBannerUntilPerf = 0;
 const keyMap = { KeyW:'forward', ArrowUp:'forward', KeyS:'reverse', ArrowDown:'reverse', KeyA:'left', ArrowLeft:'left', KeyD:'right', ArrowRight:'right', Space:'brake' };
 
 function el(id){ return document.getElementById(id); }
 function send(data){ if(socket && socket.readyState===WebSocket.OPEN) socket.send(JSON.stringify(data)); else setStatus('서버와 연결되지 않았습니다. 서버 주소와 배포 상태를 확인해 주세요.'); }
 function setStatus(message){ el('connectionStatus').textContent=message; }
 function showToast(message){ const t=el('toast'); t.textContent=message; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2100); }
+function syncServerClock(serverTime){ if(!Number.isFinite(Number(serverTime)))return; const sample=Number(serverTime)-Date.now(); serverClockOffsetMs=hasServerClock?serverClockOffsetMs*0.7+sample*0.3:sample; hasServerClock=true; }
+function serverNow(){ return Date.now()+(hasServerClock?serverClockOffsetMs:0); }
 
 // ===== TUNING SYSTEM: 슬라이더 값을 게임 서버로 전달합니다. =====
 function renderTuneFields(){
@@ -181,6 +190,7 @@ function chooseMap(mapId, fromServer=false){
  if(!TRACK_BY_ID.has(mapId))return;
  currentMapId=mapId;el('mapSelect').value=mapId;updateMapDescription();
  if(scene)buildForestTrack();
+ if(el('trackMapPanel')?.classList.contains('show'))drawTrackMap(latestPlayers);
  if(roomCode&&!fromServer&&!roomStarted)send({type:'select-map',mapId});
 }
 function renderGarage(){
@@ -211,6 +221,7 @@ function connectServer(){
  socket.addEventListener('error',()=>{setStatus('서버에 연결할 수 없습니다. 아직 Node.js 서버를 배포하지 않았거나 서버가 꺼져 있을 수 있습니다.');});
 }
 function handleServerMessage(msg){
+ if(Number.isFinite(msg.serverTime))syncServerClock(msg.serverTime);
  if(msg.type==='connected'){setStatus(msg.message||'연결 완료');return;}
  if(msg.type==='error'){setStatus(msg.message);showToast(msg.message);return;}
  if(msg.type==='room-created'||msg.type==='room-joined'){roomCode=msg.roomCode;localPlayerId=msg.playerId;el('roomCodeLabel').textContent=roomCode;showToast(msg.type==='room-created'?'레이스 방을 만들었습니다!':'레이스 방에 참가했습니다!');return;}
@@ -222,12 +233,12 @@ function handleServerMessage(msg){
   const me=latestPlayers.find(p=>p.id===localPlayerId);if(me?.tune)updateTuneControls(me.tune);
   if(!localPlayerId){const me=latestPlayers.find(p=>p.name===el('playerName').value.trim());if(me)localPlayerId=me.id;}
   updateLobby(msg); if(roomStarted) enterGame(); else returnToLobbyView();
-  syncPlayerVisuals(latestPlayers,newRaceStart); updateRaceHud(latestPlayers,raceState);
+  syncPlayerVisuals(latestPlayers,newRaceStart); updateRaceHud(latestPlayers,raceState); updateRacingDashboard();
   if(raceState?.status==='finished') showRaceResults(raceState.results||[]);
   return;
  }
  if(msg.type==='snapshot'){
-  latestPlayers=msg.players||[];raceState=msg.race||raceState;syncPlayerVisuals(latestPlayers);updateRaceHud(latestPlayers,raceState);return;
+  latestPlayers=msg.players||[];raceState=msg.race||raceState;syncPlayerVisuals(latestPlayers);updateRaceHud(latestPlayers,raceState);updateRacingDashboard();return;
  }
  if(msg.type==='race-finished'){
   raceState=msg.race||raceState;showRaceResults(msg.results||raceState?.results||[]);return;
@@ -237,28 +248,132 @@ function handleServerMessage(msg){
 function formatTime(ms){const safe=Math.max(0,Math.floor(ms||0));const m=Math.floor(safe/60000);const s=Math.floor((safe%60000)/1000);const d=Math.floor((safe%1000)/100);return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${d}`;}
 function updateRaceHud(players,race){
  const countdown=el('startCountdown');
- if(!race){el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');countdown.classList.remove('show');return;}
+ if(!race){countdownAnchorKey=null;goBannerKey=null;el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');countdown.classList.remove('show');drawTrackMap(players||[]);return;}
+ const now=serverNow();
  if(race.status==='countdown'){
+  const key=String(race.countdownEndsAt||'new-countdown');
+  // 서버/브라우저 시계 차이가 있어도 카운트다운은 받은 순간부터 3, 2, 1로 표시합니다.
+  // 같은 레이스의 스냅샷이 계속 도착해도 시작점은 다시 설정하지 않습니다.
+  if(key!==countdownAnchorKey){countdownAnchorKey=key;countdownStartedAtPerf=performance.now();}
+  const elapsed=Math.max(0,performance.now()-countdownStartedAtPerf);
+  const left=Math.max(0,3000-elapsed);
+  const number=Math.max(1,3-Math.floor(elapsed/1000));
   el('raceHud').classList.add('show');el('raceTimeValue').textContent='출발 준비';
-  const left=Math.max(0,(race.countdownEndsAt||Date.now())-Date.now());
-  const number=Math.max(1,Math.ceil(left/1000));el('countdownNumber').textContent=number>0?String(number):'GO!';countdown.classList.add('show');
- }else{countdown.classList.remove('show');}
- if(race.status==='finished'){el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');return;}
+  el('countdownNumber').textContent=left>35?String(number):'GO!';countdown.classList.add('show');
+ }else if(race.status==='running'&&race.goBannerUntil){
+  countdownAnchorKey=null;
+  const key=String(race.goBannerUntil);
+  if(key!==goBannerKey){goBannerKey=key;goBannerUntilPerf=performance.now()+550;}
+  if(performance.now()<goBannerUntilPerf){el('countdownNumber').textContent='GO!';countdown.classList.add('show');}
+  else countdown.classList.remove('show');
+ }else{countdownAnchorKey=null;countdown.classList.remove('show');}
+ if(race.status==='finished'){countdownAnchorKey=null;el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');drawTrackMap(players||[]);return;}
  if(race.status==='running'){
   el('raceHud').classList.add('show');
-  if(race.finishWindowEndsAt){el('raceTimeValue').textContent=`마감 ${Math.max(0,(race.finishWindowEndsAt-Date.now())/1000).toFixed(1)}초`;}
+  if(race.finishWindowEndsAt){el('raceTimeValue').textContent=`마감 ${Math.max(0,(race.finishWindowEndsAt-now)/1000).toFixed(1)}초`;}
   else el('raceTimeValue').textContent=race.firstFinisherId?'완주 대기':'진행 중';
  }
- const me=(players||[]).find(p=>p.id===localPlayerId);
+ const list=players||[];
+ const me=list.find(p=>p.id===localPlayerId);
  const lapsToWin=race.lapsToWin||3;
  if(me){
-  el('raceLapValue').textContent=`${Math.min(lapsToWin,(me.lapsCompleted||0)+1)} / ${lapsToWin}`;
-  el('racePositionValue').textContent=`${me.position||1} / ${players.length}`;
+  el('raceLapValue').textContent=me.finished?`완주 ${lapsToWin}/${lapsToWin}`:`${Math.min(lapsToWin,(me.lapsCompleted||0)+1)} / ${lapsToWin}`;
+  el('racePositionValue').textContent=`${me.position||1} / ${list.length}`;
   el('raceCollisionValue').textContent=String(me.collisions||0);
   const times=me.lapTimes||[];el('lapTimesList').innerHTML=times.length?times.map((t,i)=>`<div class="lap-time-row"><span>${i+1} LAP</span><span>${formatTime(t)}</span></div>`).join(''):'아직 기록이 없습니다.';
   el('lapTimesPanel').classList.add('show');
  }
+ drawTrackMap(list);
 }
+
+function sampleTrackForMap(track, steps=18){
+ const pts=track.points||[],out=[],n=pts.length;if(n<2)return pts.map(p=>({x:p[0],z:p[1]}));
+ for(let i=0;i<n;i++){
+  const p0=pts[(i-1+n)%n],p1=pts[i],p2=pts[(i+1)%n],p3=pts[(i+2)%n];
+  for(let step=0;step<steps;step++){
+   const t=step/steps,t2=t*t,t3=t2*t;
+   const x=.5*((2*p1[0])+(-p0[0]+p2[0])*t+(2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*t2+(-p0[0]+3*p1[0]-3*p2[0]+p3[0])*t3);
+   const z=.5*((2*p1[1])+(-p0[1]+p2[1])*t+(2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*t2+(-p0[1]+3*p1[1]-3*p2[1]+p3[1])*t3);
+   out.push({x,z});
+  }
+ }
+ return out;
+}
+function drawTrackMap(players){
+ const canvas=el('trackMapCanvas');if(!canvas)return;
+ const ctx=canvas.getContext('2d');if(!ctx)return;
+ const map=TRACK_BY_ID.get(currentMapId)||TRACKS[0];
+ const points=sampleTrackForMap(map);
+ const w=canvas.width,h=canvas.height,pad=34;
+ ctx.clearRect(0,0,w,h);ctx.fillStyle='#0b201d';ctx.fillRect(0,0,w,h);
+ if(points.length<2){ctx.fillStyle='#c8ded2';ctx.font='18px system-ui';ctx.textAlign='center';ctx.fillText('MAP DATA NOT FOUND',w/2,h/2);return;}
+ let minX=Infinity,maxX=-Infinity,minZ=Infinity,maxZ=-Infinity;
+ for(const p of points){minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x);minZ=Math.min(minZ,p.z);maxZ=Math.max(maxZ,p.z);}
+ const rangeX=Math.max(1,maxX-minX),rangeZ=Math.max(1,maxZ-minZ);
+ const scale=Math.min((w-pad*2)/rangeX,(h-pad*2)/rangeZ);
+ const offsetX=(w-rangeX*scale)/2-minX*scale;
+ const offsetY=(h-rangeZ*scale)/2-minZ*scale;
+ const toCanvas=p=>({x:offsetX+p.x*scale,y:offsetY+p.z*scale});
+ const drawPath=()=>{ctx.beginPath();points.forEach((p,i)=>{const q=toCanvas(p);if(i===0)ctx.moveTo(q.x,q.y);else ctx.lineTo(q.x,q.y);});ctx.closePath();};
+ ctx.save();ctx.lineJoin='round';ctx.lineCap='round';drawPath();
+ ctx.strokeStyle='#62766c';ctx.lineWidth=Math.max(8,map.width*scale+7);ctx.stroke();
+ ctx.strokeStyle='#273b36';ctx.lineWidth=Math.max(5,map.width*scale-1);ctx.stroke();
+ ctx.strokeStyle='rgba(224,235,222,.60)';ctx.lineWidth=1.5;ctx.setLineDash([5,6]);ctx.stroke();ctx.setLineDash([]);
+ // 출발선을 코스의 첫 웨이포인트 부근에 표시합니다.
+ const start=toCanvas(points[0]),next=toCanvas(points[1]);
+ const angle=Math.atan2(next.y-start.y,next.x-start.x)+Math.PI/2;
+ ctx.save();ctx.translate(start.x,start.y);ctx.rotate(angle);ctx.fillStyle='#f6f4e8';ctx.fillRect(-map.width*scale*.42,-4,Math.max(3,map.width*scale*.84),8);ctx.restore();
+ ctx.restore();
+ for(const p of (players||[])){
+  if(!Number.isFinite(Number(p.x))||!Number.isFinite(Number(p.z)))continue;
+  const q=toCanvas({x:Number(p.x),z:Number(p.z)});
+  const isMe=p.id===localPlayerId;
+  ctx.save();ctx.translate(q.x,q.y);ctx.rotate(-Number(p.yaw||0));
+  ctx.shadowColor=isMe?'#a7f3ce':'#ffdc7a';ctx.shadowBlur=9;
+  ctx.fillStyle=isMe?'#a7f3ce':'#ffdc7a';
+  ctx.beginPath();ctx.moveTo(0,-8);ctx.lineTo(-5,5);ctx.lineTo(0,3);ctx.lineTo(5,5);ctx.closePath();ctx.fill();
+  ctx.restore();
+ }
+ el('trackMapName').textContent=map.name||'TRACK';
+ el('mapPlayerCount').textContent=`${(players||[]).length} DRIVERS`;
+}
+
+function updateRacingDashboard(){
+ if(!roomStarted)return;
+ const me=latestPlayers.find(p=>p.id===localPlayerId);
+ if(!me)return;
+ const speedMs=Number(me.speed)||0;
+ const speedKmh=Math.abs(speedMs)*3.6;
+ const tune=me.tune||DEFAULT_TUNE;
+ const maxKmh=Math.max(1,(Number(tune.topSpeed)||DEFAULT_TUNE.topSpeed)*3.6);
+ const vehicle=VEHICLES.find(v=>v.id===me.vehicleId)||VEHICLES[0];
+ const input=me.id===localPlayerId?controls:(me.controls||{});
+ const throttle=input.forward?100:(input.reverse&&speedMs<=0?35:0);
+ const brake=(input.brake||(input.reverse&&speedMs>0.4))?100:0;
+ const steer=input.left?-100:(input.right?100:0);
+ const gear=(speedMs < -0.6||(input.reverse&&speedMs<=0.6))?'R':(speedKmh<1.2&&!input.forward?'N':String(Math.max(1,Math.min(6,Math.floor(speedKmh/Math.max(1,maxKmh/6))+1))));
+ const gearNumber=Number(gear)||1;
+ const gearFraction=gear==='R'?Math.min(1,speedKmh/24):Math.max(0,Math.min(1,(speedKmh-(gearNumber-1)*(maxKmh/6))/(maxKmh/6)));
+ const rpmTarget=gear==='N'?850:Math.round(850+gearFraction*6000+(throttle>0&&speedKmh<5?900:0));
+ displayedRpm+=(rpmTarget-displayedRpm)*0.24;
+ const shownSpeed=Math.round(speedKmh);
+ el('dashSpeed').textContent=String(shownSpeed).padStart(3,'0');
+ if(el('speedValue'))el('speedValue').textContent=String(shownSpeed);
+ el('dashGear').textContent=gear;
+ el('dashRpmText').textContent=String(Math.round(displayedRpm)).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+ el('dashRpmBar').style.width=`${Math.max(0,Math.min(100,displayedRpm/7000*100))}%`;
+ el('dashThrottle').textContent=`${throttle}%`;el('dashBrake').textContent=`${brake}%`;el('dashSteer').textContent=`${steer}%`;
+ const laps=Number(raceState?.lapsToWin||3);
+ el('dashLap').textContent=me.finished?`FIN ${laps}/${laps}`:`${Math.min(laps,(me.lapsCompleted||0)+1)}/${laps}`;
+ el('dashPosition').textContent=`${me.position||1}/${latestPlayers.length||1}`;
+ el('dashBest').textContent=me.bestLapMs?formatTime(me.bestLapMs):'--:--';
+ el('dashPenalty').textContent=`${((me.penaltyMs||0)/1000).toFixed(1)}s`;
+ el('dashCarName').textContent=`${vehicle.short||vehicle.name} · ${vehicle.kind||'차량'}`;
+ const surface=me.surface==='grass'?'잔디':(me.surface==='dirt'?'흙·모래':'아스팔트');
+ const boost=Number(me.boostRemaining)>0?` · BOOST ${Number(me.boostRemaining).toFixed(1)}s`:'';
+ el('dashStatusLine').textContent=`${surface} · ${me.finished?'완주':(raceState?.status==='countdown'?'출발 대기':'주행 중')}${boost}`;
+}
+
 function showRaceResults(results){
  if(raceResultsShown)return;raceResultsShown=true;el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');el('startCountdown').classList.remove('show');el('boostHud').classList.remove('show');
  const rows=[...(results||[])].sort((a,b)=>a.rank-b.rank);
@@ -285,7 +400,8 @@ function createRoom(){if(!connected)return;send({type:'create-room',name:el('pla
 function joinRoom(){if(!connected)return;const code=el('roomCodeInput').value.trim().toUpperCase();if(code.length!==5){setStatus('방 코드는 다섯 글자입니다.');return;}send({type:'join-room',name:el('playerName').value,vehicleId:selectedVehicleId,roomCode:code,tune:currentTune});}
 function enterGame(){
  el('startOverlay').style.display='none';el('gameHud').classList.add('show');el('rightHud').classList.add('show');el('gameButtons').classList.add('show');el('raceResultOverlay').classList.remove('show');raceResultsShown=false;
- el('mobileControls').classList.toggle('show',selectedDevice==='mobile');el('racingDash').classList.add('show');el('trackMapPanel').classList.add('show');el('dashDriverStrip').classList.add('show');el('hudRoomCode').textContent=roomCode;showToast('3초 카운트다운 후 출발합니다!');
+ if(document.activeElement&&typeof document.activeElement.blur==='function')document.activeElement.blur();
+ el('mobileControls').classList.toggle('show',selectedDevice==='mobile');el('racingDash').classList.add('show');el('trackMapPanel').classList.add('show');el('dashDriverStrip').classList.add('show');el('hudRoomCode').textContent=roomCode;drawTrackMap(latestPlayers);updateRacingDashboard();showToast('3초 카운트다운 후 출발합니다!');
 }
 function returnToLobbyView(){
  el('startOverlay').style.display='flex';el('gameHud').classList.remove('show');el('rightHud').classList.remove('show');el('gameButtons').classList.remove('show');el('mobileControls').classList.remove('show');el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');el('startCountdown').classList.remove('show');el('boostHud').classList.remove('show');el('racingDash').classList.remove('show');el('trackMapPanel').classList.remove('show');el('dashDriverStrip').classList.remove('show');el('raceResultOverlay').classList.remove('show');raceResultsShown=false;raceState=null;controls={forward:false,reverse:false,left:false,right:false,brake:false};
@@ -331,6 +447,8 @@ async function loadThree(){
  for(const url of urls){try{return await import(url)}catch(err){lastError=err;console.warn('Three.js CDN failed:',url,err);}}
  throw lastError||new Error('Three.js 엔진을 불러오지 못했습니다.');
 }
+// 온라인 HUD 루프를 먼저 시작합니다. Three.js CDN이 느리거나 차단되어도 UI는 계속 갱신됩니다.
+animate();
 try{
  THREE=await loadThree();
  // 원본 차량 제작기의 RoundedBoxGeometry 자리에 기본 BoxGeometry를 둡니다. 모델별 비율과 부품 구성은 그대로 사용합니다.
@@ -1028,7 +1146,7 @@ function initScene(){
  const sun=new THREE.DirectionalLight(0xffefcf,2.15);sun.position.set(-180,260,-160);sun.castShadow=innerWidth>700;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-360;sun.shadow.camera.right=360;sun.shadow.camera.top=360;sun.shadow.camera.bottom=-360;scene.add(sun);
  const ground=new THREE.Mesh(new THREE.PlaneGeometry(1200,1400),new THREE.MeshStandardMaterial({color:0x315b3d,roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.18;ground.receiveShadow=true;scene.add(ground);
  buildForestTrack();
- clock=new THREE.Clock();window.addEventListener('resize',onResize);animate();
+ clock=new THREE.Clock();window.addEventListener('resize',onResize);
 }
 // ===== MAP SYSTEM: tracks.json의 웨이포인트로 10개 트랙을 그립니다. =====
 function sampleTrackForDrawing(track){
@@ -1119,12 +1237,16 @@ function syncPlayerVisuals(players,snap=false){
  const list=players.slice().sort((a,b)=>(a.position||99)-(b.position||99)).map(p=>`<div>${p.position||'-'}. ${p.host?'👑 ':''}${escapeHtml(p.name)}${p.id===localPlayerId?' (나)':''}</div>`).join('');el('onlineList').innerHTML=list;el('driverCount').textContent=`${players.length}/8`;
 }
 function lerpAngle(a,b,t){let d=((b-a+Math.PI*3)%(Math.PI*2))-Math.PI;return a+d*t;}
-function animate(){requestAnimationFrame(animate);if(!renderer||!scene||!camera)return;const dt=Math.min(.05,clock.getDelta());
+function animate(){requestAnimationFrame(animate);
+ // 계기판/랩 HUD는 3D 엔진 렌더러 상태와 독립적으로 계속 갱신합니다.
+ if(raceState&&performance.now()-lastRaceHudUpdate>120){updateRaceHud(latestPlayers,raceState);lastRaceHudUpdate=performance.now();}
+ updateRacingDashboard();
+ if(!renderer||!scene||!camera||!clock)return;
+ const dt=Math.min(.05,clock.getDelta());
  const localAlpha=1-Math.exp(-22*dt),remoteAlpha=1-Math.exp(-18*dt),cameraAlpha=1-Math.exp(-8*dt);
  if(localRoot&&targetLocal){localRoot.position.x+= (targetLocal.x-localRoot.position.x)*localAlpha;localRoot.position.z+=(targetLocal.z-localRoot.position.z)*localAlpha;localRoot.rotation.y=lerpAngle(localRoot.rotation.y,targetLocal.yaw,localAlpha);if(localRoot.userData.model?.userData?.mainRotor)localRoot.userData.model.userData.mainRotor.rotation.y+=dt*12;}
  for(const entry of remotePlayers.values()){const t=entry.target;entry.root.position.x+=(t.x-entry.root.position.x)*remoteAlpha;entry.root.position.z+=(t.z-entry.root.position.z)*remoteAlpha;entry.root.rotation.y=lerpAngle(entry.root.rotation.y,t.yaw,remoteAlpha);}
  if(localRoot){const yaw=localRoot.rotation.y;const desired=new THREE.Vector3(localRoot.position.x+Math.sin(yaw)*13,7.3,localRoot.position.z+Math.cos(yaw)*13);camera.position.lerp(desired,cameraAlpha);camera.lookAt(localRoot.position.x,1.5,localRoot.position.z);}
- if(raceState?.status==='running'&&Date.now()-lastRaceHudUpdate>180){updateRaceHud(latestPlayers,raceState);lastRaceHudUpdate=Date.now();}
  renderer.render(scene,camera);
 }
 function onResize(){if(!renderer||!camera)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio||1,innerWidth<850?1.25:1.65));}

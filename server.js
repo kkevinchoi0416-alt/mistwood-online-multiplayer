@@ -14,6 +14,46 @@ const SNAPSHOT_EVERY = 1;
 // 차량과 10개 트랙은 JSON 파일로 분리해 학생이 쉽게 수정할 수 있습니다.
 const VEHICLES = JSON.parse(fs.readFileSync(path.join(ROOT, 'vehicles.json'), 'utf8'));
 const VEHICLE_MAP = new Map(VEHICLES.map(v => [v.id, v]));
+
+// 차량 모델의 길이·너비(게임 단위). 차량 scale을 곱해 충돌 박스 크기를 맞춥니다.
+function getVehicleHitbox(player) {
+  const vehicle = VEHICLE_MAP.get(player.vehicleId) || VEHICLES[0];
+  const scale = clamp(vehicle.scale, 0.75, 1.5, 1);
+  const length = clamp(vehicle.collisionLength, 3.0, 8.0, 5.0) * scale;
+  const width = clamp(vehicle.collisionWidth, 1.0, 3.5, 2.0) * scale;
+  // 실제 외형보다 약간 안쪽으로 잡아 바퀴만 스쳐도 충돌하는 과민 판정을 줄입니다.
+  return { halfLength: length * 0.48, halfWidth: width * 0.48 }; // 외형의 약 96% 범위로 판정합니다.
+}
+function vehicleAxes(yaw) {
+  return {
+    forward: { x: -Math.sin(yaw), z: -Math.cos(yaw) },
+    right: { x: Math.cos(yaw), z: -Math.sin(yaw) }
+  };
+}
+function orientedBoxContact(a, b) {
+  const A = getVehicleHitbox(a), B = getVehicleHitbox(b);
+  const aa = vehicleAxes(a.yaw), bb = vehicleAxes(b.yaw);
+  const dx = b.x - a.x, dz = b.z - a.z;
+  const axes = [aa.forward, aa.right, bb.forward, bb.right];
+  let minOverlap = Infinity, bestAxis = null, bestSign = 1;
+  for (const axis of axes) {
+    const distance = dx * axis.x + dz * axis.z;
+    const radiusA = A.halfLength * Math.abs(aa.forward.x * axis.x + aa.forward.z * axis.z)
+      + A.halfWidth * Math.abs(aa.right.x * axis.x + aa.right.z * axis.z);
+    const radiusB = B.halfLength * Math.abs(bb.forward.x * axis.x + bb.forward.z * axis.z)
+      + B.halfWidth * Math.abs(bb.right.x * axis.x + bb.right.z * axis.z);
+    const overlap = radiusA + radiusB - Math.abs(distance);
+    // 4cm 미만의 모서리 접촉은 부동소수점 흔들림으로 보고 충돌에서 제외합니다.
+    if (overlap <= 0.04) return null;
+    if (overlap < minOverlap) {
+      minOverlap = overlap;
+      bestAxis = axis;
+      bestSign = distance >= 0 ? 1 : -1;
+    }
+  }
+  if (!bestAxis) return null;
+  return { overlap: minOverlap, nx: bestAxis.x * bestSign, nz: bestAxis.z * bestSign };
+}
 const TRACKS = JSON.parse(fs.readFileSync(path.join(ROOT, 'tracks.json'), 'utf8'));
 const TRACK_MAP = new Map(TRACKS.map(t => [t.id, t]));
 const DEFAULT_MAP_ID = TRACKS[0].id;
@@ -101,6 +141,7 @@ function roomPlayers(room) {
     id: p.id, name: p.name, vehicleId: p.vehicleId,
     host: p.id === room.hostId,
     x: p.x, z: p.z, yaw: p.yaw, speed: p.speed, surface: p.surface || 'road',
+    controls: { ...(p.controls || {}) },
     boostRemaining: Math.max(0, p.boostUntil - Date.now()) / 1000,
     abilityCooldown: Math.max(0, p.abilityReadyAt - Date.now()) / 1000,
     boostsRemaining: Math.max(0, 5 - (p.boostsUsed || 0)),
@@ -120,7 +161,7 @@ function sendRoomState(room) {
   const payload = {
     type: 'room-state', roomCode: room.code, hostId: room.hostId,
     started: room.started, mapId: room.mapId || DEFAULT_MAP_ID, lapsToWin: room.lapsToWin || 3, race: room.race || null,
-    players: roomPlayers(room), maxPlayers: MAX_PLAYERS
+    players: roomPlayers(room), maxPlayers: MAX_PLAYERS, serverTime: Date.now()
   };
   for (const p of room.players.values()) safeSend(p.ws, payload);
 }
@@ -240,21 +281,35 @@ function resolveCarCollisions(room, now) {
   const players = [...room.players.values()].filter(p => !p.finished);
   for (let i = 0; i < players.length; i++) for (let j = i + 1; j < players.length; j++) {
     const a = players[i], b = players[j];
-    let dx = b.x - a.x, dz = b.z - a.z;
-    const distance = Math.hypot(dx, dz);
-    const minDistance = 4.6;
-    if (distance >= minDistance) continue;
-    if (distance < 0.001) { dx = 1; dz = 0; }
-    const len = Math.max(0.001, Math.hypot(dx, dz));
-    const nx = dx / len, nz = dz / len;
-    const overlap = minDistance - distance;
-    a.x -= nx * overlap * 0.52; a.z -= nz * overlap * 0.52;
-    b.x += nx * overlap * 0.52; b.z += nz * overlap * 0.52;
-    a.speed *= 0.82; b.speed *= 0.82;
+    const contact = orientedBoxContact(a, b);
+    if (!contact) continue;
+
+    const { nx, nz, overlap } = contact;
+    // 밀어내기는 겹친 양만큼 두 차에 나눠 적용합니다. 접촉 상태가 계속 누적되지 않습니다.
+    const correction = Math.max(0, overlap - 0.025) * 0.505;
+    a.x -= nx * correction; a.z -= nz * correction;
+    b.x += nx * correction; b.z += nz * correction;
+
+    // 충돌 충격은 실제로 서로 접근 중일 때만 작게 전달합니다.
+    // 옆면 스침이나 정지 상태의 겹침 때문에 속도가 갑자기 떨어지지 않게 합니다.
+    const fa = vehicleAxes(a.yaw).forward;
+    const fb = vehicleAxes(b.yaw).forward;
+    const avx = fa.x * a.speed, avz = fa.z * a.speed;
+    const bvx = fb.x * b.speed, bvz = fb.z * b.speed;
+    const closingSpeed = (avx - bvx) * nx + (avz - bvz) * nz;
+    if (overlap > 0.08 && closingSpeed > 0.5) {
+      const impulse = Math.min(1.25, closingSpeed * 0.075);
+      const nextAvx = avx - impulse * nx, nextAvz = avz - impulse * nz;
+      const nextBvx = bvx + impulse * nx, nextBvz = bvz + impulse * nz;
+      a.speed = nextAvx * fa.x + nextAvz * fa.z;
+      b.speed = nextBvx * fb.x + nextBvz * fb.z;
+    }
+
     if (now >= a.collisionReadyAt) { a.collisions++; a.penaltyMs += 500; a.collisionReadyAt = now + 900; }
     if (now >= b.collisionReadyAt) { b.collisions++; b.penaltyMs += 500; b.collisionReadyAt = now + 900; }
   }
 }
+
 function publicVehicleUpdate(room, player) {
   for (const other of room.players.values()) {
     if (other.id !== player.id) safeSend(other.ws, { type: 'player-vehicle', playerId: player.id, vehicleId: player.vehicleId });
@@ -526,6 +581,7 @@ setInterval(() => {
       if (now >= room.race.countdownEndsAt) {
         room.race.status = 'running';
         room.race.startedAt = now;
+        room.race.goBannerUntil = now + 550;
         for (const p of room.players.values()) {
           p.lapStartedAt = now;
           p.controls = { forward:false, reverse:false, left:false, right:false, brake:false };
