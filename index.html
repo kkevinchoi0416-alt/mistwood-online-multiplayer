@@ -138,6 +138,29 @@
 .spectator-hud.show{display:block}.spectator-toolbar-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.spectator-toolbar-top>div{display:flex;align-items:center;gap:12px;min-width:0}.spectator-toolbar-top b{color:#ffb27e;font-size:10px;font-weight:1000;letter-spacing:.16em}.spectator-toolbar-top span{color:#c5d9cf;font-size:9px;font-weight:800}.spectator-exit,.spectator-mode-btn{border:1px solid rgba(255,255,255,.17);border-radius:7px;padding:7px 10px;color:#f3fff8;background:rgba(255,255,255,.07);font-size:9px;font-weight:900;white-space:nowrap}.spectator-exit{border-color:rgba(255,135,105,.38);color:#ffc0a2}.spectator-toolbar-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:9px}.spectator-mode-btn.active{border-color:#ff9b60;color:#ffc093;background:rgba(255,130,70,.14)}.spectator-toolbar-actions select{min-width:150px;max-width:230px;padding:7px 9px;border:1px solid rgba(255,255,255,.2);border-radius:7px;background:#102320;color:#f4fff9;font-size:9px}.spectator-hint{margin-top:7px;color:#a9c5b8;font-size:8px;line-height:1.4}
 .spectator-board{position:fixed;z-index:25;right:12px;top:116px;display:none;width:min(230px,calc(100vw - 24px));padding:10px;border:1px solid rgba(255,255,255,.17);border-radius:8px 14px 8px 14px;background:rgba(4,17,19,.88);box-shadow:0 10px 30px rgba(0,0,0,.34);backdrop-filter:blur(10px);pointer-events:none}.spectator-board.show{display:block}.spectator-board-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:7px}.spectator-board-head b{font-size:9px;color:#ffb27e;letter-spacing:.12em}.spectator-board-head span{font-size:8px;color:#b2c9bf}.spectator-standing{display:grid;grid-template-columns:20px 1fr auto;gap:7px;align-items:center;padding:5px 2px;border-top:1px solid rgba(255,255,255,.07);font-size:9px}.spectator-standing strong{color:#f1fff7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.spectator-standing>span:first-child{color:#ffcb91;font-weight:1000}.spectator-standing small{font-size:8px;color:#9bb7aa;white-space:nowrap}
 @media(max-width:700px){.spectator-hud{top:7px;padding:8px;width:calc(100vw - 14px)}.spectator-toolbar-top b{font-size:9px}.spectator-toolbar-actions{gap:5px}.spectator-mode-btn,.spectator-exit{padding:6px 8px;font-size:8px}.spectator-toolbar-actions select{min-width:118px;max-width:calc(100vw - 200px);flex:1}.spectator-board{top:auto;right:7px;bottom:12px;width:185px;padding:8px}}
+
+/* Public room browser: server-backed room discovery, independent from the legacy room-code flow. */
+.room-browser-box{margin:12px 0 14px}
+.room-browser-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.room-browser-head .fineprint{max-width:520px}
+.room-browser-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}
+.room-browser-empty{grid-column:1/-1;padding:18px 12px;text-align:center;color:#a8c1b5;border:1px dashed rgba(255,255,255,.16);border-radius:12px;background:rgba(255,255,255,.025);font-size:11px}
+.room-card{min-width:0;padding:12px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018))}
+.room-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.room-card-name{min-width:0;color:#f5fff9;font-size:13px;font-weight:1000;line-height:1.3;overflow-wrap:anywhere}
+.room-card-status{flex:none;padding:4px 7px;border-radius:999px;font-size:8px;font-weight:1000;letter-spacing:.06em;background:rgba(167,243,206,.10);color:#b9f5d7;border:1px solid rgba(167,243,206,.22)}
+.room-card-status.live{color:#ffc08f;background:rgba(255,150,85,.10);border-color:rgba(255,150,85,.25)}
+.room-card-status.finished{color:#c7d4ff;background:rgba(130,150,255,.10);border-color:rgba(130,150,255,.25)}
+.room-card-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 8px;margin:9px 0;color:#b7cdc2;font-size:9px;line-height:1.4}
+.room-card-meta span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.room-card-actions{display:flex;gap:7px;margin-top:8px}
+.room-card-actions .btn{flex:1;min-width:0;padding:8px 9px;font-size:9px}
+.room-card-actions .btn:disabled{opacity:.42;cursor:not-allowed;filter:grayscale(.5)}
+.room-title{font-size:17px;font-weight:1000;line-height:1.25;color:#fff;overflow-wrap:anywhere}
+#roomCodeLabel{font-size:10px;letter-spacing:.14em;color:#a8c5b7;font-weight:850}
+@media(max-width:650px){.room-browser-list{grid-template-columns:1fr}.room-browser-head{align-items:flex-start}.room-browser-head .btn{padding:8px 10px;font-size:9px}.room-card{padding:10px}.lobby-head{align-items:flex-start}.lobby-head>.row{flex-wrap:wrap;justify-content:flex-end}.room-title{font-size:15px}}
+
+.invite-prompt{margin:12px 0;border-color:rgba(255,155,96,.48)!important;background:linear-gradient(120deg,rgba(255,140,75,.12),rgba(255,255,255,.025))!important}
 </style>
 </head>
 <body>
@@ -147,6 +170,7 @@
   <div class="home-hero-top"><span class="home-series">MISTWOOD MOTORSPORT <i>·</i> ONLINE RACING SERIES</span><div class="home-hero-meta"><span class="home-season">SEASON 01 / MULTIPLAYER</span><span class="home-live-pill" aria-live="polite"><i></i><b id="homeOnlineCount">0</b><span>PLAYERS ONLINE</span></span></div></div>
   <div class="brand"><div><div class="eyebrow">YOUR GRID. YOUR LINE. YOUR RACE.</div><h1>MISTWOOD <span class="race-word">ONLINE</span></h1><div class="sub">친구들과 같은 서킷에서 경쟁하는 실시간 멀티플레이 레이싱 · 선두 완주 후 20초 추가 주행</div></div><span id="connectionPill" class="connection-status">서버 연결 중...</span></div>
   <div class="home-stats"><div><b>08</b><span>MAX DRIVERS</span></div><div><b>10</b><span>RACE CIRCUITS</span></div><div><b>20</b><span>MAX LAPS</span></div><div><b>LIVE</b><span>ONLINE RACING</span></div></div>
+  <section id="invitePrompt" class="box invite-prompt" style="display:none" aria-live="polite"><div class="box-title">RACE INVITATION · 초대 링크 확인</div><div id="invitePromptText" class="fineprint">초대받은 방이 있습니다. 닉네임과 차량을 확인해 주세요.</div><button id="acceptInviteBtn" class="btn" style="width:100%;margin-top:8px">초대받은 방 입장</button></section>
   <div class="top-grid">
    <section class="box">
     <div class="box-title">01 / DRIVER PROFILE</div>
@@ -155,16 +179,20 @@
     <div class="fineprint">PC: W/A/S/D 또는 방향키 · Space 브레이크 · F 부스트(3초, 경기당 5회)<br>모바일: 화면 방향키와 부스트 버튼</div>
    </section>
    <section class="box">
-    <div class="box-title">02 / RACE LOBBY</div>
-    <button id="createRoomBtn" class="btn" style="width:100%" disabled>새 온라인 방 만들기</button>
-    <div class="row" style="margin-top:9px"><input id="roomCodeInput" class="field small-field" maxlength="5" placeholder="방 코드" /><button id="joinRoomBtn" class="btn secondary" disabled>방 참가</button></div>
+    <div class="box-title">02 / CREATE RACE ROOM</div>
+    <input id="roomNameInput" class="field" maxlength="28" placeholder="방 이름 (예: 친구들과 그랑프리)" value="" />
+    <div class="row" style="margin-top:8px;align-items:center">
+     <label for="roomVisibilitySelect" class="fineprint" style="margin:0;white-space:nowrap">방 공개 설정</label>
+     <select id="roomVisibilitySelect" class="field small-field" style="flex:1;max-width:150px"><option value="public">공개 방 · 목록에 표시</option><option value="private">비공개 방 · 초대 링크만</option></select>
+    </div>
+    <button id="createRoomBtn" class="btn" style="width:100%;margin-top:9px" disabled>새 온라인 방 만들기</button>
     <div id="connectionStatus" class="status">온라인 서버에 연결하는 중입니다.</div>
    </section>
   </div>
-  <section class="box spectator-entry-box">
-   <div class="box-title">LIVE SPECTATOR · WATCH A RACE</div>
-   <div class="row spectator-entry-row"><input id="spectatorRoomCodeInput" class="field small-field" maxlength="5" placeholder="관전할 방 코드" aria-label="관전할 방 코드"/><button id="spectateRoomBtn" class="btn secondary" disabled>관전 모드 입장</button></div>
-   <div class="fineprint">진행 중이거나 결과가 나온 레이스를 볼 수 있어요. 관전자는 레이서 8명 제한에 포함되지 않습니다.</div>
+  <section class="box room-browser-box">
+   <div class="room-browser-head"><div><div class="box-title" style="margin:0">03 / PUBLIC RACE ROOMS</div><div class="fineprint" style="margin:4px 0 0">친구가 만든 공개 방을 골라 바로 참가하거나 관전하세요.</div></div><button id="refreshRoomsBtn" class="btn secondary" type="button">↻ 새로고침</button></div>
+   <div id="roomBrowserList" class="room-browser-list" aria-live="polite"><div class="room-browser-empty">공개 방 목록을 불러오는 중...</div></div>
+   <div class="fineprint">비공개 방은 목록에 나타나지 않습니다. 방장에게 받은 초대 링크를 열면 참가할 수 있어요.</div>
   </section>
   <section class="box" style="margin:12px 0">
    <div class="box-title">03 / CIRCUIT SELECTION · 10 TRACKS</div>
@@ -184,7 +212,7 @@
   <div id="garage" class="garage"></div>
   <div id="selectedInfo" class="selected-info"></div>
     <div id="roomLobby" class="lobby">
-   <div class="lobby-head"><div><div class="box-title" style="margin:0 0 4px">ONLINE ROOM</div><div class="room-code" id="roomCodeLabel">-----</div><div class="fineprint" style="margin:3px 0 0">친구에게 이 방 코드를 알려 주세요.</div></div><div class="row"><button id="copyCodeBtn" class="btn secondary">코드 복사</button><button id="leaveRoomBtn" class="btn secondary">나가기</button></div></div>
+   <div class="lobby-head"><div><div class="box-title" style="margin:0 0 4px">ONLINE ROOM</div><div class="room-title" id="roomNameLabel">MISTWOOD RACE</div><div class="room-code" id="roomCodeLabel">ROOM -----</div><div class="fineprint" id="roomVisibilityLabel" style="margin:3px 0 0">공개 방</div></div><div class="row"><button id="copyInviteBtn" class="btn secondary">초대 링크 복사</button><button id="leaveRoomBtn" class="btn secondary">나가기</button></div></div>
    <div id="playerList" class="players"></div>
    <div class="row" style="align-items:center;margin:10px 0"><label for="lapCountSelect" class="fineprint" style="margin:0">레이스 랩 수</label><select id="lapCountSelect" class="field small-field" style="max-width:100px"><option value="1">1랩</option><option value="2">2랩</option><option value="3" selected>3랩</option><option value="4">4랩</option><option value="5">5랩</option><option value="6">6랩</option><option value="7">7랩</option><option value="8">8랩</option><option value="9">9랩</option><option value="10">10랩</option><option value="11">11랩</option><option value="12">12랩</option><option value="13">13랩</option><option value="14">14랩</option><option value="15">15랩</option><option value="16">16랩</option><option value="17">17랩</option><option value="18">18랩</option><option value="19">19랩</option><option value="20">20랩</option></select></div>
    <div class="row"><button id="startRoomBtn" class="btn" disabled>레이스 시작</button><span id="hostHint" class="fineprint">방장이 게임을 시작할 수 있어요.</span></div>
@@ -254,6 +282,10 @@ let trackGroup = null, forestGroup = null;
 let socket = null;
 let connected = false;
 let roomCode = '';
+let roomInviteToken = '';
+let roomEntryPending = false;
+let pendingInviteToken = '';
+let invitePromptShown = false;
 let hostId = '';
 let roomStarted = false;
 let raceState = null;
@@ -289,20 +321,47 @@ function setStatus(message){ el('connectionStatus').textContent=message; }
 function showToast(message){ const t=el('toast'); t.textContent=message; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2100); }
 function syncServerClock(serverTime){ if(!Number.isFinite(Number(serverTime)))return; const sample=Number(serverTime)-Date.now(); serverClockOffsetMs=hasServerClock?serverClockOffsetMs*0.7+sample*0.3:sample; hasServerClock=true; }
 function serverNow(){ return Date.now()+(hasServerClock?serverClockOffsetMs:0); }
-// 홈 화면 상단에 방에 입장한 전체 플레이어 수를 서버에서 받아 표시합니다.
-async function refreshHomeOnlineCount(){
- const target=el('homeOnlineCount');if(!target)return;
+// 홈 화면 온라인 인원과 공개 방 목록은 /api/rooms 한 번으로 함께 갱신합니다.
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshRoomBrowser();});
+
+// 공개 방 목록은 서버가 만든 안전한 요약 정보만 표시합니다. 초대 토큰·비공개 방은 내려오지 않습니다.
+let roomBrowserBusy = false;
+async function refreshRoomBrowser(){
+ const list=el('roomBrowserList');if(!list||roomBrowserBusy)return;
+ if(!connected){list.innerHTML='<div class="room-browser-empty">서버에 연결되면 공개 방 목록이 표시됩니다.</div>';return;}
+ roomBrowserBusy=true;
  try{
-  const response=await fetch(`/api/status?_=${Date.now()}`,{cache:'no-store'});
-  if(!response.ok)throw new Error(`status ${response.status}`);
-  const status=await response.json();
-  target.textContent=String(Math.max(0,Number(status.onlinePlayers)||0));
-  target.title=`현재 ${target.textContent}명이 온라인 방에 접속해 있습니다.`;
- }catch(error){target.textContent='—';}
+  const response=await fetch(`/api/rooms?_=${Date.now()}`,{cache:'no-store'});
+  if(!response.ok)throw new Error(`rooms ${response.status}`);
+  const payload=await response.json();
+  const onlineCount=el('homeOnlineCount');
+  if(onlineCount){onlineCount.textContent=String(Math.max(0,Number(payload.onlinePlayers)||0));onlineCount.title=`현재 ${onlineCount.textContent}명이 온라인 방에 접속해 있습니다.`;}
+  renderRoomBrowser(Array.isArray(payload.rooms)?payload.rooms:[]);
+ }catch(error){list.innerHTML='<div class="room-browser-empty">방 목록을 불러오지 못했습니다. 새로고침을 눌러 다시 시도해 주세요.</div>';}
+ finally{roomBrowserBusy=false;}
 }
-refreshHomeOnlineCount();
-setInterval(refreshHomeOnlineCount,4000);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshHomeOnlineCount();});
+function renderRoomBrowser(rooms){
+ const list=el('roomBrowserList');if(!list)return;
+ if(!rooms.length){list.innerHTML='<div class="room-browser-empty">현재 공개된 방이 없습니다. 첫 번째 방을 만들어 보세요!</div>';return;}
+ list.innerHTML=rooms.map(room=>{
+  const statusLabel=room.status==='waiting'?'대기 중':room.status==='finished'?'경기 종료':'경기 진행 중';
+  const statusClass=room.status==='waiting'?'':room.status==='finished'?'finished':'live';
+  const action=room.canJoin?'join':room.canSpectate?'spectate':'';
+  const actionLabel=action==='join'?'레이스 참가':action==='spectate'?'관전하기':room.status==='waiting'?'인원 가득 참':'관전 인원 가득 참';
+  const disabled=action?'':'disabled';
+  return `<article class="room-card"><div class="room-card-top"><div class="room-card-name">${escapeHtml(room.roomName||'MISTWOOD ROOM')}</div><span class="room-card-status ${statusClass}">${statusLabel}</span></div><div class="room-card-meta"><span>👑 ${escapeHtml(room.hostName||'방장')}</span><span>🏁 ${escapeHtml(room.mapName||'트랙')}</span><span>🚗 ${Number(room.players)||0}/${Number(room.maxPlayers)||8} 레이서</span><span>👀 ${Number(room.spectators)||0}/${Number(room.maxSpectators)||20} 관전자</span><span>랩 ${Number(room.lapsToWin)||3}</span><span>${room.status==='waiting'?'참가 가능':room.status==='finished'?'결과 관전':'실시간 관전'}</span></div><div class="room-card-actions"><button class="btn ${action==='spectate'?'secondary':''}" data-room-action="${action}" data-room-code="${escapeHtml(room.roomCode||'')}" ${disabled}>${actionLabel}</button></div></article>`;
+ }).join('');
+}
+function enterListedRoom(action,code){
+ if(!connected||roomEntryPending||!code)return;
+ roomEntryPending=true;
+ document.querySelectorAll('[data-room-action]').forEach(button=>button.disabled=true);
+ const payload={type:action==='join'?'join-room':'spectate-room',roomCode:code,name:el('playerName').value};
+ if(action==='join')payload.vehicleId=selectedVehicleId;
+ send(payload);
+ setTimeout(()=>{if(!roomCode)roomEntryPending=false;},5000);
+}
+setInterval(()=>{if(connected&&!roomCode&&!document.hidden)refreshRoomBrowser();},3500);
 
 // ===== TUNING SYSTEM: 슬라이더 값을 게임 서버로 전달합니다. =====
 function renderTuneFields(){
@@ -357,22 +416,30 @@ function connectServer(){
  const protocol=location.protocol==='https:'?'wss:':'ws:';
  const url=`${protocol}//${location.host}`;
  try{ socket=new WebSocket(url); }catch(e){setStatus('연결을 시작하지 못했습니다.');return;}
- socket.addEventListener('open',()=>{connected=true;el('connectionPill').textContent='ONLINE SERVER CONNECTED';el('connectionPill').classList.add('online');el('createRoomBtn').disabled=false;el('joinRoomBtn').disabled=false;el('spectateRoomBtn').disabled=false;setStatus('서버 연결 완료! 차량을 선택하고 방을 만들거나 관전할 수 있습니다.');});
+ socket.addEventListener('open',()=>{
+  connected=true;el('connectionPill').textContent='ONLINE SERVER CONNECTED';el('connectionPill').classList.add('online');el('createRoomBtn').disabled=false;
+  setStatus('서버 연결 완료! 공개 방 목록에서 참가하거나 새 방을 만들 수 있습니다.');refreshRoomBrowser();
+  const invite=new URLSearchParams(location.search).get('invite');
+  if(invite&&!invitePromptShown){
+   invitePromptShown=true;pendingInviteToken=invite;el('invitePrompt').style.display='block';
+   el('invitePromptText').textContent='친구가 보낸 초대 링크입니다. 닉네임과 차량을 확인한 뒤 입장 버튼을 눌러 주세요. 대기 중인 방은 레이스 참가, 진행 중인 방은 관전으로 연결됩니다.';
+  }
+ });
  socket.addEventListener('message',event=>{let msg;try{msg=JSON.parse(event.data)}catch{return;} handleServerMessage(msg);});
- socket.addEventListener('close',()=>{connected=false;el('connectionPill').textContent='SERVER OFFLINE';el('connectionPill').classList.remove('online');el('createRoomBtn').disabled=true;el('joinRoomBtn').disabled=true;el('spectateRoomBtn').disabled=true;setStatus('서버 연결이 끊어졌습니다. 페이지를 새로고침해 주세요.');});
+ socket.addEventListener('close',()=>{connected=false;roomEntryPending=false;el('connectionPill').textContent='SERVER OFFLINE';el('connectionPill').classList.remove('online');el('createRoomBtn').disabled=true;setStatus('서버 연결이 끊어졌습니다. 페이지를 새로고침해 주세요.');refreshRoomBrowser();});
  socket.addEventListener('error',()=>{setStatus('서버에 연결할 수 없습니다. 아직 Node.js 서버를 배포하지 않았거나 서버가 꺼져 있을 수 있습니다.');});
 }
 function handleServerMessage(msg){
  if(Number.isFinite(msg.serverTime))syncServerClock(msg.serverTime);
  if(msg.type==='connected'){setStatus(msg.message||'연결 완료');return;}
- if(msg.type==='error'){setStatus(msg.message);showToast(msg.message);return;}
- if(msg.type==='room-created'||msg.type==='room-joined'){spectatorMode=false;roomCode=msg.roomCode;localPlayerId=msg.playerId;el('roomCodeLabel').textContent=roomCode;showToast(msg.type==='room-created'?'레이스 방을 만들었습니다!':'레이스 방에 참가했습니다!');return;}
- if(msg.type==='spectator-joined'){spectatorMode=true;spectatorId=msg.spectatorId;localPlayerId=null;roomCode=msg.roomCode;roomStarted=true;spectatorCameraMode='leader';spectatorTargetId=null;showToast('관전 모드에 입장했습니다!');return;}
+ if(msg.type==='error'){roomEntryPending=false;el('acceptInviteBtn').disabled=false;document.querySelectorAll('[data-room-action]').forEach(button=>button.disabled=false);setStatus(msg.message);showToast(msg.message);refreshRoomBrowser();return;}
+ if(msg.type==='room-created'||msg.type==='room-joined'){roomEntryPending=false;pendingInviteToken='';el('invitePrompt').style.display='none';spectatorMode=false;roomCode=msg.roomCode;localPlayerId=msg.playerId;el('roomCodeLabel').textContent=`ROOM ${roomCode}`;showToast(msg.type==='room-created'?'레이스 방을 만들었습니다!':'레이스 방에 참가했습니다!');refreshRoomBrowser();return;}
+ if(msg.type==='spectator-joined'){roomEntryPending=false;pendingInviteToken='';el('invitePrompt').style.display='none';spectatorMode=true;spectatorId=msg.spectatorId;localPlayerId=null;roomCode=msg.roomCode;roomStarted=true;spectatorCameraMode='leader';spectatorTargetId=null;showToast('관전 모드에 입장했습니다!');refreshRoomBrowser();return;}
  if(msg.type==='room-closed'){showToast(msg.message||'관전 중인 방이 종료되었습니다.');resetToGarage();return;}
  if(msg.type==='left-room'){resetToGarage();return;}
  if(msg.type==='room-state'){
   const newRaceStart=!!msg.started&&['countdown','running'].includes(msg.race?.status)&&(!raceState||raceState.countdownEndsAt!==msg.race.countdownEndsAt);
-  roomCode=msg.roomCode;hostId=msg.hostId;roomStarted=!!msg.started;latestPlayers=msg.players||[];raceState=msg.race||null;
+  roomCode=msg.roomCode;roomInviteToken=msg.inviteToken||roomInviteToken;hostId=msg.hostId;roomStarted=!!msg.started;latestPlayers=msg.players||[];raceState=msg.race||null;
   if(msg.mapId&&msg.mapId!==currentMapId)chooseMap(msg.mapId,true);
   if(spectatorMode){
    if(!roomStarted||!raceState){send({type:'leave-room'});showToast('관전 중인 레이스가 대기실로 돌아갔습니다.');return;}
@@ -657,12 +724,6 @@ function setSpectatorCamera(mode){
  }
  updateSpectatorHud();
 }
-function joinSpectatorRoom(){
- if(!connected)return;
- const code=el('spectatorRoomCodeInput').value.trim().toUpperCase();
- if(code.length!==5){setStatus('관전 방 코드는 다섯 글자입니다.');return;}
- send({type:'spectate-room',roomCode:code,name:el('playerName').value});
-}
 function showRaceResults(results){
  if(raceResultsShown)return;raceResultsShown=true;el('finishCountdownHud').classList.remove('show');el('controlGuide').classList.remove('show');el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');el('startCountdown').classList.remove('show');el('boostHud').classList.remove('show');
  const rows=[...(results||[])].sort((a,b)=>a.rank-b.rank);
@@ -712,7 +773,9 @@ function renderControlGuide(){
   : '<span><b>W / ↑</b> 가속</span><span><b>S / ↓</b> 후진</span><span><b>A / D</b> 조향</span><span><b>SPACE</b> 브레이크</span><span><b>F</b> 부스트';
 }
 function updateLobby(state){
- el('roomLobby').classList.add('show');el('roomCodeLabel').textContent=state.roomCode;
+ el('roomLobby').classList.add('show');el('roomCodeLabel').textContent=`ROOM ${state.roomCode}`;
+ el('roomNameLabel').textContent=state.roomName||'MISTWOOD RACE';
+ el('roomVisibilityLabel').textContent=state.visibility==='private'?'비공개 방 · 초대 링크로만 입장':'공개 방 · 방 목록에 표시';
  const list=state.players||[];
  el('playerList').innerHTML=list.map(p=>`<div class="player-chip"><strong>${escapeHtml(p.name)} ${p.host?'👑':''}</strong><span>${escapeHtml((VEHICLES.find(v=>v.id===p.vehicleId)||VEHICLES[0]).short)}${p.id===localPlayerId?' · 나':''}</span></div>`).join('');
  const isHost=state.hostId===localPlayerId;const canHostEdit=isHost&&!state.started;
@@ -727,8 +790,11 @@ function updateLobby(state){
  setStatus(`${list.length}/${state.maxPlayers||8}명 참가 · 방 코드 ${state.roomCode}`);
 }
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function createRoom(){if(!connected)return;send({type:'create-room',name:el('playerName').value,vehicleId:selectedVehicleId,mapId:currentMapId,tune:currentTune});}
-function joinRoom(){if(!connected)return;const code=el('roomCodeInput').value.trim().toUpperCase();if(code.length!==5){setStatus('방 코드는 다섯 글자입니다.');return;}send({type:'join-room',name:el('playerName').value,vehicleId:selectedVehicleId,roomCode:code,tune:currentTune});}
+function createRoom(){
+ if(!connected||roomEntryPending)return;
+ const roomName=el('roomNameInput').value.trim();
+ send({type:'create-room',name:el('playerName').value,roomName,visibility:el('roomVisibilitySelect').value,vehicleId:selectedVehicleId,mapId:currentMapId,tune:currentTune});
+}
 function enterGame(){
  spectatorMode=false;spectatorCameraInitialized=false;
  el('startOverlay').style.display='none';el('gameHud').classList.add('show');el('rightHud').classList.add('show');el('gameButtons').classList.add('show');el('raceResultOverlay').classList.remove('show');el('spectatorHud').classList.remove('show');el('spectatorBoard').classList.remove('show');raceResultsShown=false;
@@ -739,9 +805,14 @@ function returnToLobbyView(){
  spectatorMode=false;spectatorId=null;spectatorCameraInitialized=false;spectatorCameraKeys.clear();
  el('spectatorHud').classList.remove('show');el('spectatorBoard').classList.remove('show');el('startOverlay').style.display='flex';el('controlGuide').classList.remove('show');el('finishCountdownHud').classList.remove('show');el('gameHud').classList.remove('show');el('rightHud').classList.remove('show');el('gameButtons').classList.remove('show');el('mobileControls').classList.remove('show');el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');el('startCountdown').classList.remove('show');el('boostHud').classList.remove('show');el('draftHud').classList.remove('show');el('racingDash').classList.remove('show');el('trackMapPanel').classList.remove('show');el('dashDriverStrip').classList.remove('show');el('raceResultOverlay').classList.remove('show');raceResultsShown=false;raceState=null;controls={forward:false,reverse:false,left:false,right:false,brake:false};
 }
-function resetToGarage(){roomCode='';localPlayerId=null;hostId='';roomStarted=false;latestPlayers=[];spectatorMode=false;spectatorId=null;spectatorCameraInitialized=false;for(const p of remotePlayers.values())scene?.remove(p.root);remotePlayers.clear();if(localRoot){scene?.remove(localRoot);localRoot=null;}el('roomLobby').classList.remove('show');returnToLobbyView();setStatus('방에서 나왔습니다. 새 방을 만들거나 다른 방에 참가할 수 있습니다.');}
+function resetToGarage(){roomCode='';roomInviteToken='';localPlayerId=null;hostId='';roomStarted=false;latestPlayers=[];roomEntryPending=false;spectatorMode=false;spectatorId=null;spectatorCameraInitialized=false;for(const p of remotePlayers.values())scene?.remove(p.root);remotePlayers.clear();if(localRoot){scene?.remove(localRoot);localRoot=null;}el('roomLobby').classList.remove('show');returnToLobbyView();setStatus('방에서 나왔습니다. 공개 방 목록을 새로고침합니다.');refreshRoomBrowser();}
 
-function copyRoomCode(){if(!roomCode)return;const text=roomCode;if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>showToast('방 코드를 복사했습니다.')).catch(()=>showToast(`방 코드: ${text}`));else showToast(`방 코드: ${text}`);}
+function copyInviteLink(){
+ if(!roomInviteToken){showToast('초대 링크를 아직 준비하지 못했습니다.');return;}
+ const inviteUrl=new URL(location.href);inviteUrl.searchParams.delete('join');inviteUrl.searchParams.set('invite',roomInviteToken);
+ const text=inviteUrl.toString();
+ if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>showToast('초대 링크를 복사했습니다!')).catch(()=>showToast(text));else showToast(text);
+}
 
 function setControl(name,value){controls[name]=value;}
 window.addEventListener('keydown',e=>{
@@ -769,9 +840,13 @@ el('mapSelect').addEventListener('change',()=>chooseMap(el('mapSelect').value));
 el('advancedToggle').addEventListener('click',()=>{isAdvancedTuning=!isAdvancedTuning;el('tuningAdvanced').style.display=isAdvancedTuning?'grid':'none';el('advancedToggle').textContent=isAdvancedTuning?'고급 튜닝 접기':'고급 튜닝 펼치기 (추가 4개 설정)';});
 el('pcChoice').addEventListener('click',()=>{selectedDevice='pc';el('pcChoice').classList.add('active');el('mobileChoice').classList.remove('active');renderControlGuide();});
 el('mobileChoice').addEventListener('click',()=>{selectedDevice='mobile';el('mobileChoice').classList.add('active');el('pcChoice').classList.remove('active');renderControlGuide();});
-el('createRoomBtn').addEventListener('click',createRoom);el('joinRoomBtn').addEventListener('click',joinRoom);el('spectateRoomBtn').addEventListener('click',joinSpectatorRoom);el('spectatorRoomCodeInput').addEventListener('keydown',e=>{if(e.key==='Enter')joinSpectatorRoom();});el('spectatorExitBtn').addEventListener('click',()=>send({type:'leave-room'}));el('spectatorLeaderBtn').addEventListener('click',()=>setSpectatorCamera('leader'));el('spectatorOverviewBtn').addEventListener('click',()=>setSpectatorCamera('overview'));el('spectatorFreeBtn').addEventListener('click',()=>setSpectatorCamera('free'));el('spectatorTargetSelect').addEventListener('change',()=>{if(el('spectatorTargetSelect').value)setSpectatorCamera('selected');else setSpectatorCamera('leader');});el('startRoomBtn').addEventListener('click',()=>send({type:'start-room',lapsToWin:Number(el('lapCountSelect').value)||3}));
+el('createRoomBtn').addEventListener('click',createRoom);
+el('acceptInviteBtn').addEventListener('click',()=>{if(!connected||!pendingInviteToken||roomEntryPending)return;roomEntryPending=true;el('acceptInviteBtn').disabled=true;send({type:'join-invite',inviteToken:pendingInviteToken,name:el('playerName').value,vehicleId:selectedVehicleId});});
+el('roomBrowserList').addEventListener('click',event=>{const button=event.target.closest('[data-room-action]');if(!button||button.disabled)return;enterListedRoom(button.dataset.roomAction,button.dataset.roomCode);});
+el('refreshRoomsBtn').addEventListener('click',refreshRoomBrowser);
+el('spectatorExitBtn').addEventListener('click',()=>send({type:'leave-room'}));el('spectatorLeaderBtn').addEventListener('click',()=>setSpectatorCamera('leader'));el('spectatorOverviewBtn').addEventListener('click',()=>setSpectatorCamera('overview'));el('spectatorFreeBtn').addEventListener('click',()=>setSpectatorCamera('free'));el('spectatorTargetSelect').addEventListener('change',()=>{if(el('spectatorTargetSelect').value)setSpectatorCamera('selected');else setSpectatorCamera('leader');});el('startRoomBtn').addEventListener('click',()=>send({type:'start-room',lapsToWin:Number(el('lapCountSelect').value)||3}));
 el('raceAgainBtn').addEventListener('click',()=>send({type:'restart-race'}));
-el('resultLobbyBtn').addEventListener('click',()=>{if(hostId===localPlayerId)send({type:'stop-room'});else send({type:'leave-room'});});el('copyCodeBtn').addEventListener('click',copyRoomCode);el('leaveRoomBtn').addEventListener('click',()=>send({type:'leave-room'}));el('returnLobbyBtn').addEventListener('click',()=>{if(hostId===localPlayerId)send({type:'stop-room'});else showToast('방장이 대기실로 돌아가면 함께 이동합니다.');});
+el('resultLobbyBtn').addEventListener('click',()=>{if(hostId===localPlayerId)send({type:'stop-room'});else send({type:'leave-room'});});el('copyInviteBtn').addEventListener('click',copyInviteLink);el('leaveRoomBtn').addEventListener('click',()=>send({type:'leave-room'}));el('returnLobbyBtn').addEventListener('click',()=>{if(hostId===localPlayerId)send({type:'stop-room'});else showToast('방장이 대기실로 돌아가면 함께 이동합니다.');});
 const spectatorCanvas=el('gameCanvas');
 spectatorCanvas.addEventListener('pointerdown',e=>{if(!spectatorMode||spectatorCameraMode!=='free')return;spectatorDragging=true;spectatorLastPointer={x:e.clientX,y:e.clientY};try{spectatorCanvas.setPointerCapture(e.pointerId)}catch{}});
 spectatorCanvas.addEventListener('pointermove',e=>{if(!spectatorDragging||!spectatorLastPointer)return;const dx=e.clientX-spectatorLastPointer.x,dy=e.clientY-spectatorLastPointer.y;spectatorLastPointer={x:e.clientX,y:e.clientY};spectatorFreeYaw-=dx*.004;spectatorFreePitch=Math.max(-1.15,Math.min(.65,spectatorFreePitch+dy*.003));});

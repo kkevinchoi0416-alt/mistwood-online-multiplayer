@@ -143,6 +143,35 @@ function sanitizeName(value) {
   const name = String(value || '').replace(/[<>\u0000-\u001f]/g, '').trim().slice(0, 14);
   return name || `Driver-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
 }
+function sanitizeRoomName(value, hostName) {
+  const name = String(value || '').replace(/[<>\u0000-\u001f]/g, '').replace(/\s+/g, ' ').trim().slice(0, 28);
+  return name || `${hostName || 'Driver'}의 레이스`;
+}
+function publicRoomList() {
+  return [...rooms.values()]
+    .filter(room => room.visibility !== 'private' && room.players.size > 0)
+    .map(room => {
+      const track = TRACK_MAP.get(room.mapId) || TRACKS[0];
+      const raceStatus = room.race?.status || 'waiting';
+      const status = !room.started ? 'waiting' : raceStatus === 'finished' ? 'finished' : 'running';
+      return {
+        roomCode: room.code,
+        roomName: room.name,
+        hostName: room.players.get(room.hostId)?.name || '방장',
+        mapId: room.mapId,
+        mapName: track.name,
+        players: room.players.size,
+        spectators: room.spectators?.size || 0,
+        maxPlayers: MAX_PLAYERS,
+        maxSpectators: MAX_SPECTATORS,
+        lapsToWin: room.lapsToWin || 3,
+        status,
+        canJoin: status === 'waiting' && room.players.size < MAX_PLAYERS,
+        canSpectate: status !== 'waiting' && (room.spectators?.size || 0) < MAX_SPECTATORS
+      };
+    })
+    .sort((a, b) => (a.status === 'waiting' ? 0 : 1) - (b.status === 'waiting' ? 0 : 1) || a.roomName.localeCompare(b.roomName));
+}
 function makeRoomCode() {
   const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code;
@@ -183,7 +212,8 @@ function roomPlayers(room) {
 }
 function sendRoomState(room) {
   const payload = {
-    type: 'room-state', roomCode: room.code, hostId: room.hostId,
+    type: 'room-state', roomCode: room.code, roomName: room.name, visibility: room.visibility,
+    inviteToken: room.inviteToken, hostId: room.hostId,
     started: room.started, mapId: room.mapId || DEFAULT_MAP_ID, lapsToWin: room.lapsToWin || 3, race: room.race || null,
     players: roomPlayers(room), spectators: [...(room.spectators?.values() || [])].map(s => ({ id: s.id, name: s.name })),
     spectatorCount: room.spectators?.size || 0,
@@ -380,6 +410,10 @@ const server = http.createServer((req, res) => {
       serverTime: Date.now()
     }));
   }
+  if (url.pathname === '/api/rooms') {
+    res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
+    return res.end(JSON.stringify({ ok: true, rooms: publicRoomList(), onlinePlayers: countOnlinePlayers(), onlineDrivers: countOnlineDrivers(), onlineSpectators: countOnlineSpectators(), serverTime: Date.now() }));
+  }
   let pathname = decodeURIComponent(url.pathname);
   if (pathname === '/') pathname = '/index.html';
   // 공개 서버는 게임 화면만 제공합니다. server.js와 환경 설정 파일은 다운로드할 수 없습니다.
@@ -493,7 +527,13 @@ function handleConnection(ws) {
       const sharedTune = sanitizeTune(msg.tune);
       const player = makePlayer(ws, name, vehicle.id, sharedTune);
       const mapId = TRACK_MAP.has(String(msg.mapId || '')) ? String(msg.mapId) : DEFAULT_MAP_ID;
-      const room = { code, hostId: player.id, started: false, mapId, tune: sharedTune, players: new Map(), spectators: new Map() };
+      const room = {
+        code, name: sanitizeRoomName(msg.roomName, name),
+        visibility: msg.visibility === 'private' ? 'private' : 'public',
+        inviteToken: crypto.randomBytes(18).toString('base64url'),
+        hostId: player.id, started: false, mapId, tune: sharedTune,
+        players: new Map(), spectators: new Map(), createdAt: Date.now()
+      };
       room.players.set(player.id, player);
       rooms.set(code, room);
       ws.room = room; ws.player = player;
@@ -506,8 +546,9 @@ function handleConnection(ws) {
       if (ws.room) return sendError(ws, '이미 방에 참가 중입니다.');
       const code = String(msg.roomCode || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5);
       const room = rooms.get(code);
-      if (!room) return sendError(ws, '방을 찾을 수 없습니다. 방 코드를 다시 확인해 주세요.');
-      if (room.started) return sendError(ws, '이미 게임이 시작된 방입니다.');
+      if (!room) return sendError(ws, '방을 찾을 수 없습니다. 방 목록을 새로고침해 주세요.');
+      if (room.visibility === 'private' && String(msg.inviteToken || '') !== room.inviteToken) return sendError(ws, '비공개 방입니다. 방장이 보낸 초대 링크로 입장해 주세요.');
+      if (room.started) return sendError(ws, '이미 게임이 시작된 방입니다. 관전하기를 선택해 주세요.');
       if (room.players.size >= MAX_PLAYERS) return sendError(ws, `방이 가득 찼습니다. 최대 ${MAX_PLAYERS}명까지 참가할 수 있습니다.`);
       const name = sanitizeName(msg.name);
       const vehicle = VEHICLE_MAP.get(String(msg.vehicleId || 'grandeur')) || VEHICLES[0];
@@ -523,7 +564,8 @@ function handleConnection(ws) {
       if (ws.room) return sendError(ws, '이미 방에 참가 중입니다.');
       const code = String(msg.roomCode || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5);
       const room = rooms.get(code);
-      if (!room) return sendError(ws, '관전할 방을 찾을 수 없습니다. 방 코드를 확인해 주세요.');
+      if (!room) return sendError(ws, '관전할 방을 찾을 수 없습니다. 방 목록을 새로고침해 주세요.');
+      if (room.visibility === 'private' && String(msg.inviteToken || '') !== room.inviteToken) return sendError(ws, '비공개 방입니다. 방장이 보낸 초대 링크로 관전해 주세요.');
       if (!room.started || !room.race || !['countdown', 'running', 'finished'].includes(room.race.status)) {
         return sendError(ws, '아직 관전할 레이스가 시작되지 않았습니다.');
       }
@@ -532,6 +574,30 @@ function handleConnection(ws) {
       room.spectators.set(spectator.id, spectator);
       ws.room = room; ws.player = null; ws.spectator = spectator;
       safeSend(ws, { type: 'spectator-joined', roomCode: code, spectatorId: spectator.id });
+      sendRoomState(room);
+      return;
+    }
+
+    if (msg.type === 'join-invite') {
+      if (ws.room) return sendError(ws, '이미 방에 참가 중입니다.');
+      const token = String(msg.inviteToken || '').slice(0, 128);
+      const room = [...rooms.values()].find(candidate => candidate.inviteToken === token);
+      if (!room) return sendError(ws, '초대 링크가 만료되었거나 방이 삭제되었습니다.');
+      if (room.started && room.race && ['countdown', 'running', 'finished'].includes(room.race.status)) {
+        if ((room.spectators?.size || 0) >= MAX_SPECTATORS) return sendError(ws, `관전 인원이 가득 찼습니다. 최대 ${MAX_SPECTATORS}명까지 관전할 수 있습니다.`);
+        const spectator = { id: crypto.randomUUID(), ws, name: sanitizeName(msg.name || 'Spectator') };
+        room.spectators.set(spectator.id, spectator);
+        ws.room = room; ws.player = null; ws.spectator = spectator;
+        safeSend(ws, { type: 'spectator-joined', roomCode: room.code, spectatorId: spectator.id });
+      } else {
+        if (room.players.size >= MAX_PLAYERS) return sendError(ws, `방이 가득 찼습니다. 최대 ${MAX_PLAYERS}명까지 참가할 수 있습니다.`);
+        const name = sanitizeName(msg.name);
+        const vehicle = VEHICLE_MAP.get(String(msg.vehicleId || 'grandeur')) || VEHICLES[0];
+        const player = makePlayer(ws, name, vehicle.id, room.tune || DEFAULT_TUNE);
+        room.players.set(player.id, player);
+        ws.room = room; ws.player = player;
+        safeSend(ws, { type: 'room-joined', roomCode: room.code, playerId: player.id });
+      }
       sendRoomState(room);
       return;
     }
