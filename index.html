@@ -173,6 +173,126 @@
 #roomCodeLabel{font-size:10px;letter-spacing:.14em;color:#a8c5b7;font-weight:850}
 @media(max-width:650px){.room-browser-list{grid-template-columns:1fr}.room-browser-head{align-items:flex-start}.room-browser-head .btn{padding:8px 10px;font-size:9px}.room-card{padding:10px}.lobby-head{align-items:flex-start}.lobby-head>.row{flex-wrap:wrap;justify-content:flex-end}.room-title{font-size:15px}}
 
+
+/* ===== COUNTDOWN CARD SIZE FIX V2: roomy signal panel and guaranteed GO fit ===== */
+#startCountdown.start-countdown{
+  padding:clamp(12px,3vw,34px);
+  overflow-x:hidden;
+  overflow-y:auto;
+}
+#startCountdown .start-countdown-card{
+  width:min(660px,calc(100vw - 28px));
+  max-width:100%;
+  min-height:min(370px,calc(100dvh - 28px));
+  max-height:calc(100dvh - 28px);
+  overflow:auto;
+  padding:clamp(26px,4.5vw,48px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:stretch;
+  gap:clamp(8px,1.5vh,16px);
+  border-radius:28px;
+}
+#startCountdown .countdown-kicker{
+  font-size:clamp(10px,1.4vw,13px);
+  letter-spacing:.16em;
+  line-height:1.5;
+}
+#startCountdown .start-light-panel{
+  display:grid;
+  grid-template-columns:minmax(0,1.18fr) minmax(210px,.82fr);
+  align-items:center;
+  justify-items:stretch;
+  gap:clamp(18px,3vw,32px);
+  width:100%;
+  max-width:540px;
+  margin:clamp(18px,3vh,28px) auto;
+}
+#startCountdown .start-lights{
+  width:100%;
+  min-height:88px;
+  padding:16px clamp(12px,2vw,20px);
+  align-items:center;
+  justify-content:space-evenly;
+  gap:clamp(7px,1.3vw,13px);
+  border-radius:18px;
+}
+#startCountdown .start-lights i{
+  flex:0 1 25px;
+  width:clamp(18px,2.7vw,25px);
+  height:clamp(18px,2.7vw,25px);
+}
+#startCountdown .start-light-panel>strong{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  padding:4px 0 10px;
+  overflow:visible;
+  white-space:nowrap;
+  text-align:center;
+  font-size:clamp(90px,11vw,128px) !important;
+  line-height:1;
+  letter-spacing:-.045em;
+  font-variant-numeric:tabular-nums;
+}
+#startCountdown #startCountdownState{
+  font-size:clamp(12px,1.7vw,15px);
+  line-height:1.45;
+  letter-spacing:.04em;
+  overflow-wrap:anywhere;
+}
+#startCountdown .start-countdown-footer{
+  margin-top:8px;
+  font-size:9px;
+  line-height:1.5;
+  letter-spacing:.12em;
+}
+@media(max-width:600px){
+  #startCountdown.start-countdown{padding:10px;}
+  #startCountdown .start-countdown-card{
+    width:calc(100vw - 20px);
+    min-height:min(350px,calc(100dvh - 20px));
+    max-height:calc(100dvh - 20px);
+    padding:clamp(22px,6vw,32px);
+    border-radius:22px;
+  }
+  #startCountdown .start-light-panel{
+    grid-template-columns:minmax(0,1fr);
+    gap:14px;
+    margin:16px auto;
+    max-width:420px;
+  }
+  #startCountdown .start-lights{
+    width:100%;
+    min-height:70px;
+    padding:12px 14px;
+    gap:clamp(8px,3vw,16px);
+  }
+  #startCountdown .start-lights i{
+    flex:0 1 24px;
+    width:clamp(19px,5vw,24px);
+    height:clamp(19px,5vw,24px);
+  }
+  #startCountdown .start-light-panel>strong{
+    font-size:clamp(76px,22vw,112px) !important;
+    padding:0 0 5px;
+  }
+  #startCountdown #startCountdownState{font-size:12px;}
+  #startCountdown .start-countdown-footer{font-size:8px;}
+}
+@media(max-height:420px){
+  #startCountdown .start-countdown-card{min-height:0;padding:16px 24px;gap:4px;}
+  #startCountdown .start-light-panel{margin:8px auto;}
+  #startCountdown .start-lights{min-height:58px;padding:8px 12px;}
+  #startCountdown .start-light-panel>strong{font-size:clamp(68px,13vh,94px) !important;}
+  #startCountdown .start-countdown-footer{margin-top:2px;}
+}
+/* ===== END COUNTDOWN CARD SIZE FIX V2 ===== */
+
 </style>
 </head>
 <body>
