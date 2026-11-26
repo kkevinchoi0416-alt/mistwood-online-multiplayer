@@ -293,6 +293,39 @@
 }
 /* ===== END COUNTDOWN CARD SIZE FIX V2 ===== */
 
+
+
+/* BOOST HUD REPOSITION: keep boost status in its own right-side lane,
+   separate from the growing lap-history panel on the left. */
+#boostHud.boost-hud{
+  top:270px;right:12px;bottom:auto;left:auto;
+  width:min(220px,calc(100vw - 24px));min-width:178px;max-width:220px;
+  z-index:13;
+}
+@media(max-width:1000px){
+  #boostHud.boost-hud{
+    top:176px;right:8px;bottom:auto;left:auto;
+    width:164px;min-width:0;max-width:calc(100vw - 16px);
+  }
+}
+@media(max-width:760px){
+  #boostHud.boost-hud{
+    top:158px;right:7px;bottom:auto;left:auto;
+    width:144px;min-width:0;max-width:144px;
+    padding:7px 8px;
+  }
+  #boostHud .boost-hud-head{gap:5px}
+  #boostHud .boost-hud-head>span{font-size:7px;letter-spacing:.04em}
+  #boostHud .boost-hud-head strong{font-size:11px}
+  #boostHud>span:last-child{font-size:8px}
+}
+@media(max-width:380px){
+  #boostHud.boost-hud{
+    top:154px;right:7px;width:136px;max-width:calc(100vw - 14px);
+    padding:6px 7px;
+  }
+}
+
 </style>
 </head>
 <body>
