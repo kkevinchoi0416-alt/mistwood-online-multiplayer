@@ -145,7 +145,8 @@ function roomPlayers(room) {
     boostRemaining: Math.max(0, p.boostUntil - Date.now()) / 1000,
     abilityCooldown: Math.max(0, p.abilityReadyAt - Date.now()) / 1000,
     boostsRemaining: Math.max(0, 5 - (p.boostsUsed || 0)),
-    tune: p.tune,
+    tune: room.tune || p.tune || DEFAULT_TUNE,
+    drafting: !!p.drafting,
     raceProgress: p.raceProgress || 0,
     lapsCompleted: Math.min(room.race?.lapsToWin || room.lapsToWin || 3, Math.floor((p.raceProgress || 0) / (getTrackCache(room.mapId).length || 1))),
     lapTimes: [...(p.lapTimes || [])],
@@ -161,7 +162,7 @@ function sendRoomState(room) {
   const payload = {
     type: 'room-state', roomCode: room.code, hostId: room.hostId,
     started: room.started, mapId: room.mapId || DEFAULT_MAP_ID, lapsToWin: room.lapsToWin || 3, race: room.race || null,
-    players: roomPlayers(room), maxPlayers: MAX_PLAYERS, serverTime: Date.now()
+    players: roomPlayers(room), tune: room.tune || DEFAULT_TUNE, maxPlayers: MAX_PLAYERS, serverTime: Date.now()
   };
   for (const p of room.players.values()) safeSend(p.ws, payload);
 }
@@ -181,6 +182,7 @@ function spawnPlayer(player, index, count, now, track) {
   player.speed = 0;
   player.surface = 'road';
   player.controls = { forward: false, reverse: false, left: false, right: false, brake: false };
+  player.drafting = false;
   player.boostUntil = 0;
   player.abilityReadyAt = 0;
   player.boostsUsed = 0; // 매 경기마다 5회로 초기화됩니다.
@@ -202,6 +204,27 @@ function canUseBoost(player, now) {
   player.boostsUsed = (player.boostsUsed || 0) + 1;
   return true;
 }
+// 앞차 바로 뒤에서 일정한 간격을 유지하면 약한 슬립스트림 보너스를 받습니다.
+// 가속만 8%, 최고속도는 2.5%만 올리고 부스트와 중복되지 않게 합니다.
+function isInSlipstream(player, room) {
+  if (player.speed < 6 || player.surface !== 'road') return false;
+  const axes = vehicleAxes(player.yaw);
+  for (const other of room.players.values()) {
+    if (other.id === player.id || other.finished || other.speed < 6 || other.surface !== 'road') continue;
+    const dx = other.x - player.x, dz = other.z - player.z;
+    const longitudinal = dx * axes.forward.x + dz * axes.forward.z;
+    if (longitudinal < 5 || longitudinal > 19) continue;
+    const lateral = Math.abs(dx * axes.right.x + dz * axes.right.z);
+    if (lateral > 3.3) continue;
+    const otherForward = vehicleAxes(other.yaw).forward;
+    const headingAgreement = axes.forward.x * otherForward.x + axes.forward.z * otherForward.z;
+    if (headingAgreement < 0.94) continue;
+    if (other.speed < player.speed - 1.8) continue;
+    return true;
+  }
+  return false;
+}
+
 function startRace(room, now, requestedLaps) {
   room.started = true;
   const track = getTrackCache(room.mapId);
@@ -227,7 +250,7 @@ function finishRace(room, now) {
   if (!room.race || room.race.status !== 'running') return;
   room.race.status = 'finished';
   room.race.finishedAt = now;
-  for (const p of room.players.values()) { p.controls = { forward:false, reverse:false, left:false, right:false, brake:false }; p.speed = 0; }
+  for (const p of room.players.values()) { p.controls = { forward:false, reverse:false, left:false, right:false, brake:false }; p.speed = 0; p.drafting = false; }
   const ordered = raceStandings(room);
   const results = ordered.map((p, i) => {
     const completedLaps = Math.min(room.race.lapsToWin || 3, Math.floor((p.raceProgress || 0) / (room.race.trackLength || 1)));
@@ -433,9 +456,10 @@ function handleConnection(ws) {
       const name = sanitizeName(msg.name);
       const vehicle = VEHICLE_MAP.get(String(msg.vehicleId || 'grandeur')) || VEHICLES[0];
       const code = makeRoomCode();
-      const player = makePlayer(ws, name, vehicle.id, msg.tune);
+      const sharedTune = sanitizeTune(msg.tune);
+      const player = makePlayer(ws, name, vehicle.id, sharedTune);
       const mapId = TRACK_MAP.has(String(msg.mapId || '')) ? String(msg.mapId) : DEFAULT_MAP_ID;
-      const room = { code, hostId: player.id, started: false, mapId, players: new Map() };
+      const room = { code, hostId: player.id, started: false, mapId, tune: sharedTune, players: new Map() };
       room.players.set(player.id, player);
       rooms.set(code, room);
       ws.room = room; ws.player = player;
@@ -453,7 +477,7 @@ function handleConnection(ws) {
       if (room.players.size >= MAX_PLAYERS) return sendError(ws, `방이 가득 찼습니다. 최대 ${MAX_PLAYERS}명까지 참가할 수 있습니다.`);
       const name = sanitizeName(msg.name);
       const vehicle = VEHICLE_MAP.get(String(msg.vehicleId || 'grandeur')) || VEHICLES[0];
-      const player = makePlayer(ws, name, vehicle.id, msg.tune);
+      const player = makePlayer(ws, name, vehicle.id, room.tune || DEFAULT_TUNE);
       room.players.set(player.id, player);
       ws.room = room; ws.player = player;
       safeSend(ws, { type: 'room-joined', roomCode: code, playerId: player.id });
@@ -474,7 +498,9 @@ function handleConnection(ws) {
     if (msg.type === 'tune') {
       if (!ws.player || !ws.room) return sendError(ws, '먼저 온라인 방에 참가해 주세요.');
       if (ws.room.started) return sendError(ws, '레이스 중에는 튜닝할 수 없습니다.');
-      ws.player.tune = sanitizeTune(msg.tune);
+      if (ws.room.hostId !== ws.player.id) return sendError(ws, '공통 튜닝은 방장만 변경할 수 있습니다.');
+      ws.room.tune = sanitizeTune(msg.tune);
+      for (const member of ws.room.players.values()) member.tune = ws.room.tune;
       sendRoomState(ws.room);
       return;
     }
@@ -514,7 +540,7 @@ function handleConnection(ws) {
       ws.room.started = false;
       ws.room.race = null;
       for (const p of ws.room.players.values()) {
-        p.speed = 0;
+        p.speed = 0; p.drafting = false;
         p.controls = { forward: false, reverse: false, left: false, right: false, brake: false };
       }
       sendRoomState(ws.room);
@@ -552,7 +578,7 @@ function handleConnection(ws) {
 
 function makePlayer(ws, name, vehicleId, tuneInput) {
   return {
-    id: crypto.randomUUID(), ws, name, vehicleId, tune: sanitizeTune(tuneInput),
+    id: crypto.randomUUID(), ws, name, vehicleId, tune: sanitizeTune(tuneInput), drafting: false,
     x: 0, z: 0, yaw: -Math.PI / 2, speed: 0,
     controls: { forward: false, reverse: false, left: false, right: false, brake: false },
     boostUntil: 0, abilityReadyAt: 0, boostsUsed: 0, raceProgress: 0, lastTrackDistance: 0, collisions: 0, penaltyMs: 0, collisionReadyAt: 0, finished: false, finishTimeMs: null, lapStartedAt: 0, lapTimes: []
@@ -596,14 +622,19 @@ setInterval(() => {
     for (const p of room.players.values()) {
       if (p.finished) continue;
       const c = p.controls;
-      const tune = p.tune || DEFAULT_TUNE;
+      const tune = room.tune || p.tune || DEFAULT_TUNE;
+      p.tune = tune; // 방 안의 모든 차량은 방장이 확정한 동일 튜닝값을 사용합니다.
       const boosting = now < p.boostUntil;
-      // 노면별 효과는 모든 차량에 공통 적용하고, 플레이어별 튜닝값은 그대로 곱해집니다.
       const surface = p.surface || 'road';
-      const surfaceGrip = surface === 'grass' ? 0.72 : surface === 'dirt' ? 0.48 : 1;
-      const surfacePower = surface === 'grass' ? 0.72 : surface === 'dirt' ? 0.48 : 1;
-      const maxSpeed = tune.topSpeed * (boosting ? 1.18 : 1) * surfacePower;
-      const accel = tune.acceleration * (boosting ? 1.25 : 1) * surfacePower;
+      // 잔디·흙 감속을 완만하게 해 실수 후에도 레이스에 복귀할 수 있게 합니다.
+      const surfaceGrip = surface === 'grass' ? 0.90 : surface === 'dirt' ? 0.80 : 1;
+      const surfacePower = surface === 'grass' ? 0.92 : surface === 'dirt' ? 0.82 : 1;
+      const drafting = !boosting && isInSlipstream(p, room);
+      p.drafting = drafting;
+      const draftTopSpeed = drafting ? 1.025 : 1;
+      const draftAcceleration = drafting ? 1.08 : 1;
+      const maxSpeed = tune.topSpeed * (boosting ? 1.18 : 1) * surfacePower * draftTopSpeed;
+      const accel = tune.acceleration * (boosting ? 1.25 : 1) * surfacePower * draftAcceleration;
       const brake = tune.brake;
       const reverse = tune.reverse * surfacePower;
       if (c.forward) p.speed = Math.min(maxSpeed, p.speed + accel * dt);
@@ -629,11 +660,12 @@ setInterval(() => {
       const roadEdge = track.width / 2;
       // 도로 가장자리를 벗어나면 잔디, 더 멀리 벗어나면 흙/모래 노면으로 판정합니다.
       p.surface = roadDistance <= roadEdge ? 'road' : roadDistance <= roadEdge + 18 ? 'grass' : 'dirt';
-      if (p.surface === 'grass') p.speed *= Math.exp(-2.0 * dt);
-      else if (p.surface === 'dirt') p.speed *= Math.exp(-3.2 * dt);
-      // 노면에 진입한 순간에도 해당 노면의 제한 속도를 넘지 않게 부드럽게 낮춥니다.
-      const surfaceLimit = tune.topSpeed * (boosting ? 1.18 : 1) * (p.surface === 'grass' ? 0.72 : p.surface === 'dirt' ? 0.48 : 1);
-      p.speed = Math.max(-tune.reverse * (p.surface === 'grass' ? 0.72 : p.surface === 'dirt' ? 0.48 : 1), Math.min(surfaceLimit, p.speed));
+      if (p.surface === 'grass') p.speed *= Math.exp(-0.25 * dt);
+      else if (p.surface === 'dirt') p.speed *= Math.exp(-0.55 * dt);
+      // 노면 제한은 살짝만 적용합니다. 도로로 복귀할 수 있도록 속도를 크게 깎지 않습니다.
+      const surfaceRatio = p.surface === 'grass' ? 0.92 : p.surface === 'dirt' ? 0.82 : 1;
+      const surfaceLimit = tune.topSpeed * (boosting ? 1.18 : 1) * surfaceRatio * (p.drafting && !boosting ? 1.025 : 1);
+      p.speed = Math.max(-tune.reverse * surfaceRatio, Math.min(surfaceLimit, p.speed));
       p.x = Math.max(-420, Math.min(420, p.x));
       p.z = Math.max(-520, Math.min(520, p.z));
       updateRaceProgress(room, p, now, track);

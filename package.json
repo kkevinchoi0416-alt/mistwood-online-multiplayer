@@ -2,7 +2,7 @@
   "name": "mistwood-online-v2",
   "version": "1.0.0",
   "private": true,
-  "description": "MISTWOOD ONLINE V2: multiplayer racing with player tuning, 10 selectable tracks, and limited nitro boosts",
+  "description": "MISTWOOD ONLINE V2: multiplayer racing with host-controlled room-wide tuning, 10 technical tracks, slipstream and limited nitro boosts",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
