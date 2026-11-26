@@ -160,7 +160,6 @@
 #roomCodeLabel{font-size:10px;letter-spacing:.14em;color:#a8c5b7;font-weight:850}
 @media(max-width:650px){.room-browser-list{grid-template-columns:1fr}.room-browser-head{align-items:flex-start}.room-browser-head .btn{padding:8px 10px;font-size:9px}.room-card{padding:10px}.lobby-head{align-items:flex-start}.lobby-head>.row{flex-wrap:wrap;justify-content:flex-end}.room-title{font-size:15px}}
 
-.invite-prompt{margin:12px 0;border-color:rgba(255,155,96,.48)!important;background:linear-gradient(120deg,rgba(255,140,75,.12),rgba(255,255,255,.025))!important}
 </style>
 </head>
 <body>
@@ -170,7 +169,6 @@
   <div class="home-hero-top"><span class="home-series">MISTWOOD MOTORSPORT <i>·</i> ONLINE RACING SERIES</span><div class="home-hero-meta"><span class="home-season">SEASON 01 / MULTIPLAYER</span><span class="home-live-pill" aria-live="polite"><i></i><b id="homeOnlineCount">0</b><span>PLAYERS ONLINE</span></span></div></div>
   <div class="brand"><div><div class="eyebrow">YOUR GRID. YOUR LINE. YOUR RACE.</div><h1>MISTWOOD <span class="race-word">ONLINE</span></h1><div class="sub">친구들과 같은 서킷에서 경쟁하는 실시간 멀티플레이 레이싱 · 선두 완주 후 20초 추가 주행</div></div><span id="connectionPill" class="connection-status">서버 연결 중...</span></div>
   <div class="home-stats"><div><b>08</b><span>MAX DRIVERS</span></div><div><b>10</b><span>RACE CIRCUITS</span></div><div><b>20</b><span>MAX LAPS</span></div><div><b>LIVE</b><span>ONLINE RACING</span></div></div>
-  <section id="invitePrompt" class="box invite-prompt" style="display:none" aria-live="polite"><div class="box-title">RACE INVITATION · 초대 링크 확인</div><div id="invitePromptText" class="fineprint">초대받은 방이 있습니다. 닉네임과 차량을 확인해 주세요.</div><button id="acceptInviteBtn" class="btn" style="width:100%;margin-top:8px">초대받은 방 입장</button></section>
   <div class="top-grid">
    <section class="box">
     <div class="box-title">01 / DRIVER PROFILE</div>
@@ -181,18 +179,14 @@
    <section class="box">
     <div class="box-title">02 / CREATE RACE ROOM</div>
     <input id="roomNameInput" class="field" maxlength="28" placeholder="방 이름 (예: 친구들과 그랑프리)" value="" />
-    <div class="row" style="margin-top:8px;align-items:center">
-     <label for="roomVisibilitySelect" class="fineprint" style="margin:0;white-space:nowrap">방 공개 설정</label>
-     <select id="roomVisibilitySelect" class="field small-field" style="flex:1;max-width:150px"><option value="public">공개 방 · 목록에 표시</option><option value="private">비공개 방 · 초대 링크만</option></select>
-    </div>
     <button id="createRoomBtn" class="btn" style="width:100%;margin-top:9px" disabled>새 온라인 방 만들기</button>
     <div id="connectionStatus" class="status">온라인 서버에 연결하는 중입니다.</div>
    </section>
   </div>
   <section class="box room-browser-box">
-   <div class="room-browser-head"><div><div class="box-title" style="margin:0">03 / PUBLIC RACE ROOMS</div><div class="fineprint" style="margin:4px 0 0">친구가 만든 공개 방을 골라 바로 참가하거나 관전하세요.</div></div><button id="refreshRoomsBtn" class="btn secondary" type="button">↻ 새로고침</button></div>
+   <div class="room-browser-head"><div><div class="box-title" style="margin:0">03 / PUBLIC RACE ROOMS</div><div class="fineprint" style="margin:4px 0 0">생성된 모든 방이 여기에 표시됩니다. 대기 중인 방은 참가하고, 진행 중인 방은 관전할 수 있어요.</div></div><button id="refreshRoomsBtn" class="btn secondary" type="button">↻ 새로고침</button></div>
    <div id="roomBrowserList" class="room-browser-list" aria-live="polite"><div class="room-browser-empty">공개 방 목록을 불러오는 중...</div></div>
-   <div class="fineprint">비공개 방은 목록에 나타나지 않습니다. 방장에게 받은 초대 링크를 열면 참가할 수 있어요.</div>
+   <div class="fineprint">방은 모두 공개로 운영되며, 목록에서 선택해 바로 입장할 수 있습니다.</div>
   </section>
   <section class="box" style="margin:12px 0">
    <div class="box-title">03 / CIRCUIT SELECTION · 10 TRACKS</div>
@@ -208,11 +202,11 @@
    <div id="tuningAdvanced" class="tune-grid" style="display:none"></div>
    <div class="fineprint">초급 과제: 최고 속도·가속·조향 3개만 바꿔 보기. 심화 과제: 브레이크·접지력·후진 속도·관성까지 조절해 보세요.</div>
   </section>
-  <div class="garage-head"><strong>05 / SELECT YOUR MACHINE · 11 VEHICLES</strong><span>차량 외형은 각자 선택 · 튜닝은 방장 공통</span></div>
+  <div class="garage-head"><strong>05 / SELECT YOUR MACHINE · 15 VEHICLES</strong><span>차량 외형은 각자 선택 · 튜닝은 방장 공통</span></div>
   <div id="garage" class="garage"></div>
   <div id="selectedInfo" class="selected-info"></div>
     <div id="roomLobby" class="lobby">
-   <div class="lobby-head"><div><div class="box-title" style="margin:0 0 4px">ONLINE ROOM</div><div class="room-title" id="roomNameLabel">MISTWOOD RACE</div><div class="room-code" id="roomCodeLabel">ROOM -----</div><div class="fineprint" id="roomVisibilityLabel" style="margin:3px 0 0">공개 방</div></div><div class="row"><button id="copyInviteBtn" class="btn secondary">초대 링크 복사</button><button id="leaveRoomBtn" class="btn secondary">나가기</button></div></div>
+   <div class="lobby-head"><div><div class="box-title" style="margin:0 0 4px">ONLINE ROOM</div><div class="room-title" id="roomNameLabel">MISTWOOD RACE</div><div class="room-code" id="roomCodeLabel">ROOM -----</div><div class="fineprint" id="roomVisibilityLabel" style="margin:3px 0 0">전체 공개 · 방 목록에서 입장 가능</div></div><div class="row"><button id="leaveRoomBtn" class="btn secondary">나가기</button></div></div>
    <div id="playerList" class="players"></div>
    <div class="row" style="align-items:center;margin:10px 0"><label for="lapCountSelect" class="fineprint" style="margin:0">레이스 랩 수</label><select id="lapCountSelect" class="field small-field" style="max-width:100px"><option value="1">1랩</option><option value="2">2랩</option><option value="3" selected>3랩</option><option value="4">4랩</option><option value="5">5랩</option><option value="6">6랩</option><option value="7">7랩</option><option value="8">8랩</option><option value="9">9랩</option><option value="10">10랩</option><option value="11">11랩</option><option value="12">12랩</option><option value="13">13랩</option><option value="14">14랩</option><option value="15">15랩</option><option value="16">16랩</option><option value="17">17랩</option><option value="18">18랩</option><option value="19">19랩</option><option value="20">20랩</option></select></div>
    <div class="row"><button id="startRoomBtn" class="btn" disabled>레이스 시작</button><span id="hostHint" class="fineprint">방장이 게임을 시작할 수 있어요.</span></div>
@@ -243,7 +237,7 @@
 <div id="raceResultOverlay" class="overlay result-overlay"><main class="panel result-panel"><div class="eyebrow">MISTWOOD ONLINE · RACE RESULTS</div><h1>레이스 종료</h1><div id="raceResultSummary" class="sub">최종 순위와 주행 피드백</div><div id="raceResultList" class="result-list"></div><div class="row result-actions"><button id="raceAgainBtn" class="btn">다시 레이스</button><button id="resultLobbyBtn" class="btn secondary">대기실로</button></div><div id="raceResultHint" class="fineprint"></div></main></div>
 <div id="toast"></div>
 <script type="module">
-const VEHICLES = [{"id":"grandeur","name":"2023 현대 그랜저","short":"그랜저","kind":"대형 세단 · 균형형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12108744,"body":"sedan","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":5.0,"collisionWidth":2.0,"powertrain":"combustion"},{"id":"tesla3","name":"테슬라 모델 3","short":"모델 3","kind":"전기 세단 · 가속형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":10135476,"body":"sedan","scale":0.97,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.9,"collisionWidth":1.98,"powertrain":"electric"},{"id":"ioniq6","name":"현대 아이오닉 6","short":"아이오닉 6","kind":"전기 세단 · 안정형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":5464427,"body":"streamline","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":5.16,"collisionWidth":1.96,"powertrain":"electric"},{"id":"ev6","name":"기아 EV6","short":"EV6","kind":"전기 크로스오버 · 다목적형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":7440255,"body":"crossover","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.78,"collisionWidth":2.12,"powertrain":"electric"},{"id":"taycan","name":"포르쉐 타이칸","short":"타이칸","kind":"전기 스포츠 세단 · 고속형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":3767226,"body":"sports","scale":0.94,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.96,"collisionWidth":2.02,"powertrain":"electric"},{"id":"supra","name":"토요타 GR 수프라","short":"GR 수프라","kind":"스포츠 쿠페 · 민첩형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":14240562,"body":"coupe","scale":0.92,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.48,"collisionWidth":2.04,"powertrain":"combustion"},{"id":"toyotaPriusHybrid","name":"토요타 프리우스 하이브리드","short":"프리우스","kind":"하이브리드 해치백 · 전기/연료 자동 전환","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":7248515,"body":"hatchback","scale":0.98,"hybrid":true,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.65,"collisionWidth":1.84,"powertrain":"hybrid"},{"id":"jeepWrangler","name":"지프 랭글러 루비콘","short":"랭글러","kind":"정통 오프로드 SUV · 높은 차체와 안정감","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12684101,"body":"offroad","scale":1.04,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.35,"collisionWidth":1.96,"powertrain":"combustion"},{"id":"mazdaMx5","name":"마쓰다 MX-5 미아타","short":"MX-5","kind":"경량 2인승 로드스터 · 민첩한 코너링","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12005186,"body":"lightRoadster","scale":0.92,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":3.92,"collisionWidth":1.76,"powertrain":"combustion"},{"id":"eventTruck","name":"숲속 탐험 트럭","short":"이벤트 트럭","kind":"이벤트 전용 · 무겁고 안정적","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":14001732,"body":"truck","scale":1.13,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":5.9,"collisionWidth":2.35,"powertrain":"combustion"},{"id":"subaruWRX","name":"스바루 WRX STI 랠리","short":"WRX 랠리","kind":"AWD 랠리 세단 · 접지력과 가속 특화","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":2652375,"body":"sedan","scale":0.98,"rally":true,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.72,"collisionWidth":1.96,"powertrain":"combustion"}];
+const VEHICLES = [{"id":"grandeur","name":"2023 현대 그랜저","short":"그랜저","kind":"대형 세단 · 균형형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12108744,"body":"sedan","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":5.0,"collisionWidth":2.0,"powertrain":"combustion"},{"id":"tesla3","name":"테슬라 모델 3","short":"모델 3","kind":"전기 세단 · 가속형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":10135476,"body":"sedan","scale":0.97,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.9,"collisionWidth":1.98,"powertrain":"electric"},{"id":"ioniq6","name":"현대 아이오닉 6","short":"아이오닉 6","kind":"전기 세단 · 안정형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":5464427,"body":"streamline","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":5.16,"collisionWidth":1.96,"powertrain":"electric"},{"id":"ev6","name":"기아 EV6","short":"EV6","kind":"전기 크로스오버 · 다목적형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":7440255,"body":"crossover","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.78,"collisionWidth":2.12,"powertrain":"electric"},{"id":"taycan","name":"포르쉐 타이칸","short":"타이칸","kind":"전기 스포츠 세단 · 고속형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":3767226,"body":"sports","scale":0.94,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.96,"collisionWidth":2.02,"powertrain":"electric"},{"id":"supra","name":"토요타 GR 수프라","short":"GR 수프라","kind":"스포츠 쿠페 · 민첩형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":14240562,"body":"coupe","scale":0.92,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.48,"collisionWidth":2.04,"powertrain":"combustion"},{"id":"toyotaPriusHybrid","name":"토요타 프리우스 하이브리드","short":"프리우스","kind":"하이브리드 해치백 · 전기/연료 자동 전환","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":7248515,"body":"hatchback","scale":0.98,"hybrid":true,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.65,"collisionWidth":1.84,"powertrain":"hybrid"},{"id":"jeepWrangler","name":"지프 랭글러 루비콘","short":"랭글러","kind":"정통 오프로드 SUV · 높은 차체와 안정감","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12684101,"body":"offroad","scale":1.04,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.35,"collisionWidth":1.96,"powertrain":"combustion"},{"id":"mazdaMx5","name":"마쓰다 MX-5 미아타","short":"MX-5","kind":"경량 2인승 로드스터 · 민첩한 코너링","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12005186,"body":"lightRoadster","scale":0.92,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":3.92,"collisionWidth":1.76,"powertrain":"combustion"},{"id":"eventTruck","name":"숲속 탐험 트럭","short":"이벤트 트럭","kind":"이벤트 전용 · 무겁고 안정적","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":14001732,"body":"truck","scale":1.13,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":5.9,"collisionWidth":2.35,"powertrain":"combustion"},{"id":"subaruWRX","name":"스바루 WRX STI 랠리","short":"WRX 랠리","kind":"AWD 랠리 세단 · 접지력과 가속 특화","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":2652375,"body":"sedan","scale":0.98,"rally":true,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.72,"collisionWidth":1.96,"powertrain":"combustion"},{"id":"bmwM4","name":"BMW M4 컴페티션","short":"BMW M4","kind":"고성능 쿠페 · 세로형 키드니 그릴","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":3043015,"body":"customCar","scale":1,"specialAbility":"외형 전용 · 모든 차량의 주행 성능과 충돌 크기 동일","collisionLength":5.0,"collisionWidth":2.0,"powertrain":"combustion"},{"id":"nissanGtr","name":"닛산 GT-R R35","short":"GT-R","kind":"슈퍼 스포츠 쿠페 · 넓은 차체와 원형 4등식 후미등","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":3158064,"body":"customCar","scale":1,"specialAbility":"외형 전용 · 모든 차량의 주행 성능과 충돌 크기 동일","collisionLength":5.0,"collisionWidth":2.0,"powertrain":"combustion"},{"id":"corvetteC8","name":"쉐보레 콜벳 C8","short":"콜벳 C8","kind":"미드십 스포츠카 · 낮은 쐐기형 차체와 측면 흡기구","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":14233651,"body":"customCar","scale":1,"specialAbility":"외형 전용 · 모든 차량의 주행 성능과 충돌 크기 동일","collisionLength":5.0,"collisionWidth":2.0,"powertrain":"combustion"},{"id":"mustangDarkHorse","name":"포드 머스탱 다크호스","short":"머스탱","kind":"머슬 쿠페 · 긴 보닛과 3줄 헤드램프","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":14848811,"body":"customCar","scale":1,"specialAbility":"외형 전용 · 모든 차량의 주행 성능과 충돌 크기 동일","collisionLength":5.0,"collisionWidth":2.0,"powertrain":"combustion"}];
 // 같은 tracks.json을 서버와 공유해 맵 모양과 랩 판정이 어긋나지 않게 합니다.
 const TRACKS = await fetch('/tracks.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('tracks.json을 불러오지 못했습니다.'); return r.json(); });
 const TRACK_BY_ID = new Map(TRACKS.map(track => [track.id, track]));
@@ -282,10 +276,7 @@ let trackGroup = null, forestGroup = null;
 let socket = null;
 let connected = false;
 let roomCode = '';
-let roomInviteToken = '';
 let roomEntryPending = false;
-let pendingInviteToken = '';
-let invitePromptShown = false;
 let hostId = '';
 let roomStarted = false;
 let raceState = null;
@@ -324,7 +315,7 @@ function serverNow(){ return Date.now()+(hasServerClock?serverClockOffsetMs:0); 
 // 홈 화면 온라인 인원과 공개 방 목록은 /api/rooms 한 번으로 함께 갱신합니다.
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshRoomBrowser();});
 
-// 공개 방 목록은 서버가 만든 안전한 요약 정보만 표시합니다. 초대 토큰·비공개 방은 내려오지 않습니다.
+// 모든 방은 공개로 운영하며, 서버에서 받은 방 요약만 목록에 표시합니다.
 let roomBrowserBusy = false;
 async function refreshRoomBrowser(){
  const list=el('roomBrowserList');if(!list||roomBrowserBusy)return;
@@ -419,11 +410,6 @@ function connectServer(){
  socket.addEventListener('open',()=>{
   connected=true;el('connectionPill').textContent='ONLINE SERVER CONNECTED';el('connectionPill').classList.add('online');el('createRoomBtn').disabled=false;
   setStatus('서버 연결 완료! 공개 방 목록에서 참가하거나 새 방을 만들 수 있습니다.');refreshRoomBrowser();
-  const invite=new URLSearchParams(location.search).get('invite');
-  if(invite&&!invitePromptShown){
-   invitePromptShown=true;pendingInviteToken=invite;el('invitePrompt').style.display='block';
-   el('invitePromptText').textContent='친구가 보낸 초대 링크입니다. 닉네임과 차량을 확인한 뒤 입장 버튼을 눌러 주세요. 대기 중인 방은 레이스 참가, 진행 중인 방은 관전으로 연결됩니다.';
-  }
  });
  socket.addEventListener('message',event=>{let msg;try{msg=JSON.parse(event.data)}catch{return;} handleServerMessage(msg);});
  socket.addEventListener('close',()=>{connected=false;roomEntryPending=false;el('connectionPill').textContent='SERVER OFFLINE';el('connectionPill').classList.remove('online');el('createRoomBtn').disabled=true;setStatus('서버 연결이 끊어졌습니다. 페이지를 새로고침해 주세요.');refreshRoomBrowser();});
@@ -432,14 +418,14 @@ function connectServer(){
 function handleServerMessage(msg){
  if(Number.isFinite(msg.serverTime))syncServerClock(msg.serverTime);
  if(msg.type==='connected'){setStatus(msg.message||'연결 완료');return;}
- if(msg.type==='error'){roomEntryPending=false;el('acceptInviteBtn').disabled=false;document.querySelectorAll('[data-room-action]').forEach(button=>button.disabled=false);setStatus(msg.message);showToast(msg.message);refreshRoomBrowser();return;}
- if(msg.type==='room-created'||msg.type==='room-joined'){roomEntryPending=false;pendingInviteToken='';el('invitePrompt').style.display='none';spectatorMode=false;roomCode=msg.roomCode;localPlayerId=msg.playerId;el('roomCodeLabel').textContent=`ROOM ${roomCode}`;showToast(msg.type==='room-created'?'레이스 방을 만들었습니다!':'레이스 방에 참가했습니다!');refreshRoomBrowser();return;}
- if(msg.type==='spectator-joined'){roomEntryPending=false;pendingInviteToken='';el('invitePrompt').style.display='none';spectatorMode=true;spectatorId=msg.spectatorId;localPlayerId=null;roomCode=msg.roomCode;roomStarted=true;spectatorCameraMode='leader';spectatorTargetId=null;showToast('관전 모드에 입장했습니다!');refreshRoomBrowser();return;}
+ if(msg.type==='error'){roomEntryPending=false;document.querySelectorAll('[data-room-action]').forEach(button=>button.disabled=false);setStatus(msg.message);showToast(msg.message);refreshRoomBrowser();return;}
+ if(msg.type==='room-created'||msg.type==='room-joined'){roomEntryPending=false;spectatorMode=false;roomCode=msg.roomCode;localPlayerId=msg.playerId;el('roomCodeLabel').textContent=`ROOM ${roomCode}`;showToast(msg.type==='room-created'?'레이스 방을 만들었습니다!':'레이스 방에 참가했습니다!');refreshRoomBrowser();return;}
+ if(msg.type==='spectator-joined'){roomEntryPending=false;spectatorMode=true;spectatorId=msg.spectatorId;localPlayerId=null;roomCode=msg.roomCode;roomStarted=true;spectatorCameraMode='leader';spectatorTargetId=null;showToast('관전 모드에 입장했습니다!');refreshRoomBrowser();return;}
  if(msg.type==='room-closed'){showToast(msg.message||'관전 중인 방이 종료되었습니다.');resetToGarage();return;}
  if(msg.type==='left-room'){resetToGarage();return;}
  if(msg.type==='room-state'){
   const newRaceStart=!!msg.started&&['countdown','running'].includes(msg.race?.status)&&(!raceState||raceState.countdownEndsAt!==msg.race.countdownEndsAt);
-  roomCode=msg.roomCode;roomInviteToken=msg.inviteToken||roomInviteToken;hostId=msg.hostId;roomStarted=!!msg.started;latestPlayers=msg.players||[];raceState=msg.race||null;
+  roomCode=msg.roomCode;hostId=msg.hostId;roomStarted=!!msg.started;latestPlayers=msg.players||[];raceState=msg.race||null;
   if(msg.mapId&&msg.mapId!==currentMapId)chooseMap(msg.mapId,true);
   if(spectatorMode){
    if(!roomStarted||!raceState){send({type:'leave-room'});showToast('관전 중인 레이스가 대기실로 돌아갔습니다.');return;}
@@ -775,7 +761,7 @@ function renderControlGuide(){
 function updateLobby(state){
  el('roomLobby').classList.add('show');el('roomCodeLabel').textContent=`ROOM ${state.roomCode}`;
  el('roomNameLabel').textContent=state.roomName||'MISTWOOD RACE';
- el('roomVisibilityLabel').textContent=state.visibility==='private'?'비공개 방 · 초대 링크로만 입장':'공개 방 · 방 목록에 표시';
+ el('roomVisibilityLabel').textContent='전체 공개 · 방 목록에서 입장 가능';
  const list=state.players||[];
  el('playerList').innerHTML=list.map(p=>`<div class="player-chip"><strong>${escapeHtml(p.name)} ${p.host?'👑':''}</strong><span>${escapeHtml((VEHICLES.find(v=>v.id===p.vehicleId)||VEHICLES[0]).short)}${p.id===localPlayerId?' · 나':''}</span></div>`).join('');
  const isHost=state.hostId===localPlayerId;const canHostEdit=isHost&&!state.started;
@@ -793,7 +779,7 @@ function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':
 function createRoom(){
  if(!connected||roomEntryPending)return;
  const roomName=el('roomNameInput').value.trim();
- send({type:'create-room',name:el('playerName').value,roomName,visibility:el('roomVisibilitySelect').value,vehicleId:selectedVehicleId,mapId:currentMapId,tune:currentTune});
+ send({type:'create-room',name:el('playerName').value,roomName,vehicleId:selectedVehicleId,mapId:currentMapId,tune:currentTune});
 }
 function enterGame(){
  spectatorMode=false;spectatorCameraInitialized=false;
@@ -805,14 +791,7 @@ function returnToLobbyView(){
  spectatorMode=false;spectatorId=null;spectatorCameraInitialized=false;spectatorCameraKeys.clear();
  el('spectatorHud').classList.remove('show');el('spectatorBoard').classList.remove('show');el('startOverlay').style.display='flex';el('controlGuide').classList.remove('show');el('finishCountdownHud').classList.remove('show');el('gameHud').classList.remove('show');el('rightHud').classList.remove('show');el('gameButtons').classList.remove('show');el('mobileControls').classList.remove('show');el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');el('startCountdown').classList.remove('show');el('boostHud').classList.remove('show');el('draftHud').classList.remove('show');el('racingDash').classList.remove('show');el('trackMapPanel').classList.remove('show');el('dashDriverStrip').classList.remove('show');el('raceResultOverlay').classList.remove('show');raceResultsShown=false;raceState=null;controls={forward:false,reverse:false,left:false,right:false,brake:false};
 }
-function resetToGarage(){roomCode='';roomInviteToken='';localPlayerId=null;hostId='';roomStarted=false;latestPlayers=[];roomEntryPending=false;spectatorMode=false;spectatorId=null;spectatorCameraInitialized=false;for(const p of remotePlayers.values())scene?.remove(p.root);remotePlayers.clear();if(localRoot){scene?.remove(localRoot);localRoot=null;}el('roomLobby').classList.remove('show');returnToLobbyView();setStatus('방에서 나왔습니다. 공개 방 목록을 새로고침합니다.');refreshRoomBrowser();}
-
-function copyInviteLink(){
- if(!roomInviteToken){showToast('초대 링크를 아직 준비하지 못했습니다.');return;}
- const inviteUrl=new URL(location.href);inviteUrl.searchParams.delete('join');inviteUrl.searchParams.set('invite',roomInviteToken);
- const text=inviteUrl.toString();
- if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>showToast('초대 링크를 복사했습니다!')).catch(()=>showToast(text));else showToast(text);
-}
+function resetToGarage(){roomCode='';localPlayerId=null;hostId='';roomStarted=false;latestPlayers=[];roomEntryPending=false;spectatorMode=false;spectatorId=null;spectatorCameraInitialized=false;for(const p of remotePlayers.values())scene?.remove(p.root);remotePlayers.clear();if(localRoot){scene?.remove(localRoot);localRoot=null;}el('roomLobby').classList.remove('show');returnToLobbyView();setStatus('방에서 나왔습니다. 공개 방 목록을 새로고침합니다.');refreshRoomBrowser();}
 
 function setControl(name,value){controls[name]=value;}
 window.addEventListener('keydown',e=>{
@@ -841,12 +820,11 @@ el('advancedToggle').addEventListener('click',()=>{isAdvancedTuning=!isAdvancedT
 el('pcChoice').addEventListener('click',()=>{selectedDevice='pc';el('pcChoice').classList.add('active');el('mobileChoice').classList.remove('active');renderControlGuide();});
 el('mobileChoice').addEventListener('click',()=>{selectedDevice='mobile';el('mobileChoice').classList.add('active');el('pcChoice').classList.remove('active');renderControlGuide();});
 el('createRoomBtn').addEventListener('click',createRoom);
-el('acceptInviteBtn').addEventListener('click',()=>{if(!connected||!pendingInviteToken||roomEntryPending)return;roomEntryPending=true;el('acceptInviteBtn').disabled=true;send({type:'join-invite',inviteToken:pendingInviteToken,name:el('playerName').value,vehicleId:selectedVehicleId});});
 el('roomBrowserList').addEventListener('click',event=>{const button=event.target.closest('[data-room-action]');if(!button||button.disabled)return;enterListedRoom(button.dataset.roomAction,button.dataset.roomCode);});
 el('refreshRoomsBtn').addEventListener('click',refreshRoomBrowser);
 el('spectatorExitBtn').addEventListener('click',()=>send({type:'leave-room'}));el('spectatorLeaderBtn').addEventListener('click',()=>setSpectatorCamera('leader'));el('spectatorOverviewBtn').addEventListener('click',()=>setSpectatorCamera('overview'));el('spectatorFreeBtn').addEventListener('click',()=>setSpectatorCamera('free'));el('spectatorTargetSelect').addEventListener('change',()=>{if(el('spectatorTargetSelect').value)setSpectatorCamera('selected');else setSpectatorCamera('leader');});el('startRoomBtn').addEventListener('click',()=>send({type:'start-room',lapsToWin:Number(el('lapCountSelect').value)||3}));
 el('raceAgainBtn').addEventListener('click',()=>send({type:'restart-race'}));
-el('resultLobbyBtn').addEventListener('click',()=>{if(hostId===localPlayerId)send({type:'stop-room'});else send({type:'leave-room'});});el('copyInviteBtn').addEventListener('click',copyInviteLink);el('leaveRoomBtn').addEventListener('click',()=>send({type:'leave-room'}));el('returnLobbyBtn').addEventListener('click',()=>{if(hostId===localPlayerId)send({type:'stop-room'});else showToast('방장이 대기실로 돌아가면 함께 이동합니다.');});
+el('resultLobbyBtn').addEventListener('click',()=>{if(hostId===localPlayerId)send({type:'stop-room'});else send({type:'leave-room'});});el('leaveRoomBtn').addEventListener('click',()=>send({type:'leave-room'}));el('returnLobbyBtn').addEventListener('click',()=>{if(hostId===localPlayerId)send({type:'stop-room'});else showToast('방장이 대기실로 돌아가면 함께 이동합니다.');});
 const spectatorCanvas=el('gameCanvas');
 spectatorCanvas.addEventListener('pointerdown',e=>{if(!spectatorMode||spectatorCameraMode!=='free')return;spectatorDragging=true;spectatorLastPointer={x:e.clientX,y:e.clientY};try{spectatorCanvas.setPointerCapture(e.pointerId)}catch{}});
 spectatorCanvas.addEventListener('pointermove',e=>{if(!spectatorDragging||!spectatorLastPointer)return;const dx=e.clientX-spectatorLastPointer.x,dy=e.clientY-spectatorLastPointer.y;spectatorLastPointer={x:e.clientX,y:e.clientY};spectatorFreeYaw-=dx*.004;spectatorFreePitch=Math.max(-1.15,Math.min(.65,spectatorFreePitch+dy*.003));});
@@ -920,14 +898,18 @@ try{
         mazdaMx5:     { length:3.92, width:1.76, height:0.48, wheelZ:[-1.28,1.28] },
         subaruWRX:    { length:4.72, width:1.96, height:0.66, wheelZ:[-1.52,1.52] },
         vipRevuelto:  { length:4.78, width:2.08, height:0.46, wheelZ:[-1.58,1.58] },
-        adminFireTruck:{ length:6.85, width:2.62, height:1.18, wheelZ:[-2.35,0,2.35] }
+        adminFireTruck:{ length:6.85, width:2.62, height:1.18, wheelZ:[-2.35,0,2.35] },
+        bmwM4:       { length:5.00, width:2.00, height:0.62, wheelZ:[-1.58,1.58] },
+        nissanGtr:   { length:5.00, width:2.00, height:0.66, wheelZ:[-1.58,1.58] },
+        corvetteC8:  { length:5.00, width:2.00, height:0.54, wheelZ:[-1.58,1.58] },
+        mustangDarkHorse:{ length:5.00, width:2.00, height:0.66, wheelZ:[-1.58,1.58] }
       };
       const modelSize = dimensions[vehicle.id] || null;
       const bodyLength = isHelicopter ? 5.1 : (isMotorcycle ? 3.15 : (isFireTruck ? 6.85 : (isTank || isExcavator ? 6.25 : (isHeavy ? (isCrusher ? 6.25 : 5.9) : (modelSize?.length || 5.0)))));
       const bodyWidth = isHelicopter ? 1.65 : (isMotorcycle ? 0.92 : (isFireTruck ? 2.62 : (isTank ? 3.25 : (isExcavator ? 3.15 : (isCrusher ? 2.5 : (isTruck ? 2.35 : (modelSize?.width || (vehicle.body==='crossover' ? 2.12 : 2.0))))))));
       const bodyHeight = isHelicopter ? 1.35 : (isMotorcycle ? 0.45 : (isFireTruck ? 1.18 : (isTank ? 1.1 : (isExcavator ? 1.22 : (isCrusher ? 1.04 : (isTruck ? 0.92 : (modelSize?.height || 0.68)))))));
       const wheelZ = (isTank || isMotorcycle || isHelicopter || isExcavator) ? [] : (isFireTruck ? [-2.35,0,2.35] : (isTruck ? [-1.9,1.82] : (isCrusher ? [-2.05,0,2.05] : (modelSize?.wheelZ || [-1.55,1.55]))));
-      const wheelRadius = ({tesla3:0.43,ioniq6:0.46,ev6:0.54,taycan:0.46,supra:0.48,speedster:0.50,teslaRoadster:0.48,adminPolice:0.47,toyotaPriusHybrid:0.42,jeepWrangler:0.68,mazdaMx5:0.42,subaruWRX:0.50,vipRevuelto:0.50,adminFireTruck:0.59})[vehicle.id] || (isCrusher?0.62:(isTruck?0.57:0.43));
+      const wheelRadius = ({tesla3:0.43,ioniq6:0.46,ev6:0.54,taycan:0.46,supra:0.48,speedster:0.50,teslaRoadster:0.48,adminPolice:0.47,toyotaPriusHybrid:0.42,jeepWrangler:0.68,mazdaMx5:0.42,subaruWRX:0.50,vipRevuelto:0.50,adminFireTruck:0.59,bmwM4:0.46,nissanGtr:0.46,corvetteC8:0.46,mustangDarkHorse:0.46})[vehicle.id] || (isCrusher?0.62:(isTruck?0.57:0.43));
       // 오토바이는 자동차처럼 넓은 차체가 없으므로 전용 프레임과 바퀴를 따로 만듭니다.
       if (isHelicopter) {
         // 관리자 전용 헬리콥터: 동체, 유리 캐빈, 꼬리 붐, 착륙 스키드, 회전 로터를 따로 만듭니다.
@@ -1084,6 +1066,26 @@ try{
             add(new RoundedBoxGeometry(1.76,0.48,3.92,6,0.16),bodyMat,0,0.72,0);
             add(new RoundedBoxGeometry(1.56,0.16,1.24,5,0.07),bodyMat,0,0.98,-1.38);
             add(new RoundedBoxGeometry(1.58,0.14,0.76,5,0.06),bodyMat,0,0.94,1.42);
+          } else if (vehicle.id === 'bmwM4') {
+            // BMW M4: 길고 낮은 쿠페형 기본 차체와 넓은 앞·뒤 펜더.
+            add(new RoundedBoxGeometry(2.00,0.62,5.00,7,0.18),bodyMat,0,0.78,0);
+            add(new RoundedBoxGeometry(1.94,0.24,1.55,6,0.10),bodyMat,0,0.91,-1.57);
+            add(new RoundedBoxGeometry(1.90,0.22,1.02,5,0.09),bodyMat,0,0.88,1.86);
+          } else if (vehicle.id === 'nissanGtr') {
+            // GT-R R35: 폭이 넓은 차체와 짧은 패스트백 뒤쪽을 표현합니다.
+            add(new RoundedBoxGeometry(2.00,0.66,5.00,7,0.18),bodyMat,0,0.79,0);
+            add(new RoundedBoxGeometry(1.94,0.25,1.72,6,0.10),bodyMat,0,0.93,-1.48);
+            add(new RoundedBoxGeometry(1.94,0.26,1.26,6,0.10),bodyMat,0,0.94,1.72);
+          } else if (vehicle.id === 'corvetteC8') {
+            // 콜벳 C8: 바닥에 낮게 붙은 미드십 스포츠카 비율입니다.
+            add(new RoundedBoxGeometry(2.00,0.54,5.00,7,0.18),bodyMat,0,0.72,0);
+            add(new RoundedBoxGeometry(1.92,0.18,1.78,6,0.08),bodyMat,0,0.84,-1.55);
+            add(new RoundedBoxGeometry(1.90,0.22,1.26,6,0.09),bodyMat,0,0.84,1.65);
+          } else if (vehicle.id === 'mustangDarkHorse') {
+            // 머스탱: 길고 각진 보닛, 넓은 뒤 펜더의 머슬 쿠페 실루엣.
+            add(new RoundedBoxGeometry(2.00,0.66,5.00,7,0.18),bodyMat,0,0.80,0);
+            add(new RoundedBoxGeometry(1.96,0.22,1.86,6,0.09),bodyMat,0,0.95,-1.42);
+            add(new RoundedBoxGeometry(1.94,0.25,1.16,6,0.10),bodyMat,0,0.94,1.75);
           } else {
             add(new RoundedBoxGeometry(bodyWidth,bodyHeight,bodyLength,5,0.16),bodyMat,0,0.82,0);
           }
@@ -1447,6 +1449,76 @@ try{
           add(new RoundedBoxGeometry(1.56,0.08,0.08,4,0.03),darkMat,0,0.55,-1.98);
           addFrontLed(-0.66,0.98,-2.00,0.40); addFrontLed(0.66,0.98,-2.00,0.40);
           add(new RoundedBoxGeometry(1.48,0.07,0.07,4,0.03),rearMat,0,1.02,1.98);
+        } else if (vehicle.id === 'bmwM4') {
+          // BMW M4 Competition: 키드니 그릴, 낮은 루프, M 스타일 사이드 벤트.
+          add(new RoundedBoxGeometry(1.54,0.58,1.92,6,0.14),glassMat,0,1.31,0.12,-0.10,0,0);
+          add(new RoundedBoxGeometry(1.42,0.085,1.45,5,0.05),darkMat,0,1.64,0.16);
+          add(new RoundedBoxGeometry(0.31,0.34,0.09,4,0.035),darkMat,-0.22,0.80,-2.49);
+          add(new RoundedBoxGeometry(0.31,0.34,0.09,4,0.035),darkMat,0.22,0.80,-2.49);
+          add(new RoundedBoxGeometry(0.76,0.10,0.07,4,0.03),trimMat,0,1.02,-2.49);
+          addFrontLed(-0.73,1.02,-2.43,0.48); addFrontLed(0.73,1.02,-2.43,0.48);
+          for (const side of [-1,1]) {
+            addSidePanel(side,glassMat,1.32,0.12,1.62,0.42);
+            addSidePanel(side,darkMat,0.88,-0.55,0.48,0.20,0.07);
+            add(new RoundedBoxGeometry(0.11,0.22,0.50,3,0.025),trimMat,side*1.01,0.88,-0.53,0,0,side*0.12);
+            addMirror(side,-0.76);
+          }
+          add(new RoundedBoxGeometry(1.78,0.07,0.08,4,0.03),rearMat,0,1.05,2.48);
+          for (const side of [-1,1]) {
+            add(new THREE.CylinderGeometry(0.12,0.12,0.08,18),trimMat,side*0.72,0.57,2.50,Math.PI/2,0,0);
+          }
+        } else if (vehicle.id === 'nissanGtr') {
+          // Nissan GT-R R35: 낮은 패스트백 캐빈, 네 개의 원형 후미등, 큰 리어 윙.
+          add(new RoundedBoxGeometry(1.70,0.60,1.82,6,0.14),glassMat,0,1.30,0.30,-0.10,0,0);
+          add(new RoundedBoxGeometry(1.56,0.08,1.46,5,0.04),darkMat,0,1.62,0.28);
+          add(new RoundedBoxGeometry(1.64,0.10,0.68,5,0.04),bodyMat,0,1.02,-1.88);
+          addFrontLed(-0.76,1.01,-2.42,0.44); addFrontLed(0.76,1.01,-2.42,0.44);
+          for (const side of [-1,1]) {
+            addSidePanel(side,glassMat,1.29,0.31,1.42,0.40);
+            addSidePanel(side,darkMat,0.88,0.84,0.74,0.19,0.06);
+            addMirror(side,-0.72);
+            add(new THREE.CylinderGeometry(0.16,0.16,0.075,24),rearMat,side*0.49,1.08,2.51,Math.PI/2,0,0);
+            add(new THREE.CylinderGeometry(0.16,0.16,0.075,24),rearMat,side*0.76,1.08,2.51,Math.PI/2,0,0);
+          }
+          add(new RoundedBoxGeometry(1.92,0.09,0.08,4,0.03),darkMat,0,1.08,2.43);
+          add(new RoundedBoxGeometry(0.10,0.32,0.11,3,0.03),darkMat,-0.72,1.27,1.95);
+          add(new RoundedBoxGeometry(0.10,0.32,0.11,3,0.03),darkMat,0.72,1.27,1.95);
+          add(new RoundedBoxGeometry(2.02,0.12,0.34,4,0.04),bodyMat,0,1.43,1.96);
+        } else if (vehicle.id === 'corvetteC8') {
+          // Corvette C8: 뒤쪽으로 밀린 조종석, 낮은 앞유리, 깊은 측면 공기 흡입구.
+          add(new RoundedBoxGeometry(1.50,0.50,1.62,6,0.15),glassMat,0,1.21,0.42,-0.16,0,0);
+          add(new RoundedBoxGeometry(1.38,0.075,1.20,5,0.04),darkMat,0,1.49,0.47);
+          add(new RoundedBoxGeometry(1.86,0.10,1.24,5,0.05),bodyMat,0,0.94,-1.78);
+          add(new RoundedBoxGeometry(1.74,0.10,0.76,5,0.04),darkMat,0,0.93,1.72);
+          for (const side of [-1,1]) {
+            addEllipsoid(0.30,0.24,0.72,bodyMat,side*0.86,0.78,-1.42);
+            addEllipsoid(0.32,0.25,0.74,bodyMat,side*0.86,0.78,1.38);
+            addSidePanel(side,glassMat,1.22,0.46,0.92,0.34);
+            add(new RoundedBoxGeometry(0.12,0.30,0.78,4,0.07),darkMat,side*0.99,0.76,0.46,0,0,side*0.08);
+            add(new RoundedBoxGeometry(0.09,0.26,0.42,3,0.04),trimMat,side*1.03,0.77,0.48,0,0,side*0.08);
+            addMirror(side,-0.52);
+          }
+          addFrontLed(-0.74,0.98,-2.42,0.54); addFrontLed(0.74,0.98,-2.42,0.54);
+          add(new RoundedBoxGeometry(1.68,0.07,0.08,4,0.03),rearMat,0,1.04,2.49);
+          for (let slat=0;slat<5;slat++) add(new RoundedBoxGeometry(1.34,0.035,0.065,3,0.015),darkMat,0,1.02+slat*0.055,1.78+slat*0.10);
+          add(new RoundedBoxGeometry(1.90,0.08,0.24,4,0.03),darkMat,0,0.43,2.32);
+        } else if (vehicle.id === 'mustangDarkHorse') {
+          // Mustang Dark Horse: 각진 패스트백 루프, 긴 보닛, 3줄 주간등과 삼중 후미등.
+          add(new RoundedBoxGeometry(1.72,0.64,1.82,6,0.14),glassMat,0,1.34,0.16,-0.07,0,0);
+          add(new RoundedBoxGeometry(1.54,0.09,1.46,5,0.04),darkMat,0,1.66,0.17);
+          add(new RoundedBoxGeometry(1.90,0.12,0.66,5,0.05),darkMat,0,0.75,-2.47);
+          add(new RoundedBoxGeometry(0.12,0.08,1.04,3,0.03),darkMat,-0.48,1.05,-1.52);
+          add(new RoundedBoxGeometry(0.12,0.08,1.04,3,0.03),darkMat,0.48,1.05,-1.52);
+          for (const side of [-1,1]) {
+            for (let bar=0;bar<3;bar++) add(new RoundedBoxGeometry(0.09,0.28,0.06,3,0.025),lampMat,side*(0.70+bar*0.10),1.00,-2.45,0,0,side*0.06);
+            addSidePanel(side,glassMat,1.33,0.16,1.45,0.42);
+            addSidePanel(side,darkMat,0.90,0.92,0.48,0.18,0.06);
+            addMirror(side,-0.74);
+            for (let bar=0;bar<3;bar++) add(new RoundedBoxGeometry(0.10,0.34,0.075,3,0.025),rearMat,side*(0.56+bar*0.15),1.00,2.49,0,0,side*0.05);
+          }
+          addFrontLed(-0.78,1.02,-2.40,0.30); addFrontLed(0.78,1.02,-2.40,0.30);
+          add(new RoundedBoxGeometry(1.86,0.09,0.10,4,0.03),darkMat,0,0.51,-2.49);
+          add(new RoundedBoxGeometry(1.72,0.09,0.10,4,0.03),darkMat,0,0.50,2.47);
         } else if (vehicle.id === 'subaruWRX') {
           // WRX 랠리카: 스포티한 세단 캐빈, 보닛 흡기구, 랠리 라이트와 큰 리어 윙.
           add(new RoundedBoxGeometry(1.82,.66,4.72,6,.16),bodyMat,0,.80,0);
