@@ -12,27 +12,49 @@
 .panel{width:min(1060px,100%);max-height:calc(100dvh - 32px);overflow:auto;border:1px solid #b8ead033;border-radius:24px;background:linear-gradient(145deg,rgba(13,42,36,.98),rgba(5,19,20,.98));box-shadow:0 24px 90px #0009;padding:clamp(18px,3vw,30px)}
 .brand{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}.eyebrow{font-size:10px;font-weight:950;letter-spacing:.22em;color:var(--mint)}h1{font-size:clamp(27px,5vw,44px);line-height:1.05;margin:7px 0 5px;letter-spacing:-.04em}.sub{color:var(--muted);font-size:13px;line-height:1.6}.pill{border:1px solid #a7f3ce44;border-radius:999px;padding:7px 11px;color:var(--mint);font-size:11px;font-weight:850;white-space:nowrap;background:#a7f3ce0f}
 .top-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:14px;margin:16px 0}.box{border:1px solid var(--line);background:#ffffff08;border-radius:16px;padding:14px;text-align:left}.box-title{font-size:12px;font-weight:900;color:var(--mint);margin-bottom:9px;letter-spacing:.08em}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.field{width:100%;min-width:0;padding:11px 12px;border-radius:11px;border:1px solid #bfe8d044;background:#071d1a;color:white;outline:none}.field:focus{border-color:var(--mint);box-shadow:0 0 0 3px #a7f3ce16}.small-field{max-width:170px;text-transform:uppercase}.btn{border:1px solid #b7e9d044;border-radius:11px;padding:11px 15px;background:#a7f3ce;color:#0b2b20;font-weight:950}.btn.secondary{background:#ffffff10;color:#eafff4;border-color:#ffffff24}.btn.warn{background:#ff7777;color:#310c10;border-color:#ff9e9e}.btn:disabled{opacity:.42;cursor:not-allowed}.status{font-size:11px;color:#bad6c9;min-height:19px;margin-top:7px}.device-row{display:flex;gap:8px;margin-top:10px}.device-btn{flex:1;padding:9px;border:1px solid #ffffff24;background:#ffffff08;border-radius:10px;color:#d9eee4;font-size:12px;font-weight:850}.device-btn.active{border-color:var(--mint);color:var(--mint);background:#a7f3ce17}
-.garage-head{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:18px 0 9px}.garage-head strong{font-size:14px}.garage-head span{color:var(--muted);font-size:11px}.garage{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.car-card{position:relative;min-width:0;text-align:left;border:1px solid #ffffff1b;border-radius:13px;padding:10px;background:linear-gradient(145deg,#ffffff0d,#ffffff05);color:white;transition:.15s;min-height:120px}.car-card:hover{transform:translateY(-2px);border-color:#a7f3ce66}.car-card.selected{border-color:var(--mint);box-shadow:inset 0 0 0 1px #a7f3ce55;background:#a7f3ce17}.car-card.locked{opacity:.68}.car-card b{display:block;font-size:12px;line-height:1.3;margin:5px 0}.car-card small{display:block;color:#b4cfc1;font-size:10px;line-height:1.4}.car-tag{display:inline-flex;padding:3px 6px;border-radius:999px;font-size:9px;font-weight:900;letter-spacing:.04em;background:#ffffff12;color:#b9d8c9}.car-tag.vip{background:#a78bfa22;color:#d6c7ff}.car-tag.admin{background:#f3c76e22;color:#ffe08a}.car-tag.normal{background:#a7f3ce16;color:#a7f3ce}.lock{position:absolute;right:8px;top:8px;font-size:9px;color:#ffe08a;font-weight:900}.selected-info{margin-top:10px;padding:11px 13px;border-radius:12px;border:1px solid #a7f3ce26;background:#a7f3ce0b;color:#d9f3e5;font-size:11px;line-height:1.55}.unlock-row{display:none;margin-top:10px;gap:8px;align-items:center}.unlock-row.show{display:flex}.unlock-row input{max-width:210px}.lobby{display:none;margin-top:16px;padding:15px;border-radius:16px;background:#061b19;border:1px solid #a7f3ce32}.lobby.show{display:block}.lobby-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.room-code{font-size:25px;font-weight:1000;letter-spacing:.18em;color:var(--gold)}.players{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:12px 0}.player-chip{border:1px solid #ffffff18;background:#ffffff08;border-radius:10px;padding:9px;font-size:11px;min-width:0}.player-chip strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.player-chip span{color:#a9c5b8;font-size:10px}.fineprint{font-size:10px;color:#9fbaad;line-height:1.55;margin-top:12px}
-#connectionPill{font-size:10px;padding:6px 9px;border-radius:999px;background:#ff77771a;color:#ffaaaa;border:1px solid #ff777744}#connectionPill.online{background:#a7f3ce13;color:var(--mint);border-color:#a7f3ce44}
-#pinOverlay{z-index:45;display:none}#pinOverlay.show{display:flex}.pin-panel{width:min(400px,100%);padding:22px;border:1px solid #c9ead44a;border-radius:18px;background:#0b2824;box-shadow:0 20px 70px #000a;text-align:center}.pin-panel h2{margin:4px 0 8px}.pin-panel p{color:#b5d0c4;font-size:12px;line-height:1.6}
-.hud{position:fixed;z-index:8;top:12px;left:12px;display:none;gap:7px;pointer-events:none;max-width:calc(100vw - 24px);flex-wrap:wrap}.hud.show{display:flex}.hud-card{min-width:86px;padding:8px 10px;border-radius:12px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(8px)}.hud-card small{display:block;color:#b4cfc1;font-size:9px;letter-spacing:.08em}.hud-card strong{font-size:19px;font-weight:950;font-variant-numeric:tabular-nums}.hud-card strong.mint{color:var(--mint)}.right-hud{position:fixed;z-index:8;top:12px;right:12px;display:none;min-width:150px;max-width:220px;padding:10px 12px;border-radius:13px;background:var(--panel);border:1px solid var(--line);pointer-events:none}.right-hud.show{display:block}.right-hud strong{color:var(--mint);font-size:11px}.online-list{margin-top:5px;font-size:10px;line-height:1.6;color:#d3e8dc}.game-buttons{position:fixed;z-index:9;right:12px;bottom:12px;display:none;gap:7px}.game-buttons.show{display:flex}.mini-btn{border:1px solid #ffffff35;background:#071b1bd9;color:#effff6;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:850;backdrop-filter:blur(8px)}
+.garage-head{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:18px 0 9px}.garage-head strong{font-size:14px}.garage-head span{color:var(--muted);font-size:11px}.garage{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.car-card{position:relative;min-width:0;text-align:left;border:1px solid #ffffff1b;border-radius:13px;padding:10px;background:linear-gradient(145deg,#ffffff0d,#ffffff05);color:white;transition:.15s;min-height:120px}.car-card:hover{transform:translateY(-2px);border-color:#a7f3ce66}.car-card.selected{border-color:var(--mint);box-shadow:inset 0 0 0 1px #a7f3ce55;background:#a7f3ce17}.car-card b{display:block;font-size:12px;line-height:1.3;margin:5px 0}.car-card small{display:block;color:#b4cfc1;font-size:10px;line-height:1.4}.car-tag{display:inline-flex;padding:3px 6px;border-radius:999px;font-size:9px;font-weight:900;letter-spacing:.04em;background:#ffffff12;color:#b9d8c9}.car-tag.normal{background:#a7f3ce16;color:#a7f3ce}.selected-info{margin-top:10px;padding:11px 13px;border-radius:12px;border:1px solid #a7f3ce26;background:#a7f3ce0b;color:#d9f3e5;font-size:11px;line-height:1.55}.lobby{display:none;margin-top:16px;padding:15px;border-radius:16px;background:#061b19;border:1px solid #a7f3ce32}.lobby.show{display:block}.lobby-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.room-code{font-size:25px;font-weight:1000;letter-spacing:.18em;color:var(--gold)}.players{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:12px 0}.player-chip{border:1px solid #ffffff18;background:#ffffff08;border-radius:10px;padding:9px;font-size:11px;min-width:0}.player-chip strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.player-chip span{color:#a9c5b8;font-size:10px}.fineprint{font-size:10px;color:#9fbaad;line-height:1.55;margin-top:12px}
+.right-hud{position:fixed;z-index:8;top:12px;right:12px;display:none;min-width:150px;max-width:220px;padding:10px 12px;border-radius:13px;background:var(--panel);border:1px solid var(--line);pointer-events:none}.right-hud.show{display:block}.right-hud strong{color:var(--mint);font-size:11px}.online-list{margin-top:5px;font-size:10px;line-height:1.6;color:#d3e8dc}.game-buttons{position:fixed;z-index:9;right:12px;bottom:12px;display:none;gap:7px}.game-buttons.show{display:flex}.mini-btn{border:1px solid #ffffff35;background:#071b1bd9;color:#effff6;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:850;backdrop-filter:blur(8px)}
 .mobile-controls{position:fixed;z-index:10;left:0;right:0;bottom:max(14px,env(safe-area-inset-bottom));display:none;align-items:end;justify-content:space-between;padding:0 16px;pointer-events:none}.mobile-controls.show{display:flex}.dpad{display:grid;grid-template-columns:repeat(3,54px);grid-template-rows:repeat(2,54px);gap:5px;pointer-events:auto}.touch-btn{border:1px solid #c8f6dc66;border-radius:14px;background:rgba(4,22,20,.72);color:#eafff4;font-size:18px;font-weight:950;touch-action:none;user-select:none;backdrop-filter:blur(8px)}.touch-btn:active,.touch-btn.pressed{background:#a7f3ce;color:#0b2b20}.d-up{grid-column:2}.d-left{grid-column:1;grid-row:2}.d-down{grid-column:2;grid-row:2}.d-right{grid-column:3;grid-row:2}.touch-actions{display:flex;flex-direction:column;gap:7px;pointer-events:auto}.touch-actions .touch-btn{min-width:74px;min-height:48px;padding:7px 10px;font-size:11px}.touch-actions .boost{border-color:#ffe08a88;color:#ffe08a}
 #toast{position:fixed;z-index:50;top:18%;left:50%;transform:translate(-50%,-10px);opacity:0;pointer-events:none;background:#071d1aeb;border:1px solid #a7f3ce55;color:#eafff4;border-radius:999px;padding:10px 16px;font-size:12px;font-weight:850;transition:.18s;max-width:90vw;text-align:center}#toast.show{opacity:1;transform:translate(-50%,0)}
 @media(max-width:850px){.garage{grid-template-columns:repeat(3,minmax(0,1fr))}.top-grid{grid-template-columns:1fr}.panel{padding:16px}.players{grid-template-columns:repeat(2,minmax(0,1fr))}.right-hud{top:auto;right:8px;bottom:125px;max-width:150px}.hud{top:7px;left:7px;gap:4px}.hud-card{min-width:68px;padding:6px 7px}.hud-card strong{font-size:16px}.hud-card small{font-size:8px}.game-buttons{top:7px;right:7px;bottom:auto}.mini-btn{padding:7px 9px}.mobile-controls.show{display:flex}}
 @media(max-width:480px){.garage{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.car-card{min-height:108px;padding:8px}.car-card b{font-size:11px}.players{grid-template-columns:repeat(2,minmax(0,1fr))}.brand{align-items:start}.brand .pill{font-size:9px}.room-code{font-size:22px}.dpad{grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,48px)}.touch-actions .touch-btn{min-width:66px;min-height:43px}}
+
+.race-hud{position:fixed;z-index:9;top:12px;left:50%;transform:translateX(-50%);display:none;gap:6px;pointer-events:none;max-width:calc(100vw - 24px)}.race-hud.show{display:flex}.race-hud>div{min-width:78px;padding:7px 10px;border:1px solid #c9ead42c;border-radius:11px;background:rgba(4,20,19,.78);backdrop-filter:blur(9px);text-align:center}.race-hud small{display:block;color:#abcbbc;font-size:8px;font-weight:900;letter-spacing:.08em}.race-hud strong{display:block;color:#a7f3ce;font-size:15px;font-variant-numeric:tabular-nums}.result-overlay{z-index:42;display:none;background:linear-gradient(145deg,rgba(3,10,12,.68),rgba(2,20,16,.82))}.result-overlay.show{display:flex}.result-panel{width:min(760px,100%);max-height:calc(100dvh - 28px);overflow:auto}.result-list{margin-top:16px;display:grid;gap:7px}.result-row{display:grid;grid-template-columns:42px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:11px 12px;border:1px solid #ffffff1b;border-radius:12px;background:#ffffff08}.result-rank{font-size:20px;font-weight:1000;color:#a7f3ce}.result-name b{display:block;font-size:13px}.result-name small{display:block;color:#a9c5b8;font-size:10px;margin-top:3px}.result-metric{text-align:right;font-size:11px;color:#d9eee4}.result-metric strong{display:block;color:#fff;font-size:13px}.result-feedback{grid-column:2/-1;color:#a7f3ce;font-size:10px;line-height:1.4}.result-actions{margin-top:16px;justify-content:flex-end}
+@media(max-width:850px){.race-hud{top:62px;gap:4px}.race-hud>div{min-width:62px;padding:5px 7px}.race-hud strong{font-size:12px}.race-hud small{font-size:7px}}
+@media(max-width:480px){.race-hud{top:56px;left:50%;max-width:calc(100vw - 12px)}.race-hud>div{min-width:0;flex:1;padding:5px 4px}.race-hud strong{font-size:11px}.result-row{grid-template-columns:30px minmax(0,1fr) auto;gap:7px;padding:8px}.result-metric:last-of-type{display:none}.result-feedback{grid-column:2/-1}}
+
+
+.tune-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}.tune-item{padding:10px;border:1px solid #ffffff18;border-radius:11px;background:#ffffff06;min-width:0}.tune-item label{display:flex;justify-content:space-between;gap:8px;font-size:11px;font-weight:900;color:#eafff4}.tune-item output{color:var(--gold);font-variant-numeric:tabular-nums}.tune-item input{width:100%;accent-color:#a7f3ce;margin:8px 0 4px}.tune-item small{display:block;color:#9fbaad;font-size:9px;line-height:1.35}.map-description{color:#b8d2c5;font-size:10px;line-height:1.5;margin-top:7px}.advanced-toggle{margin-top:9px;border:1px solid #ffffff25;border-radius:9px;padding:7px 10px;background:#ffffff0a;color:#dff8eb;font-size:10px;font-weight:850}.map-meta{font-size:10px;color:#a9c5b8;margin-top:6px}.boost-hud{position:fixed;z-index:9;left:12px;top:86px;display:none;min-width:132px;padding:8px 11px;border:1px solid #ffe08a55;border-radius:12px;background:rgba(7,25,25,.86);backdrop-filter:blur(8px);color:#ffe08a;font-size:10px;font-weight:900}.boost-hud.show{display:block}.boost-hud strong{display:block;font-size:14px;font-variant-numeric:tabular-nums}.touch-actions .boost{font-size:10px}
+@media(max-width:850px){.tune-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.boost-hud{top:108px;left:8px}}
+@media(max-width:480px){.tune-grid{grid-template-columns:1fr}.tune-item{padding:8px}}
+
+
+/* ===== RACING DASHBOARD: 오리지널 모터스포츠 스타일 계기판 ===== */
+.right-hud{top:245px;right:12px}.racing-dash{position:fixed;z-index:12;left:50%;bottom:14px;transform:translateX(-50%);width:min(610px,calc(100vw - 300px));min-width:420px;display:none;grid-template-columns:112px 1fr 112px;gap:12px;align-items:center;padding:12px 16px;border:1px solid #d6fff04a;border-radius:18px;background:linear-gradient(145deg,rgba(3,14,17,.94),rgba(9,34,32,.88));box-shadow:0 12px 42px #0008,inset 0 1px #ffffff18;backdrop-filter:blur(12px);pointer-events:none}
+.racing-dash.show{display:grid}.dash-side{display:flex;flex-direction:column;gap:7px}.dash-label{font-size:8px;letter-spacing:.16em;font-weight:950;color:#9bbcaf}.dash-value{font-size:15px;font-weight:950;color:#f1fff7;font-variant-numeric:tabular-nums}.dash-value.mint{color:#9df5c9}.dash-value.gold{color:#ffdf83}.dash-center{text-align:center;min-width:0}.dash-speed{font-size:64px;line-height:.95;font-weight:1000;letter-spacing:-.06em;color:#f5fff9;font-variant-numeric:tabular-nums;text-shadow:0 0 24px #a7f3ce32}.dash-unit{font-size:10px;letter-spacing:.2em;color:#a7c5b6;font-weight:900}.dash-rpm{height:7px;background:#ffffff18;border-radius:99px;overflow:hidden;margin:9px 4px 4px}.dash-rpm>span{display:block;height:100%;width:0;background:linear-gradient(90deg,#a7f3ce 0%,#ffe08a 72%,#ff7474 100%);border-radius:99px;transition:width .12s}.dash-meta{display:flex;justify-content:center;gap:12px;font-size:9px;color:#c4dbce}.dash-meta b{color:#fff}.dash-gear{font-size:28px;line-height:1;font-weight:1000;color:#ffe08a}.dash-mini{display:grid;grid-template-columns:1fr 1fr;gap:5px}.dash-mini>div{padding:5px 6px;border:1px solid #ffffff14;border-radius:7px;background:#ffffff08}.dash-mini .dash-label{font-size:7px}.dash-mini .dash-value{font-size:11px}
+.track-map{position:fixed;z-index:11;top:12px;right:12px;width:220px;padding:9px;border:1px solid #d6fff044;border-radius:15px;background:rgba(3,16,18,.88);box-shadow:0 10px 32px #0007;backdrop-filter:blur(10px);display:none;pointer-events:none}.track-map.show{display:block}.track-map-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}.track-map-head b{font-size:9px;letter-spacing:.14em;color:#dfffee}.track-map-head span{font-size:8px;color:#9bbcaf}.track-map canvas{width:100%;height:164px;display:block;border-radius:9px;background:radial-gradient(ellipse at center,#183b32,#081b1b)}.map-legend{display:flex;justify-content:space-between;gap:7px;margin-top:6px;font-size:8px;color:#c1d9cb}.map-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;background:#a7f3ce}.map-dot.other{background:#ffdc7a}
+.dash-driver-strip{position:fixed;z-index:10;left:12px;top:12px;display:none;max-width:180px;padding:8px 10px;border:1px solid #ffffff22;border-radius:12px;background:rgba(3,16,18,.82);backdrop-filter:blur(8px);pointer-events:none}.dash-driver-strip.show{display:block}.dash-driver-strip b{display:block;font-size:8px;letter-spacing:.12em;color:#a7f3ce}.dash-driver-strip span{display:block;font-size:10px;color:#e9fff2;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:850px){.track-map{top:7px;right:7px;width:146px;padding:6px}.track-map canvas{height:108px}.track-map-head b{font-size:8px}.map-legend{font-size:7px}.racing-dash{width:min(440px,calc(100vw - 18px));min-width:0;bottom:112px;grid-template-columns:64px 1fr 64px;gap:7px;padding:8px 10px}.dash-speed{font-size:44px}.dash-gear{font-size:22px}.dash-side{gap:4px}.dash-value{font-size:12px}.dash-mini{gap:3px}.dash-mini>div{padding:3px}.dash-mini .dash-value{font-size:9px}.dash-driver-strip{top:128px;left:7px;max-width:135px}.right-hud{top:220px;right:7px;bottom:auto;max-width:140px}}
+@media(max-width:480px){.race-hud{top:7px;left:7px;transform:none;width:calc(100vw - 145px);max-width:none;gap:3px}.race-hud>div{min-width:0;flex:1}.racing-dash{bottom:112px;width:calc(100vw - 12px);grid-template-columns:52px 1fr 58px;gap:5px;padding:7px}.dash-speed{font-size:38px}.dash-unit{font-size:8px}.dash-meta{gap:7px;font-size:8px}.dash-label{font-size:7px}.dash-value{font-size:10px}.dash-mini .dash-label{font-size:6px}.dash-mini .dash-value{font-size:8px}.track-map{width:126px}.track-map canvas{height:92px}.dash-driver-strip{display:none!important}.right-hud{top:178px;max-width:116px;padding:6px}.online-list{font-size:8px}}
+
+
+.lap-times-panel{position:fixed;z-index:10;top:64px;left:12px;min-width:120px;max-width:190px;padding:9px 11px;border:1px solid #c9ead42c;border-radius:11px;background:rgba(4,20,19,.82);backdrop-filter:blur(9px);color:#e7f7ee;font-size:10px;display:none;pointer-events:none}.lap-times-panel.show{display:block}.lap-times-panel>b{display:block;color:#a7f3ce;font-size:9px;letter-spacing:.08em;margin-bottom:5px}.lap-time-row{display:flex;justify-content:space-between;gap:12px;padding:2px 0}.lap-time-row span:last-child{font-variant-numeric:tabular-nums;font-weight:800}.start-countdown{position:fixed;z-index:50;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(2,10,12,.56);backdrop-filter:blur(5px);color:white;pointer-events:none}.start-countdown.show{display:flex}.countdown-kicker{font-size:11px;font-weight:900;letter-spacing:.2em;color:#a7f3ce}.start-countdown strong{font-size:clamp(100px,24vw,220px);line-height:1;font-weight:1000;text-shadow:0 8px 40px #000}.start-countdown span{font-size:16px;font-weight:800;letter-spacing:.15em}
+@media(max-width:850px){.lap-times-panel{top:112px;left:8px;max-width:145px;padding:7px 8px;font-size:9px}}
+@media(max-width:480px){.lap-times-panel{top:55px;left:7px;min-width:100px;max-width:122px;padding:6px 7px}.lap-times-panel>b{font-size:7px}.lap-time-row{gap:6px;font-size:8px}}
+
 </style>
 </head>
 <body>
 <canvas id="gameCanvas"></canvas>
 <div id="startOverlay" class="overlay">
  <main class="panel">
-  <div class="brand"><div><div class="eyebrow">MISTWOOD MOTORSPORT · SEPARATE ONLINE GAME</div><h1>MISTWOOD <span style="color:#a7f3ce">ONLINE</span></h1><div class="sub">친구와 같은 숲속 서킷에서 함께 달리는 온라인 멀티플레이 게임</div></div><span id="connectionPill">서버 연결 중...</span></div>
+  <div class="brand"><div><div class="eyebrow">MISTWOOD MOTORSPORT · SEPARATE ONLINE GAME</div><h1>MISTWOOD <span style="color:#a7f3ce">ONLINE</span></h1><div class="sub">친구와 같은 숲속 서킷에서 함께 달리는 랩 수 선택형 온라인 레이싱 게임 · 선두 완주 후 20초 추가 주행</div></div><span id="connectionPill">서버 연결 중...</span></div>
   <div class="top-grid">
    <section class="box">
     <div class="box-title">① 플레이어 설정</div>
     <input id="playerName" class="field" maxlength="14" placeholder="게임에서 사용할 닉네임" value="Driver" />
     <div class="device-row"><button id="pcChoice" class="device-btn active">⌨ PC 조작</button><button id="mobileChoice" class="device-btn">📱 모바일 조작</button></div>
-    <div class="fineprint">PC: W/A/S/D 또는 방향키 · Space 브레이크 · F 특수 부스트<br>모바일: 화면 방향키와 부스트 버튼</div>
+    <div class="fineprint">PC: W/A/S/D 또는 방향키 · Space 브레이크 · F 부스트(3초, 경기당 5회)<br>모바일: 화면 방향키와 부스트 버튼</div>
    </section>
    <section class="box">
     <div class="box-title">② 친구와 방 만들기 / 참가하기</div>
@@ -41,30 +63,62 @@
     <div id="connectionStatus" class="status">온라인 서버에 연결하는 중입니다.</div>
    </section>
   </div>
-  <div class="garage-head"><strong>③ 차량 선택 · 총 21종</strong><span>잠금 차량은 VIP / 관리자 인증 후 선택</span></div>
+  <section class="box" style="margin:12px 0">
+   <div class="box-title">③ 맵 선택 · 10개 트랙</div>
+   <select id="mapSelect" class="field" aria-label="레이스 맵 선택"></select>
+   <div id="mapDescription" class="map-description">트랙 설명을 불러오는 중...</div>
+   <div id="mapMeta" class="map-meta"></div>
+  </section>
+  <section class="box" style="margin:12px 0">
+   <div class="box-title">④ 자동차 튜닝</div>
+   <div class="fineprint" style="margin-top:0">슬라이더를 조금씩 움직여 자동차 감각을 바꿔 보세요. 방에 들어간 뒤에는 레이스가 시작되기 전까지만 수정할 수 있습니다.</div>
+   <div id="tuningSimple" class="tune-grid"></div>
+   <button id="advancedToggle" class="advanced-toggle" type="button">고급 튜닝 펼치기 (추가 4개 설정)</button>
+   <div id="tuningAdvanced" class="tune-grid" style="display:none"></div>
+   <div class="fineprint">초급 과제: 최고 속도·가속·조향 3개만 바꿔 보기. 심화 과제: 브레이크·접지력·후진 속도·관성까지 조절해 보세요.</div>
+  </section>
+  <div class="garage-head"><strong>⑤ 차량 선택 · 총 11종</strong><span>외형과 튜닝값을 자유롭게 실험하세요</span></div>
   <div id="garage" class="garage"></div>
   <div id="selectedInfo" class="selected-info"></div>
-  <div id="unlockRow" class="unlock-row"><input id="pinInput" class="field" type="password" autocomplete="off" placeholder="비밀번호 입력" /><button id="unlockBtn" class="btn">해금</button><button id="cancelUnlockBtn" class="btn secondary">취소</button></div>
-  <div id="roomLobby" class="lobby">
+    <div id="roomLobby" class="lobby">
    <div class="lobby-head"><div><div class="box-title" style="margin:0 0 4px">ONLINE ROOM</div><div class="room-code" id="roomCodeLabel">-----</div><div class="fineprint" style="margin:3px 0 0">친구에게 이 방 코드를 알려 주세요.</div></div><div class="row"><button id="copyCodeBtn" class="btn secondary">코드 복사</button><button id="leaveRoomBtn" class="btn secondary">나가기</button></div></div>
    <div id="playerList" class="players"></div>
-   <div class="row"><button id="startRoomBtn" class="btn" disabled>드라이브 시작</button><span id="hostHint" class="fineprint">방장이 게임을 시작할 수 있어요.</span></div>
+   <div class="row" style="align-items:center;margin:10px 0"><label for="lapCountSelect" class="fineprint" style="margin:0">레이스 랩 수</label><select id="lapCountSelect" class="field small-field" style="max-width:100px"><option value="1">1랩</option><option value="2">2랩</option><option value="3" selected>3랩</option><option value="4">4랩</option><option value="5">5랩</option><option value="6">6랩</option><option value="7">7랩</option><option value="8">8랩</option><option value="9">9랩</option><option value="10">10랩</option><option value="11">11랩</option><option value="12">12랩</option><option value="13">13랩</option><option value="14">14랩</option><option value="15">15랩</option><option value="16">16랩</option><option value="17">17랩</option><option value="18">18랩</option><option value="19">19랩</option><option value="20">20랩</option></select></div>
+   <div class="row"><button id="startRoomBtn" class="btn" disabled>레이스 시작</button><span id="hostHint" class="fineprint">방장이 게임을 시작할 수 있어요.</span></div>
   </div>
   <div class="fineprint">이 게임은 기존 MISTWOOD MOTORSPORT와 별도로 실행됩니다. 인터넷에서 친구와 플레이하려면 이 게임용 Node.js 서버를 온라인 호스팅에 배포해야 합니다. GitHub Pages만으로는 실시간 연결 서버를 실행할 수 없습니다.</div>
  </main>
 </div>
-<div id="pinOverlay" class="overlay"><div class="pin-panel"><div class="eyebrow">VEHICLE ACCESS</div><h2 id="pinTitle">VIP 차량 잠금</h2><p id="pinDescription">해금 비밀번호를 입력해 주세요.</p><input id="pinModalInput" class="field" type="password" autocomplete="off" placeholder="비밀번호" /><div class="row" style="justify-content:center;margin-top:10px"><button id="pinModalSubmit" class="btn">확인</button><button id="pinModalCancel" class="btn secondary">취소</button></div><div id="pinModalStatus" class="status"></div></div></div>
 <div id="gameHud" class="hud"><div class="hud-card"><small>SPEED</small><strong class="mint"><span id="speedValue">0</span><span style="font-size:10px"> km/h</span></strong></div><div class="hud-card"><small>ROOM</small><strong id="hudRoomCode" style="font-size:16px">-----</strong></div><div class="hud-card"><small>DRIVERS</small><strong id="driverCount">1/8</strong></div></div>
+<div id="raceHud" class="race-hud"><div><small>RACE STATUS</small><strong id="raceTimeValue">대기 중</strong></div><div><small>LAP</small><strong id="raceLapValue">1 / 3</strong></div><div><small>POSITION</small><strong id="racePositionValue">1 / 1</strong></div><div><small>COLLISIONS</small><strong id="raceCollisionValue">0</strong></div></div><div id="lapTimesPanel" class="lap-times-panel"><b>MY LAP TIMES</b><div id="lapTimesList">아직 기록이 없습니다.</div></div><div id="startCountdown" class="start-countdown"><div class="countdown-kicker">MISTWOOD ONLINE · GET READY</div><strong id="countdownNumber">3</strong><span>출발 준비</span></div><div id="boostHud" class="boost-hud"><span>BOOST · F</span><strong id="boostValue">5회 남음</strong><span id="boostCooldownValue">사용 가능</span></div>
+<div id="racingDash" class="racing-dash" aria-label="레이싱 계기판">
+ <div class="dash-side"><div><div class="dash-label">GEAR</div><div id="dashGear" class="dash-gear">N</div></div><div><div class="dash-label">RPM</div><div id="dashRpmText" class="dash-value gold">0</div></div></div>
+ <div class="dash-center"><div id="dashSpeed" class="dash-speed">000</div><div class="dash-unit">KM / H</div><div class="dash-rpm"><span id="dashRpmBar"></span></div><div class="dash-meta"><span>THR <b id="dashThrottle">0%</b></span><span>BRK <b id="dashBrake">0%</b></span><span>STEER <b id="dashSteer">0%</b></span></div></div>
+ <div class="dash-side"><div class="dash-mini"><div><div class="dash-label">LAP</div><div id="dashLap" class="dash-value mint">1/3</div></div><div><div class="dash-label">POS</div><div id="dashPosition" class="dash-value">1/1</div></div><div><div class="dash-label">BEST LAP</div><div id="dashBest" class="dash-value">--:--</div></div><div><div class="dash-label">PENALTY</div><div id="dashPenalty" class="dash-value">0.0s</div></div></div></div>
+</div>
+<div id="trackMapPanel" class="track-map"><div class="track-map-head"><b>LIVE TRACK MAP</b><span id="trackMapName">TRACK</span></div><canvas id="trackMapCanvas" width="440" height="328" aria-label="트랙과 플레이어 위치 지도"></canvas><div class="map-legend"><span><i class="map-dot"></i>ME</span><span><i class="map-dot other"></i>RIVALS</span><span id="mapPlayerCount">0 DRIVERS</span></div></div>
+<div id="dashDriverStrip" class="dash-driver-strip"><b>LIVE TELEMETRY</b><span id="dashCarName">차량 정보 대기 중</span><span id="dashStatusLine">온라인 연결 대기 중</span></div>
 <div id="rightHud" class="right-hud"><strong>ONLINE DRIVERS</strong><div id="onlineList" class="online-list"></div></div>
 <div id="gameButtons" class="game-buttons"><button id="returnLobbyBtn" class="mini-btn">대기실로</button></div>
-<div id="mobileControls" class="mobile-controls"><div class="dpad"><button class="touch-btn d-up" data-control="forward">▲</button><button class="touch-btn d-left" data-control="left">◀</button><button class="touch-btn d-down" data-control="reverse">▼</button><button class="touch-btn d-right" data-control="right">▶</button></div><div class="touch-actions"><button id="mobileBrake" class="touch-btn" data-control="brake">BRAKE</button><button id="mobileBoost" class="touch-btn boost">BOOST</button></div></div>
+<div id="mobileControls" class="mobile-controls"><div class="dpad"><button class="touch-btn d-up" data-control="forward">▲</button><button class="touch-btn d-left" data-control="left">◀</button><button class="touch-btn d-down" data-control="reverse">▼</button><button class="touch-btn d-right" data-control="right">▶</button></div><div class="touch-actions"><button id="mobileBrake" class="touch-btn" data-control="brake">BRAKE</button><button id="mobileBoost" class="touch-btn boost">BOOST · F</button></div></div>
+<div id="raceResultOverlay" class="overlay result-overlay"><main class="panel result-panel"><div class="eyebrow">MISTWOOD ONLINE · RACE RESULTS</div><h1>레이스 종료</h1><div id="raceResultSummary" class="sub">최종 순위와 주행 피드백</div><div id="raceResultList" class="result-list"></div><div class="row result-actions"><button id="raceAgainBtn" class="btn">다시 레이스</button><button id="resultLobbyBtn" class="btn secondary">대기실로</button></div><div id="raceResultHint" class="fineprint"></div></main></div>
 <div id="toast"></div>
 <script type="module">
-const VEHICLES = [{"id":"grandeur","name":"2023 현대 그랜저","short":"그랜저","kind":"대형 세단 · 균형형","maxSpeed":30,"acceleration":11,"steering":1.45,"brake":24,"reverse":8,"mass":"보통","color":12108744,"body":"sedan","scale":1,"specialAbility":"가속·최고속도·조향이 고르게 균형 잡힌 기본 세단"},{"id":"tesla3","name":"테슬라 모델 3","short":"모델 3","kind":"전기 세단 · 가속형","maxSpeed":35,"acceleration":15.2,"steering":1.62,"brake":26,"reverse":9,"mass":"보통","color":10135476,"body":"sedan","scale":0.97,"specialAbility":"전기 모터의 빠른 초반 가속과 매끄러운 속도 유지"},{"id":"ioniq6","name":"현대 아이오닉 6","short":"아이오닉 6","kind":"전기 세단 · 안정형","maxSpeed":33,"acceleration":13,"steering":1.48,"brake":25,"reverse":8,"mass":"보통","color":5464427,"body":"streamline","scale":1,"specialAbility":"안정적인 직진 주행과 부드러운 속도 조절"},{"id":"ev6","name":"기아 EV6","short":"EV6","kind":"전기 크로스오버 · 다목적형","maxSpeed":31,"acceleration":13.4,"steering":1.42,"brake":24,"reverse":8,"mass":"약간 무거움","color":7440255,"body":"crossover","scale":1,"specialAbility":"높은 차체와 안정적인 조향으로 다목적 주행에 적합"},{"id":"taycan","name":"포르쉐 타이칸","short":"타이칸","kind":"전기 스포츠 세단 · 고속형","maxSpeed":39,"acceleration":17,"steering":1.82,"brake":29,"reverse":9,"mass":"보통","color":3767226,"body":"sports","scale":0.94,"specialAbility":"높은 최고속도와 강한 가속으로 긴 직선 구간에 강함"},{"id":"supra","name":"토요타 GR 수프라","short":"GR 수프라","kind":"스포츠 쿠페 · 민첩형","maxSpeed":37,"acceleration":15.5,"steering":1.95,"brake":27,"reverse":8,"mass":"가벼움","color":14240562,"body":"coupe","scale":0.92,"specialAbility":"가벼운 차체와 민첩한 조향으로 코너 공략에 유리"},{"id":"toyotaPriusHybrid","name":"토요타 프리우스 하이브리드","short":"프리우스","kind":"하이브리드 해치백 · 전기/연료 자동 전환","maxSpeed":34,"acceleration":13.8,"steering":1.55,"brake":26,"reverse":8,"mass":"보통","color":7248515,"body":"hatchback","scale":0.98,"hybrid":true,"specialAbility":"70km/h 이상에서 연료 모드 · 낮은 속도에서는 랜덤 전환"},{"id":"jeepWrangler","name":"지프 랭글러 루비콘","short":"랭글러","kind":"정통 오프로드 SUV · 높은 차체와 안정감","maxSpeed":29,"acceleration":10.5,"steering":1.34,"brake":27,"reverse":7,"mass":"무거움","color":12684101,"body":"offroad","scale":1.04,"specialAbility":"높은 차체와 큰 타이어 · 거친 길에 어울리는 안정형"},{"id":"mazdaMx5","name":"마쓰다 MX-5 미아타","short":"MX-5","kind":"경량 2인승 로드스터 · 민첩한 코너링","maxSpeed":36,"acceleration":16.5,"steering":2.08,"brake":30,"reverse":9,"mass":"매우 가벼움","color":12005186,"body":"lightRoadster","scale":0.92,"specialAbility":"가벼운 차체와 빠른 조향 반응"},{"id":"eventTruck","name":"숲속 탐험 트럭","short":"이벤트 트럭","kind":"이벤트 전용 · 무겁고 안정적","maxSpeed":22,"acceleration":6.8,"steering":0.92,"brake":28,"reverse":5,"mass":"매우 무거움","color":14001732,"body":"truck","scale":1.13,"event":true,"specialAbility":"무거운 차체로 주행이 안정적이지만 가속과 회전은 느림"},{"id":"eventCrusher","name":"포레스트 크러셔","short":"크러셔","kind":"이벤트 전용 · 장애물 파괴 특화","maxSpeed":27,"acceleration":10.8,"steering":1.12,"brake":27,"reverse":6,"mass":"매우 무거움","color":2982518,"body":"crusher","scale":1.12,"event":true,"smash":true,"specialAbility":"속도를 내고 일반 장애물을 들이받아 파괴"},{"id":"speedster","name":"포레스트 스프린터","short":"스프린터","kind":"초고속 스포츠카 · 최고속도 특화","maxSpeed":54,"acceleration":26,"steering":1.78,"brake":33,"reverse":12,"mass":"가벼움","color":2402520,"body":"sports","scale":0.93,"fast":true,"specialAbility":"매우 빠른 가속과 높은 최고 속도"},{"id":"eventTank","name":"포레스트 탱크","short":"이벤트 탱크","kind":"이벤트 전용 · 에너지 포탄과 궤도 주행","maxSpeed":23,"acceleration":7.4,"steering":0.92,"brake":27,"reverse":5,"mass":"최고 중량","color":5467465,"body":"tank","scale":1.12,"event":true,"tank":true,"specialAbility":"F 포탄 · 장애물 30개 파괴 후 G 궁극기"},{"id":"forestBike","name":"포레스트 레이서 바이크","short":"레이서 바이크","kind":"이벤트 바이크 · 빠르지만 균형 잡기 어려움","maxSpeed":43,"acceleration":20,"steering":1.95,"brake":29,"reverse":5,"mass":"매우 가벼움","color":14962236,"body":"motorcycle","scale":0.98,"event":true,"motorcycle":true,"specialAbility":"F 부스터 · 2초 동안 실제 이동 속도 2배 · 재사용 10초"},{"id":"teslaRoadster","name":"테슬라 로드스터","short":"로드스터","kind":"전기 슈퍼카 · 5초 비행 능력","maxSpeed":45,"acceleration":19,"steering":1.86,"brake":34,"reverse":11,"mass":"가벼움","color":10233679,"body":"roadster","scale":0.94,"roadster":true,"event":true,"specialAbility":"F 비행 · 5초 공중 주행과 바닥 연기 · 재사용 15초"},{"id":"adminPolice","name":"관리자 경찰차","short":"경찰차","kind":"관리자 전용 · 사이렌과 전면 범퍼","maxSpeed":38,"acceleration":17,"steering":1.72,"brake":32,"reverse":10,"mass":"보통","color":14476781,"body":"police","scale":1,"event":true,"adminOnly":true,"police":true,"specialAbility":"F 사이렌 전환 · 범퍼로 장애물과 AI 차량 밀기"},{"id":"adminHelicopter","name":"관리자 헬리콥터","short":"헬리콥터","kind":"관리자 전용 · 회전 로터와 자유 비행","maxSpeed":32,"acceleration":10,"steering":1.35,"brake":22,"reverse":5,"mass":"무거움","color":4034434,"body":"helicopter","scale":1,"event":true,"adminOnly":true,"helicopter":true,"specialAbility":"X 키로 무제한 이륙·착륙 · 메인/테일 로터 회전"},{"id":"adminExcavator","name":"관리자 포레스트 굴삭기","short":"관리자 굴삭기","kind":"관리자 전용 · 회전 캐빈과 대형 굴착 암","maxSpeed":25,"acceleration":8.5,"steering":1.02,"brake":30,"reverse":6,"mass":"최고 중량","color":14853422,"body":"excavator","scale":1.08,"event":true,"adminOnly":true,"excavator":true,"specialAbility":"F 버킷 스윙 · G 지면 정리 · C 2배 부스트 · X 자유 비행"},{"id":"subaruWRX","name":"스바루 WRX STI 랠리","short":"WRX 랠리","kind":"AWD 랠리 세단 · 접지력과 가속 특화","maxSpeed":41,"acceleration":18.2,"steering":1.88,"brake":31,"reverse":10,"mass":"보통","color":2652375,"body":"sedan","scale":0.98,"rally":true,"specialAbility":"사륜구동 랠리 세팅 · 코너 탈출 가속과 접지력 강화"},{"id":"vipRevuelto","name":"람보르기니 레부엘토","short":"레부엘토","kind":"VIP 하이브리드 슈퍼카 · 오버부스트","maxSpeed":47,"acceleration":20.5,"steering":1.96,"brake":35,"reverse":11,"mass":"보통","color":10276408,"body":"supercar","scale":0.94,"hybrid":true,"vipOverboost":true,"specialAbility":"하이브리드 자동 전환 · F 오버부스트 4초 · 재사용 18초"},{"id":"adminFireTruck","name":"관리자 포레스트 레스큐 소방차","short":"레스큐 소방차","kind":"관리자 전용 · 물대포와 전개식 사다리","maxSpeed":27,"acceleration":9.2,"steering":1.05,"brake":30,"reverse":6,"mass":"매우 무거움","color":14234418,"body":"firetruck","scale":1.05,"event":true,"adminOnly":true,"firetruck":true,"specialAbility":"F 물대포 · G 사다리 전개/접기 · C 2배 속도 · X 자유 비행"}];
-const VIP_VEHICLE_IDS = new Set(['eventCrusher','speedster','eventTank','forestBike','teslaRoadster','vipRevuelto']);
-const ADMIN_PIN_NOTE = '관리자 전용';
-const VIP_PIN_NOTE = 'VIP 전용';
-const TRACK_RX = 180, TRACK_RZ = 260;
+const VEHICLES = [{"id":"grandeur","name":"2023 현대 그랜저","short":"그랜저","kind":"대형 세단 · 균형형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12108744,"body":"sedan","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"tesla3","name":"테슬라 모델 3","short":"모델 3","kind":"전기 세단 · 가속형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":10135476,"body":"sedan","scale":0.97,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"ioniq6","name":"현대 아이오닉 6","short":"아이오닉 6","kind":"전기 세단 · 안정형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":5464427,"body":"streamline","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"ev6","name":"기아 EV6","short":"EV6","kind":"전기 크로스오버 · 다목적형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":7440255,"body":"crossover","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"taycan","name":"포르쉐 타이칸","short":"타이칸","kind":"전기 스포츠 세단 · 고속형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":3767226,"body":"sports","scale":0.94,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"supra","name":"토요타 GR 수프라","short":"GR 수프라","kind":"스포츠 쿠페 · 민첩형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":14240562,"body":"coupe","scale":0.92,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"toyotaPriusHybrid","name":"토요타 프리우스 하이브리드","short":"프리우스","kind":"하이브리드 해치백 · 전기/연료 자동 전환","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":7248515,"body":"hatchback","scale":0.98,"hybrid":true,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"jeepWrangler","name":"지프 랭글러 루비콘","short":"랭글러","kind":"정통 오프로드 SUV · 높은 차체와 안정감","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12684101,"body":"offroad","scale":1.04,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"mazdaMx5","name":"마쓰다 MX-5 미아타","short":"MX-5","kind":"경량 2인승 로드스터 · 민첩한 코너링","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12005186,"body":"lightRoadster","scale":0.92,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"eventTruck","name":"숲속 탐험 트럭","short":"이벤트 트럭","kind":"이벤트 전용 · 무겁고 안정적","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":14001732,"body":"truck","scale":1.13,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"subaruWRX","name":"스바루 WRX STI 랠리","short":"WRX 랠리","kind":"AWD 랠리 세단 · 접지력과 가속 특화","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":2652375,"body":"sedan","scale":0.98,"rally":true,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"}];
+// 같은 tracks.json을 서버와 공유해 맵 모양과 랩 판정이 어긋나지 않게 합니다.
+const TRACKS = await fetch('/tracks.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('tracks.json을 불러오지 못했습니다.'); return r.json(); });
+const TRACK_BY_ID = new Map(TRACKS.map(track => [track.id, track]));
+const DEFAULT_MAP_ID = TRACKS[0].id;
+const DEFAULT_TUNE = { topSpeed:32, acceleration:12.5, steering:1.55, brake:27, grip:1, reverse:8, coastDrag:0.62 };
+const TUNE_FIELDS = [
+ {key:'topSpeed',label:'최고 속도',min:24,max:42,step:0.5,group:'simple',help:'높이면 직선에서 더 빠르게 달려요.',format:v=>`${Math.round(v*3.6)} km/h`},
+ {key:'acceleration',label:'가속',min:7,max:18,step:0.5,group:'simple',help:'높이면 최고 속도에 더 빨리 도달해요.',format:v=>v.toFixed(1)},
+ {key:'steering',label:'조향 민감도',min:0.8,max:2.4,step:0.05,group:'simple',help:'높이면 같은 키 입력에도 더 많이 돌아요.',format:v=>v.toFixed(2)},
+ {key:'brake',label:'브레이크 힘',min:18,max:36,step:1,group:'advanced',help:'높이면 더 짧은 거리에서 감속해요.',format:v=>v.toFixed(0)},
+ {key:'grip',label:'접지력',min:0.75,max:1.3,step:0.05,group:'advanced',help:'높이면 코너에서 속도를 더 안정적으로 유지해요.',format:v=>v.toFixed(2)},
+ {key:'reverse',label:'후진 속도',min:4,max:12,step:0.5,group:'advanced',help:'높이면 뒤로 움직이는 속도가 빨라져요.',format:v=>v.toFixed(1)},
+ {key:'coastDrag',label:'관성 저항',min:0.3,max:0.95,step:0.05,group:'advanced',help:'높이면 가속 페달을 놓았을 때 더 빨리 느려져요.',format:v=>v.toFixed(2)}
+];
 let THREE = null, RoundedBoxGeometry = null;
 let scene, camera, renderer, clock;
 let car = null;
@@ -73,14 +127,17 @@ let localPlayerId = null;
 let selectedVehicleId = 'grandeur';
 let selectedVehicle = VEHICLES[0];
 let selectedDevice = 'pc';
-let pendingUnlockRole = null;
-let pendingVehicleId = null;
+let currentMapId = DEFAULT_MAP_ID;
+let currentTune = { ...DEFAULT_TUNE };
+let isAdvancedTuning = false;
+let trackGroup = null, forestGroup = null;
 let socket = null;
 let connected = false;
 let roomCode = '';
 let hostId = '';
 let roomStarted = false;
-let unlocked = { vip:false, admin:false };
+let raceState = null;
+let raceResultsShown = false;
 let remotePlayers = new Map();
 let latestPlayers = [];
 let targetLocal = null;
@@ -88,46 +145,61 @@ let controls = { forward:false, reverse:false, left:false, right:false, brake:fa
 let lastInputAt = 0;
 let toastTimer = null;
 let cameraInitialized = false;
+let lastRaceHudUpdate = 0;
 const keyMap = { KeyW:'forward', ArrowUp:'forward', KeyS:'reverse', ArrowDown:'reverse', KeyA:'left', ArrowLeft:'left', KeyD:'right', ArrowRight:'right', Space:'brake' };
 
 function el(id){ return document.getElementById(id); }
 function send(data){ if(socket && socket.readyState===WebSocket.OPEN) socket.send(JSON.stringify(data)); else setStatus('서버와 연결되지 않았습니다. 서버 주소와 배포 상태를 확인해 주세요.'); }
 function setStatus(message){ el('connectionStatus').textContent=message; }
 function showToast(message){ const t=el('toast'); t.textContent=message; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2100); }
-function isVehicleUnlocked(v){ return (!v.adminOnly || unlocked.admin) && (!VIP_VEHICLE_IDS.has(v.id) || unlocked.vip); }
-function vehicleRole(v){ return v.adminOnly?'admin':VIP_VEHICLE_IDS.has(v.id)?'vip':null; }
+
+// ===== TUNING SYSTEM: 슬라이더 값을 게임 서버로 전달합니다. =====
+function renderTuneFields(){
+ const makeField = field => `<div class="tune-item"><label for="tune-${field.key}">${field.label}<output id="tune-value-${field.key}"></output></label><input id="tune-${field.key}" type="range" min="${field.min}" max="${field.max}" step="${field.step}" value="${currentTune[field.key]}" /><small>${field.help}</small></div>`;
+ el('tuningSimple').innerHTML = TUNE_FIELDS.filter(f=>f.group==='simple').map(makeField).join('');
+ el('tuningAdvanced').innerHTML = TUNE_FIELDS.filter(f=>f.group==='advanced').map(makeField).join('');
+ for(const field of TUNE_FIELDS){
+  const slider=el(`tune-${field.key}`), output=el(`tune-value-${field.key}`);
+  const update=()=>{currentTune[field.key]=Number(slider.value);output.textContent=field.format(currentTune[field.key]);if(roomCode&&!roomStarted)send({type:'tune',tune:currentTune});};
+  slider.addEventListener('input',update);update();
+ }
+}
+function updateTuneControls(tune){
+ currentTune={...DEFAULT_TUNE,...(tune||{})};
+ for(const field of TUNE_FIELDS){const slider=el(`tune-${field.key}`),output=el(`tune-value-${field.key}`);if(slider){slider.value=currentTune[field.key];output.textContent=field.format(currentTune[field.key]);}}
+}
+function updateMapDescription(){
+ const map=TRACK_BY_ID.get(currentMapId)||TRACKS[0];
+ el('mapDescription').textContent=map.description;
+ el('mapMeta').textContent=`난이도: ${map.difficulty} · 도로 폭: ${map.width}m · 웨이포인트: ${map.points.length}개`;
+}
+function fillMapSelector(){
+ el('mapSelect').innerHTML=TRACKS.map(t=>`<option value="${t.id}">${t.name} · ${t.difficulty}</option>`).join('');
+ el('mapSelect').value=currentMapId;updateMapDescription();
+}
+function chooseMap(mapId, fromServer=false){
+ if(!TRACK_BY_ID.has(mapId))return;
+ currentMapId=mapId;el('mapSelect').value=mapId;updateMapDescription();
+ if(scene)buildForestTrack();
+ if(roomCode&&!fromServer&&!roomStarted)send({type:'select-map',mapId});
+}
 function renderGarage(){
  const garage=el('garage');
  garage.innerHTML=VEHICLES.map(v=>{
-  const role=vehicleRole(v); const locked=role && !isVehicleUnlocked(v); const chosen=v.id===selectedVehicleId;
-  const tag=role==='admin'?'<span class="car-tag admin">ADMIN</span>':role==='vip'?'<span class="car-tag vip">VIP</span>':'<span class="car-tag normal">AVAILABLE</span>';
-  return `<button class="car-card ${chosen?'selected':''} ${locked?'locked':''}" data-car="${v.id}">${tag}${locked?`<span class="lock">🔒 ${role.toUpperCase()}</span>`:''}<b>${v.name}</b><small>${v.kind}</small><small>최고속도 ${Math.round(v.maxSpeed*3.6)} km/h · 가속 ${v.acceleration}</small></button>`;
+  const chosen=v.id===selectedVehicleId;
+  return `<button class="car-card ${chosen?'selected':''}" data-car="${v.id}"><span class="car-tag normal">RACE CLASS</span><b>${v.name}</b><small>${v.kind}</small><small>선택한 튜닝값 적용</small></button>`;
  }).join('');
  garage.querySelectorAll('[data-car]').forEach(btn=>btn.addEventListener('click',()=>chooseVehicle(btn.dataset.car)));
  updateSelectedInfo();
 }
 function updateSelectedInfo(){
  const v=VEHICLES.find(x=>x.id===selectedVehicleId)||VEHICLES[0]; selectedVehicle=v;
- el('selectedInfo').innerHTML=`<strong>${v.name}</strong> · ${v.kind}<br>특성: ${v.specialAbility||'균형 잡힌 기본 주행'}<br><span style="color:#a7f3ce">최고속도 ${Math.round(v.maxSpeed*3.6)} km/h · 가속 ${v.acceleration} · 조향 ${v.steering}</span>`;
+ el('selectedInfo').innerHTML=`<strong>${v.name}</strong> · ${v.kind}<br>현재 튜닝: 최고 속도 ${Math.round(currentTune.topSpeed*3.6)} km/h · 가속 ${currentTune.acceleration.toFixed(1)} · 조향 ${currentTune.steering.toFixed(2)} · 브레이크 ${currentTune.brake.toFixed(0)}`;
 }
 function chooseVehicle(id){
  const v=VEHICLES.find(x=>x.id===id); if(!v)return;
- const role=vehicleRole(v);
- if(role && !isVehicleUnlocked(v)){ openUnlock(role,id); return; }
  selectedVehicleId=id; selectedVehicle=v; renderGarage();
  if(roomCode) send({type:'select-vehicle',vehicleId:id});
-}
-function openUnlock(role,id){
- pendingUnlockRole=role; pendingVehicleId=id;
- el('pinTitle').textContent=role==='admin'?'관리자 차량 잠금':'VIP 차량 잠금';
- el('pinDescription').textContent=role==='admin'?'관리자 비밀번호를 입력하면 관리자 차량을 선택할 수 있습니다.':'VIP 비밀번호를 입력하면 VIP 차량을 선택할 수 있습니다.';
- el('pinModalInput').value=''; el('pinModalStatus').textContent='비밀번호는 온라인 서버에서 확인됩니다.';
- el('pinOverlay').classList.add('show'); setTimeout(()=>el('pinModalInput').focus(),50);
-}
-function closeUnlock(){ el('pinOverlay').classList.remove('show'); pendingUnlockRole=null; pendingVehicleId=null; }
-function submitUnlock(){
- const pin=el('pinModalInput').value; if(!pin){el('pinModalStatus').textContent='비밀번호를 입력해 주세요.';return;}
- el('pinModalStatus').textContent='서버에서 확인 중...'; send({type:'unlock',role:pendingUnlockRole,pin});
 }
 function connectServer(){
  const protocol=location.protocol==='https:'?'wss:':'ws:';
@@ -141,40 +213,82 @@ function connectServer(){
 function handleServerMessage(msg){
  if(msg.type==='connected'){setStatus(msg.message||'연결 완료');return;}
  if(msg.type==='error'){setStatus(msg.message);showToast(msg.message);return;}
- if(msg.type==='unlock-result'){
-  if(msg.ok){unlocked[msg.role]=true;el('pinModalStatus').textContent=msg.message;renderGarage();setTimeout(()=>{const id=pendingVehicleId;closeUnlock();if(id)chooseVehicle(id);},450);}
-  else el('pinModalStatus').textContent=msg.message;
-  return;
- }
- if(msg.type==='room-created'||msg.type==='room-joined'){roomCode=msg.roomCode;localPlayerId=msg.playerId;el('roomCodeLabel').textContent=roomCode;showToast(msg.type==='room-created'?'온라인 방을 만들었습니다!':'방에 참가했습니다!');return;}
+ if(msg.type==='room-created'||msg.type==='room-joined'){roomCode=msg.roomCode;localPlayerId=msg.playerId;el('roomCodeLabel').textContent=roomCode;showToast(msg.type==='room-created'?'레이스 방을 만들었습니다!':'레이스 방에 참가했습니다!');return;}
  if(msg.type==='left-room'){resetToGarage();return;}
  if(msg.type==='room-state'){
-  roomCode=msg.roomCode;hostId=msg.hostId;roomStarted=!!msg.started;latestPlayers=msg.players||[];
+  const newRaceStart=!!msg.started&&['countdown','running'].includes(msg.race?.status)&&(!raceState||raceState.countdownEndsAt!==msg.race.countdownEndsAt);
+  roomCode=msg.roomCode;hostId=msg.hostId;roomStarted=!!msg.started;latestPlayers=msg.players||[];raceState=msg.race||null;
+  if(msg.mapId&&msg.mapId!==currentMapId)chooseMap(msg.mapId,true);
+  const me=latestPlayers.find(p=>p.id===localPlayerId);if(me?.tune)updateTuneControls(me.tune);
   if(!localPlayerId){const me=latestPlayers.find(p=>p.name===el('playerName').value.trim());if(me)localPlayerId=me.id;}
   updateLobby(msg); if(roomStarted) enterGame(); else returnToLobbyView();
-  syncPlayerVisuals(latestPlayers);return;
+  syncPlayerVisuals(latestPlayers,newRaceStart); updateRaceHud(latestPlayers,raceState);
+  if(raceState?.status==='finished') showRaceResults(raceState.results||[]);
+  return;
  }
- if(msg.type==='snapshot'){latestPlayers=msg.players||[];syncPlayerVisuals(latestPlayers);return;}
- if(msg.type==='ability-result'){showToast(msg.message);return;}
+ if(msg.type==='snapshot'){
+  latestPlayers=msg.players||[];raceState=msg.race||raceState;syncPlayerVisuals(latestPlayers);updateRaceHud(latestPlayers,raceState);return;
+ }
+ if(msg.type==='race-finished'){
+  raceState=msg.race||raceState;showRaceResults(msg.results||raceState?.results||[]);return;
+ }
+ if(msg.type==='ability-result'){showToast(msg.message);if(msg.boostsRemaining!==undefined)renderBoostHud({boostsRemaining:msg.boostsRemaining,boostRemaining:msg.boostRemaining,cooldown:msg.cooldown});return;}
+}
+function formatTime(ms){const safe=Math.max(0,Math.floor(ms||0));const m=Math.floor(safe/60000);const s=Math.floor((safe%60000)/1000);const d=Math.floor((safe%1000)/100);return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${d}`;}
+function updateRaceHud(players,race){
+ const countdown=el('startCountdown');
+ if(!race){el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');countdown.classList.remove('show');return;}
+ if(race.status==='countdown'){
+  el('raceHud').classList.add('show');el('raceTimeValue').textContent='출발 준비';
+  const left=Math.max(0,(race.countdownEndsAt||Date.now())-Date.now());
+  const number=Math.max(1,Math.ceil(left/1000));el('countdownNumber').textContent=number>0?String(number):'GO!';countdown.classList.add('show');
+ }else{countdown.classList.remove('show');}
+ if(race.status==='finished'){el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');return;}
+ if(race.status==='running'){
+  el('raceHud').classList.add('show');
+  if(race.finishWindowEndsAt){el('raceTimeValue').textContent=`마감 ${Math.max(0,(race.finishWindowEndsAt-Date.now())/1000).toFixed(1)}초`;}
+  else el('raceTimeValue').textContent=race.firstFinisherId?'완주 대기':'진행 중';
+ }
+ const me=(players||[]).find(p=>p.id===localPlayerId);
+ const lapsToWin=race.lapsToWin||3;
+ if(me){
+  el('raceLapValue').textContent=`${Math.min(lapsToWin,(me.lapsCompleted||0)+1)} / ${lapsToWin}`;
+  el('racePositionValue').textContent=`${me.position||1} / ${players.length}`;
+  el('raceCollisionValue').textContent=String(me.collisions||0);
+  const times=me.lapTimes||[];el('lapTimesList').innerHTML=times.length?times.map((t,i)=>`<div class="lap-time-row"><span>${i+1} LAP</span><span>${formatTime(t)}</span></div>`).join(''):'아직 기록이 없습니다.';
+  el('lapTimesPanel').classList.add('show');
+ }
+}
+function showRaceResults(results){
+ if(raceResultsShown)return;raceResultsShown=true;el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');el('startCountdown').classList.remove('show');el('boostHud').classList.remove('show');
+ const rows=[...(results||[])].sort((a,b)=>a.rank-b.rank);
+ el('raceResultList').innerHTML=rows.map(r=>`<div class="result-row"><div class="result-rank">${r.rank}위</div><div class="result-name"><b>${escapeHtml(r.name)}</b><small>${escapeHtml(r.vehicleName||'차량')} · ${r.completedLaps||0}/${raceState?.lapsToWin||3}랩 · 충돌 ${r.collisions||0}회</small>${(r.lapTimes||[]).map((t,i)=>`<small>${i+1}랩 ${formatTime(t)}</small>`).join('')}</div><div class="result-metric"><strong>${r.finished?formatTime(r.finalTimeMs):'미완주'}</strong><span>주행 시간</span></div><div class="result-metric"><strong>+${((r.penaltyMs||0)/1000).toFixed(1)}s</strong><span>충돌 페널티</span></div><div class="result-feedback">${escapeHtml(r.feedback||'수고했어!')}</div></div>`).join('')||'<div class="sub">결과가 아직 없습니다.</div>';
+ const mine=rows.find(r=>r.id===localPlayerId);el('raceResultSummary').textContent=mine?`${mine.rank}위 · ${mine.feedback}`:'레이스가 종료되었습니다.';
+ el('raceAgainBtn').style.display=hostId===localPlayerId?'inline-block':'none';
+ el('raceResultHint').textContent=hostId===localPlayerId?'방장이 재경기를 시작하거나 대기실로 돌아갈 수 있어요.':'대기실 버튼을 누르면 현재 방에서 나갑니다.';
+ el('raceResultOverlay').classList.add('show');
 }
 function updateLobby(state){
  el('roomLobby').classList.add('show');el('roomCodeLabel').textContent=state.roomCode;
  const list=state.players||[];
  el('playerList').innerHTML=list.map(p=>`<div class="player-chip"><strong>${escapeHtml(p.name)} ${p.host?'👑':''}</strong><span>${escapeHtml((VEHICLES.find(v=>v.id===p.vehicleId)||VEHICLES[0]).short)}${p.id===localPlayerId?' · 나':''}</span></div>`).join('');
  const isHost=state.hostId===localPlayerId;
+ el('mapSelect').disabled=!isHost;el('lapCountSelect').disabled=!isHost;
+ if(state.lapsToWin)el('lapCountSelect').value=String(state.lapsToWin);
  el('startRoomBtn').style.display=isHost?'inline-block':'none';el('startRoomBtn').disabled=!isHost;
- el('hostHint').textContent=isHost?'방장입니다. 친구가 들어오면 시작하세요.':'방장이 게임을 시작할 때까지 기다려 주세요.';
+ el('hostHint').textContent=isHost?'방장입니다. 맵과 랩 수를 정한 뒤 레이스를 시작하세요.':'방장이 맵과 랩 수를 설정합니다.';
+ el('startRoomBtn').textContent='레이스 시작 · 3초 카운트다운';
  setStatus(`${list.length}/${state.maxPlayers||8}명 참가 · 방 코드 ${state.roomCode}`);
 }
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function createRoom(){if(!connected)return;send({type:'create-room',name:el('playerName').value,vehicleId:selectedVehicleId});}
-function joinRoom(){if(!connected)return;const code=el('roomCodeInput').value.trim().toUpperCase();if(code.length!==5){setStatus('방 코드는 다섯 글자입니다.');return;}send({type:'join-room',name:el('playerName').value,vehicleId:selectedVehicleId,roomCode:code});}
+function createRoom(){if(!connected)return;send({type:'create-room',name:el('playerName').value,vehicleId:selectedVehicleId,mapId:currentMapId,tune:currentTune});}
+function joinRoom(){if(!connected)return;const code=el('roomCodeInput').value.trim().toUpperCase();if(code.length!==5){setStatus('방 코드는 다섯 글자입니다.');return;}send({type:'join-room',name:el('playerName').value,vehicleId:selectedVehicleId,roomCode:code,tune:currentTune});}
 function enterGame(){
- el('startOverlay').style.display='none';el('gameHud').classList.add('show');el('rightHud').classList.add('show');el('gameButtons').classList.add('show');
- el('mobileControls').classList.toggle('show',selectedDevice==='mobile');el('hudRoomCode').textContent=roomCode;showToast('친구들과 함께 드라이브를 시작합니다!');
+ el('startOverlay').style.display='none';el('gameHud').classList.add('show');el('rightHud').classList.add('show');el('gameButtons').classList.add('show');el('raceResultOverlay').classList.remove('show');raceResultsShown=false;
+ el('mobileControls').classList.toggle('show',selectedDevice==='mobile');el('racingDash').classList.add('show');el('trackMapPanel').classList.add('show');el('dashDriverStrip').classList.add('show');el('hudRoomCode').textContent=roomCode;showToast('3초 카운트다운 후 출발합니다!');
 }
 function returnToLobbyView(){
- el('startOverlay').style.display='flex';el('gameHud').classList.remove('show');el('rightHud').classList.remove('show');el('gameButtons').classList.remove('show');el('mobileControls').classList.remove('show');controls={forward:false,reverse:false,left:false,right:false,brake:false};
+ el('startOverlay').style.display='flex';el('gameHud').classList.remove('show');el('rightHud').classList.remove('show');el('gameButtons').classList.remove('show');el('mobileControls').classList.remove('show');el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');el('startCountdown').classList.remove('show');el('boostHud').classList.remove('show');el('racingDash').classList.remove('show');el('trackMapPanel').classList.remove('show');el('dashDriverStrip').classList.remove('show');el('raceResultOverlay').classList.remove('show');raceResultsShown=false;raceState=null;controls={forward:false,reverse:false,left:false,right:false,brake:false};
 }
 function resetToGarage(){roomCode='';localPlayerId=null;hostId='';roomStarted=false;latestPlayers=[];for(const p of remotePlayers.values())scene?.remove(p.root);remotePlayers.clear();if(localRoot){scene?.remove(localRoot);localRoot=null;}el('roomLobby').classList.remove('show');returnToLobbyView();setStatus('방에서 나왔습니다. 새 방을 만들거나 다른 방에 참가할 수 있습니다.');}
 function copyRoomCode(){if(!roomCode)return;const text=roomCode;if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>showToast('방 코드를 복사했습니다.')).catch(()=>showToast(`방 코드: ${text}`));else showToast(`방 코드: ${text}`);}
@@ -194,13 +308,16 @@ document.querySelectorAll('[data-control]').forEach(btn=>{
  btn.addEventListener('pointerdown',down);btn.addEventListener('pointerup',up);btn.addEventListener('pointercancel',up);btn.addEventListener('lostpointercapture',up);
 });
 el('mobileBoost').addEventListener('click',()=>send({type:'ability'}));
-setInterval(()=>{if(roomStarted&&socket?.readyState===WebSocket.OPEN&&Date.now()-lastInputAt>35){send({type:'input',controls});lastInputAt=Date.now();}},40);
+setInterval(()=>{if(roomStarted&&socket?.readyState===WebSocket.OPEN&&raceState){updateRaceHud(latestPlayers,raceState);}if(roomStarted&&socket?.readyState===WebSocket.OPEN&&Date.now()-lastInputAt>28){send({type:'input',controls});lastInputAt=Date.now();}},33);
 
+el('mapSelect').addEventListener('change',()=>chooseMap(el('mapSelect').value));
+el('advancedToggle').addEventListener('click',()=>{isAdvancedTuning=!isAdvancedTuning;el('tuningAdvanced').style.display=isAdvancedTuning?'grid':'none';el('advancedToggle').textContent=isAdvancedTuning?'고급 튜닝 접기':'고급 튜닝 펼치기 (추가 4개 설정)';});
 el('pcChoice').addEventListener('click',()=>{selectedDevice='pc';el('pcChoice').classList.add('active');el('mobileChoice').classList.remove('active');});
 el('mobileChoice').addEventListener('click',()=>{selectedDevice='mobile';el('mobileChoice').classList.add('active');el('pcChoice').classList.remove('active');});
-el('createRoomBtn').addEventListener('click',createRoom);el('joinRoomBtn').addEventListener('click',joinRoom);el('startRoomBtn').addEventListener('click',()=>send({type:'start-room'}));el('copyCodeBtn').addEventListener('click',copyRoomCode);el('leaveRoomBtn').addEventListener('click',()=>send({type:'leave-room'}));el('returnLobbyBtn').addEventListener('click',()=>{if(hostId===localPlayerId)send({type:'stop-room'});else showToast('방장이 대기실로 돌아가면 함께 이동합니다.');});
-el('unlockBtn').addEventListener('click',submitUnlock);el('cancelUnlockBtn').addEventListener('click',closeUnlock);el('pinModalSubmit').addEventListener('click',submitUnlock);el('pinModalCancel').addEventListener('click',closeUnlock);el('pinModalInput').addEventListener('keydown',e=>{if(e.key==='Enter')submitUnlock();});
-renderGarage();connectServer();
+el('createRoomBtn').addEventListener('click',createRoom);el('joinRoomBtn').addEventListener('click',joinRoom);el('startRoomBtn').addEventListener('click',()=>send({type:'start-room',lapsToWin:Number(el('lapCountSelect').value)||3}));
+el('raceAgainBtn').addEventListener('click',()=>send({type:'restart-race'}));
+el('resultLobbyBtn').addEventListener('click',()=>{if(hostId===localPlayerId)send({type:'stop-room'});else send({type:'leave-room'});});el('copyCodeBtn').addEventListener('click',copyRoomCode);el('leaveRoomBtn').addEventListener('click',()=>send({type:'leave-room'}));el('returnLobbyBtn').addEventListener('click',()=>{if(hostId===localPlayerId)send({type:'stop-room'});else showToast('방장이 대기실로 돌아가면 함께 이동합니다.');});
+fillMapSelector();renderTuneFields();renderGarage();connectServer();
 
 // ===== THREE.JS + MISTWOOD VEHICLE MODEL SYSTEM =====
 async function loadThree(){
@@ -913,41 +1030,67 @@ function initScene(){
  buildForestTrack();
  clock=new THREE.Clock();window.addEventListener('resize',onResize);animate();
 }
-function makeOvalTrack(){
- const segments=360,halfWidth=12,positions=[],indices=[],uv=[];
+// ===== MAP SYSTEM: tracks.json의 웨이포인트로 10개 트랙을 그립니다. =====
+function sampleTrackForDrawing(track){
+ const pts=track.points,out=[],steps=24,n=pts.length;
+ for(let i=0;i<n;i++){
+  const p0=pts[(i-1+n)%n],p1=pts[i],p2=pts[(i+1)%n],p3=pts[(i+2)%n];
+  for(let step=0;step<steps;step++){
+   const t=step/steps,t2=t*t,t3=t2*t;
+   const x=.5*((2*p1[0])+(-p0[0]+p2[0])*t+(2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*t2+(-p0[0]+3*p1[0]-3*p2[0]+p3[0])*t3);
+   const z=.5*((2*p1[1])+(-p0[1]+p2[1])*t+(2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*t2+(-p0[1]+3*p1[1]-3*p2[1]+p3[1])*t3);
+   out.push(new THREE.Vector3(x,0,z));
+  }
+ }
+ out.push(out[0].clone());return out;
+}
+function disposeGroup(group){
+ if(!group)return;
+ group.traverse(obj=>{if(obj.geometry)obj.geometry.dispose();if(obj.material){const mats=Array.isArray(obj.material)?obj.material:[obj.material];for(const m of mats){if(m.map)m.map.dispose();m.dispose();}}});
+ scene.remove(group);
+}
+function makeSelectedTrack(track){
+ const samples=sampleTrackForDrawing(track),halfWidth=track.width/2,positions=[],indices=[];
+ const segments=samples.length-1;
  for(let i=0;i<=segments;i++){
-  const t=(i/segments)*Math.PI*2;const cx=TRACK_RX*Math.cos(t),cz=TRACK_RZ*Math.sin(t);const tx=-TRACK_RX*Math.sin(t),tz=TRACK_RZ*Math.cos(t);const len=Math.hypot(tx,tz);const nx=tz/len,nz=-tx/len;
-  for(const side of [-1,1]){positions.push(cx+nx*halfWidth*side,.015,cz+nz*halfWidth*side);uv.push(i/segments,side===-1?0:1);}
+  const before=samples[Math.max(0,i-1)],after=samples[Math.min(segments,i+1)];
+  let tx=after.x-before.x,tz=after.z-before.z,len=Math.max(.001,Math.hypot(tx,tz));tx/=len;tz/=len;
+  const nx=tz,nz=-tx,p=samples[i];
+  positions.push(p.x+nx*halfWidth,.015,p.z+nz*halfWidth,p.x-nx*halfWidth,.015,p.z-nz*halfWidth);
  }
  for(let i=0;i<segments;i++){const a=i*2,b=a+1,c=a+2,d=a+3;indices.push(a,c,b,b,c,d);}
- const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(indices);g.computeVertexNormals();
- const road=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:0x30383a,roughness:.93,side:THREE.DoubleSide}));road.receiveShadow=true;scene.add(road);
- // 도로 가장자리의 밝은 선과 간격을 둔 중앙 차선 표시
- const edgeMat=new THREE.MeshStandardMaterial({color:0xd8dfcf,roughness:.8});
- for(const side of [-1,1]){
-  const pts=[];for(let i=0;i<=segments;i++){const t=i/segments*Math.PI*2;const cx=TRACK_RX*Math.cos(t),cz=TRACK_RZ*Math.sin(t),tx=-TRACK_RX*Math.sin(t),tz=TRACK_RZ*Math.cos(t),len=Math.hypot(tx,tz),nx=tz/len,nz=-tx/len;pts.push(new THREE.Vector3(cx+nx*halfWidth*side,.06,cz+nz*halfWidth*side));}
-  scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:0xdce4d6})))
- }
+ const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geo.setIndex(indices);geo.computeVertexNormals();
+ const road=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:0x30383a,roughness:.93,side:THREE.DoubleSide}));road.receiveShadow=true;trackGroup.add(road);
+ const edgeMat=new THREE.LineBasicMaterial({color:0xdce4d6});
+ for(const side of [-1,1]){const edge=[];for(let i=0;i<=segments;i++){const a=samples[Math.max(0,i-1)],b=samples[Math.min(segments,i+1)],p=samples[i];let tx=b.x-a.x,tz=b.z-a.z,len=Math.max(.001,Math.hypot(tx,tz));tx/=len;tz/=len;edge.push(new THREE.Vector3(p.x+tz*halfWidth*side,.06,p.z-tx*halfWidth*side));}trackGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(edge),edgeMat));}
+ // 일정한 거리마다 중앙 차선 표시를 놓아 직선과 코너에서 길을 읽기 쉽게 합니다.
  const dashMat=new THREE.MeshStandardMaterial({color:0xf5e9be,emissive:0x332a15,roughness:.7});
- for(let i=0;i<72;i++){const t=i/72*Math.PI*2;const cx=TRACK_RX*Math.cos(t),cz=TRACK_RZ*Math.sin(t),tx=-TRACK_RX*Math.sin(t),tz=TRACK_RZ*Math.cos(t);const yaw=Math.atan2(tx,tz);const dash=new THREE.Mesh(new THREE.BoxGeometry(.20,.035,3.1),dashMat);dash.position.set(cx,.065,cz);dash.rotation.y=yaw;scene.add(dash);}
- const finish=new THREE.Mesh(new THREE.BoxGeometry(23,.10,1.5),new THREE.MeshStandardMaterial({color:0xdf2d36,emissive:0x4f0508,emissiveIntensity:.45}));finish.position.set(0,.085,-TRACK_RZ);scene.add(finish);
- // 결승선의 흰색·빨간색 체크 패턴
- const checkMatA=new THREE.MeshStandardMaterial({color:0xffffff}),checkMatB=new THREE.MeshStandardMaterial({color:0xb20f21});
- for(let i=0;i<22;i++){const tile=new THREE.Mesh(new THREE.BoxGeometry(1.04,.025,1.48),i%2?checkMatA:checkMatB);tile.position.set(-11+i*1.04,.15,-TRACK_RZ);scene.add(tile);}
+ let distanceSinceDash=0;
+ for(let i=1;i<samples.length-1;i++){const a=samples[i-1],b=samples[i],dx=b.x-a.x,dz=b.z-a.z,step=Math.hypot(dx,dz);distanceSinceDash+=step;if(distanceSinceDash>=13){distanceSinceDash=0;const dash=new THREE.Mesh(new THREE.BoxGeometry(.18,.035,3),dashMat);dash.position.set(b.x,.065,b.z);dash.rotation.y=Math.atan2(dx,dz);trackGroup.add(dash);}}
+ // 첫 웨이포인트가 출발선입니다. 도로 폭 전체를 가로지르는 선으로 표시합니다.
+ const p=samples[0],next=samples[1],yaw=Math.atan2(next.x-p.x,next.z-p.z);
+ const finish=new THREE.Mesh(new THREE.BoxGeometry(track.width,.10,1.5),new THREE.MeshStandardMaterial({color:0xe23a45,emissive:0x4f0508,emissiveIntensity:.55}));finish.position.set(p.x,.09,p.z);finish.rotation.y=yaw;trackGroup.add(finish);
+ const checkerA=new THREE.MeshStandardMaterial({color:0xffffff}),checkerB=new THREE.MeshStandardMaterial({color:0xb20f21});
+ for(let col=0;col<10;col++){const tile=new THREE.Mesh(new THREE.BoxGeometry(track.width/10,.035,1.45),(col%2)?checkerA:checkerB);tile.position.set(p.x,.15,p.z);tile.rotation.y=yaw;tile.position.x+=(Math.cos(yaw)*((col-4.5)*track.width/10));tile.position.z+=(-Math.sin(yaw)*((col-4.5)*track.width/10));trackGroup.add(tile);}
 }
+function distanceToPath(x,z,samples){let best=Infinity;for(let i=0;i<samples.length-1;i++){const a=samples[i],b=samples[i+1],dx=b.x-a.x,dz=b.z-a.z,len=dx*dx+dz*dz,t=len?Math.max(0,Math.min(1,((x-a.x)*dx+(z-a.z)*dz)/len)):0;const d=Math.hypot(x-(a.x+dx*t),z-(a.z+dz*t));if(d<best)best=d;}return best;}
 function buildForestTrack(){
- makeOvalTrack();
+ const map=TRACK_BY_ID.get(currentMapId)||TRACKS[0];
+ disposeGroup(trackGroup);disposeGroup(forestGroup);
+ trackGroup=new THREE.Group();forestGroup=new THREE.Group();scene.add(trackGroup);scene.add(forestGroup);
+ const samples=sampleTrackForDrawing(map);makeSelectedTrack(map);
  const trunkGeo=new THREE.CylinderGeometry(.22,.34,3.7,7),leafGeo=new THREE.ConeGeometry(2.5,7.5,7);
  const trunkMat=new THREE.MeshStandardMaterial({color:0x594330,roughness:1}),leafMat=new THREE.MeshStandardMaterial({color:0x1b5539,roughness:1});
  const trunks=new THREE.InstancedMesh(trunkGeo,trunkMat,430),leaves=new THREE.InstancedMesh(leafGeo,leafMat,430);const dummy=new THREE.Object3D();let n=0;
- for(let tries=0;tries<3000&&n<430;tries++){
-  const x=(Math.random()-.5)*980,z=(Math.random()-.5)*1180;const oval=Math.sqrt(x*x/(TRACK_RX*TRACK_RX)+z*z/(TRACK_RZ*TRACK_RZ));
-  if(oval>.84&&oval<1.20)continue;if(Math.abs(x)<28&&Math.abs(z+TRACK_RZ)<35)continue;
+ for(let tries=0;tries<5000&&n<430;tries++){
+  const x=(Math.random()-.5)*980,z=(Math.random()-.5)*1180;
+  // 어떤 맵을 선택해도 나무가 도로 위로 겹치지 않도록 중심선과의 거리를 검사합니다.
+  if(distanceToPath(x,z,samples)<map.width/2+12)continue;
   const scale=.75+Math.random()*1.25;dummy.position.set(x,1.5*scale,z);dummy.scale.setScalar(scale);dummy.rotation.y=Math.random()*Math.PI*2;dummy.updateMatrix();trunks.setMatrixAt(n,dummy.matrix);
   dummy.position.y=6.1*scale;dummy.scale.setScalar(scale);dummy.updateMatrix();leaves.setMatrixAt(n,dummy.matrix);n++;
  }
- trunks.count=n;leaves.count=n;trunks.castShadow=false;leaves.castShadow=false;scene.add(trunks,leaves);
- const mountains=new THREE.Mesh(new THREE.CylinderGeometry(700,780,80,48,1,true),new THREE.MeshStandardMaterial({color:0x49624d,side:THREE.BackSide,roughness:1}));mountains.position.y=5;scene.add(mountains);
+ trunks.count=n;leaves.count=n;trunks.castShadow=false;leaves.castShadow=false;forestGroup.add(trunks,leaves);
+ const mountains=new THREE.Mesh(new THREE.CylinderGeometry(700,780,80,48,1,true),new THREE.MeshStandardMaterial({color:0x49624d,side:THREE.BackSide,roughness:1}));mountains.position.y=5;forestGroup.add(mountains);
 }
 function createNameSprite(name){
  const c=document.createElement('canvas');c.width=512;c.height=128;const ctx=c.getContext('2d');ctx.fillStyle='rgba(4,20,19,.78)';roundRect(ctx,12,16,488,96,28);ctx.fill();ctx.strokeStyle='rgba(167,243,206,.65)';ctx.lineWidth=4;roundRect(ctx,12,16,488,96,28);ctx.stroke();ctx.fillStyle='#eafff4';ctx.font='bold 42px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(name.slice(0,18),256,64);const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false}));sprite.scale.set(7.5,1.9,1);sprite.position.y=5.0;return sprite;
@@ -965,21 +1108,23 @@ function makePlayerRoot(player){
 }
 function updateVehicleOnRoot(root,vehicleId){
  const current=root.userData.model;if(current)root.remove(current);const model=buildModel(root,vehicleId);root.userData.model=model;}
-function syncPlayerVisuals(players){
+function syncPlayerVisuals(players,snap=false){
  if(!scene||!players)return;
  const seen=new Set();
  for(const p of players){seen.add(p.id);
-  if(p.id===localPlayerId){if(!localRoot){localRoot=makePlayerRoot(p);localRoot.userData.isLocal=true;}if(localRoot.userData.vehicleId!==p.vehicleId){updateVehicleOnRoot(localRoot,p.vehicleId);localRoot.userData.vehicleId=p.vehicleId;}targetLocal={x:p.x,z:p.z,yaw:p.yaw,speed:p.speed};el('speedValue').textContent=String(Math.round(Math.abs(p.speed)*3.6));}
-  else{let entry=remotePlayers.get(p.id);if(!entry){const root=makePlayerRoot(p);root.userData.vehicleId=p.vehicleId;entry={root,target:{x:p.x,z:p.z,yaw:p.yaw},name:p.name};remotePlayers.set(p.id,entry);}if(entry.root.userData.vehicleId!==p.vehicleId){updateVehicleOnRoot(entry.root,p.vehicleId);entry.root.userData.vehicleId=p.vehicleId;}entry.target={x:p.x,z:p.z,yaw:p.yaw};entry.root.userData.label.material.rotation=0;}
+  if(p.id===localPlayerId){if(!localRoot){localRoot=makePlayerRoot(p);localRoot.userData.isLocal=true;localRoot.position.set(p.x,0,p.z);localRoot.rotation.y=p.yaw;}if(localRoot.userData.vehicleId!==p.vehicleId){updateVehicleOnRoot(localRoot,p.vehicleId);localRoot.userData.vehicleId=p.vehicleId;}if(snap){localRoot.position.set(p.x,0,p.z);localRoot.rotation.y=p.yaw;}targetLocal={x:p.x,z:p.z,yaw:p.yaw,speed:p.speed};el('speedValue').textContent=String(Math.round(Math.abs(p.speed)*3.6));}
+  else{let entry=remotePlayers.get(p.id);if(!entry){const root=makePlayerRoot(p);root.userData.vehicleId=p.vehicleId;root.position.set(p.x,0,p.z);root.rotation.y=p.yaw;entry={root,target:{x:p.x,z:p.z,yaw:p.yaw},name:p.name};remotePlayers.set(p.id,entry);}if(entry.root.userData.vehicleId!==p.vehicleId){updateVehicleOnRoot(entry.root,p.vehicleId);entry.root.userData.vehicleId=p.vehicleId;}if(snap){entry.root.position.set(p.x,0,p.z);entry.root.rotation.y=p.yaw;}entry.target={x:p.x,z:p.z,yaw:p.yaw};entry.root.userData.label.material.rotation=0;}
  }
  for(const [id,entry] of remotePlayers){if(!seen.has(id)){scene.remove(entry.root);entry.root.traverse(o=>{if(o.isSprite)o.material.map?.dispose();});remotePlayers.delete(id);}}
- const list=players.map(p=>`<div>${p.host?'👑 ':''}${escapeHtml(p.name)}${p.id===localPlayerId?' (나)':''}</div>`).join('');el('onlineList').innerHTML=list;el('driverCount').textContent=`${players.length}/8`;
+ const list=players.slice().sort((a,b)=>(a.position||99)-(b.position||99)).map(p=>`<div>${p.position||'-'}. ${p.host?'👑 ':''}${escapeHtml(p.name)}${p.id===localPlayerId?' (나)':''}</div>`).join('');el('onlineList').innerHTML=list;el('driverCount').textContent=`${players.length}/8`;
 }
 function lerpAngle(a,b,t){let d=((b-a+Math.PI*3)%(Math.PI*2))-Math.PI;return a+d*t;}
 function animate(){requestAnimationFrame(animate);if(!renderer||!scene||!camera)return;const dt=Math.min(.05,clock.getDelta());
- if(localRoot&&targetLocal){localRoot.position.x=THREE.MathUtils.lerp(localRoot.position.x,targetLocal.x,.42);localRoot.position.z=THREE.MathUtils.lerp(localRoot.position.z,targetLocal.z,.42);localRoot.rotation.y=lerpAngle(localRoot.rotation.y,targetLocal.yaw,.35);if(localRoot.userData.model?.userData?.mainRotor)localRoot.userData.model.userData.mainRotor.rotation.y+=dt*12;}
- for(const entry of remotePlayers.values()){const t=entry.target;entry.root.position.x=THREE.MathUtils.lerp(entry.root.position.x,t.x,.34);entry.root.position.z=THREE.MathUtils.lerp(entry.root.position.z,t.z,.34);entry.root.rotation.y=lerpAngle(entry.root.rotation.y,t.yaw,.34);}
- if(localRoot){const yaw=localRoot.rotation.y;const desired=new THREE.Vector3(localRoot.position.x-Math.sin(yaw)*13,7.3,localRoot.position.z+Math.cos(yaw)*13);camera.position.lerp(desired,.10);camera.lookAt(localRoot.position.x,1.5,localRoot.position.z);}
+ const localAlpha=1-Math.exp(-22*dt),remoteAlpha=1-Math.exp(-18*dt),cameraAlpha=1-Math.exp(-8*dt);
+ if(localRoot&&targetLocal){localRoot.position.x+= (targetLocal.x-localRoot.position.x)*localAlpha;localRoot.position.z+=(targetLocal.z-localRoot.position.z)*localAlpha;localRoot.rotation.y=lerpAngle(localRoot.rotation.y,targetLocal.yaw,localAlpha);if(localRoot.userData.model?.userData?.mainRotor)localRoot.userData.model.userData.mainRotor.rotation.y+=dt*12;}
+ for(const entry of remotePlayers.values()){const t=entry.target;entry.root.position.x+=(t.x-entry.root.position.x)*remoteAlpha;entry.root.position.z+=(t.z-entry.root.position.z)*remoteAlpha;entry.root.rotation.y=lerpAngle(entry.root.rotation.y,t.yaw,remoteAlpha);}
+ if(localRoot){const yaw=localRoot.rotation.y;const desired=new THREE.Vector3(localRoot.position.x+Math.sin(yaw)*13,7.3,localRoot.position.z+Math.cos(yaw)*13);camera.position.lerp(desired,cameraAlpha);camera.lookAt(localRoot.position.x,1.5,localRoot.position.z);}
+ if(raceState?.status==='running'&&Date.now()-lastRaceHudUpdate>180){updateRaceHud(latestPlayers,raceState);lastRaceHudUpdate=Date.now();}
  renderer.render(scene,camera);
 }
 function onResize(){if(!renderer||!camera)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio||1,innerWidth<850?1.25:1.65));}

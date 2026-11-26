@@ -10,16 +10,64 @@ const ROOT = __dirname;
 const PORT = Number(process.env.PORT || 3000);
 const MAX_PLAYERS = 8;
 const TICK_MS = 1000 / 30;
-const SNAPSHOT_EVERY = 2;
-const TRACK_RX = 180;
-const TRACK_RZ = 260;
-const VIP_PIN = process.env.VIP_PIN || 'sindorim!';
-const ADMIN_PIN = process.env.ADMIN_PIN || '0011';
-
-// 차량 선택과 주행 능력은 별도 JSON 파일을 사용합니다.
+const SNAPSHOT_EVERY = 1;
+// 차량과 10개 트랙은 JSON 파일로 분리해 학생이 쉽게 수정할 수 있습니다.
 const VEHICLES = JSON.parse(fs.readFileSync(path.join(ROOT, 'vehicles.json'), 'utf8'));
 const VEHICLE_MAP = new Map(VEHICLES.map(v => [v.id, v]));
-const VIP_IDS = new Set(['eventCrusher', 'speedster', 'eventTank', 'forestBike', 'teslaRoadster', 'vipRevuelto']);
+const TRACKS = JSON.parse(fs.readFileSync(path.join(ROOT, 'tracks.json'), 'utf8'));
+const TRACK_MAP = new Map(TRACKS.map(t => [t.id, t]));
+const DEFAULT_MAP_ID = TRACKS[0].id;
+const TRACK_STEPS = 24;
+
+// 튜닝 범위는 서버에서 다시 검사해 비정상적으로 큰 값을 막습니다.
+const DEFAULT_TUNE = Object.freeze({ topSpeed: 32, acceleration: 12.5, steering: 1.55, brake: 27, grip: 1, reverse: 8, coastDrag: 0.62 });
+function clamp(value, min, max, fallback) { const n = Number(value); return Number.isFinite(n) ? Math.max(min, Math.min(max, n)) : fallback; }
+function sanitizeTune(input = {}) {
+  return {
+    topSpeed: clamp(input.topSpeed, 24, 42, DEFAULT_TUNE.topSpeed),
+    acceleration: clamp(input.acceleration, 7, 18, DEFAULT_TUNE.acceleration),
+    steering: clamp(input.steering, 0.8, 2.4, DEFAULT_TUNE.steering),
+    brake: clamp(input.brake, 18, 36, DEFAULT_TUNE.brake),
+    grip: clamp(input.grip, 0.75, 1.3, DEFAULT_TUNE.grip),
+    reverse: clamp(input.reverse, 4, 12, DEFAULT_TUNE.reverse),
+    coastDrag: clamp(input.coastDrag, 0.3, 0.95, DEFAULT_TUNE.coastDrag)
+  };
+}
+
+// Catmull-Rom 곡선으로 웨이포인트 사이를 부드럽게 연결합니다.
+function sampleTrack(track) {
+  const points = track.points; const result = [];
+  const count = points.length;
+  for (let i = 0; i < count; i++) {
+    const p0 = points[(i - 1 + count) % count], p1 = points[i], p2 = points[(i + 1) % count], p3 = points[(i + 2) % count];
+    for (let step = 0; step < TRACK_STEPS; step++) {
+      const t = step / TRACK_STEPS, t2 = t * t, t3 = t2 * t;
+      const x = 0.5 * ((2*p1[0]) + (-p0[0]+p2[0])*t + (2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*t2 + (-p0[0]+3*p1[0]-3*p2[0]+p3[0])*t3);
+      const z = 0.5 * ((2*p1[1]) + (-p0[1]+p2[1])*t + (2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*t2 + (-p0[1]+3*p1[1]-3*p2[1]+p3[1])*t3);
+      result.push({ x, z });
+    }
+  }
+  result.push({ ...result[0] });
+  let total = 0; const cumulative = [0];
+  for (let i = 0; i < result.length - 1; i++) { total += Math.hypot(result[i+1].x-result[i].x, result[i+1].z-result[i].z); cumulative.push(total); }
+  return { points: result, cumulative, length: total, width: Number(track.width) || 24 };
+}
+const TRACK_CACHE = new Map(TRACKS.map(track => [track.id, sampleTrack(track)]));
+function getTrackCache(mapId) { return TRACK_CACHE.get(mapId) || TRACK_CACHE.get(DEFAULT_MAP_ID); }
+
+// 자동차 중심에서 도로 중심선까지의 가장 가까운 지점과 누적 거리를 구합니다.
+function projectToTrack(x, z, track) {
+  let bestDistanceSq = Infinity, bestAlong = 0;
+  for (let i = 0; i < track.points.length - 1; i++) {
+    const a = track.points[i], b = track.points[i+1];
+    const dx = b.x-a.x, dz = b.z-a.z, lenSq = dx*dx+dz*dz;
+    const t = lenSq > 0 ? Math.max(0, Math.min(1, ((x-a.x)*dx+(z-a.z)*dz)/lenSq)) : 0;
+    const px = a.x+dx*t, pz = a.z+dz*t;
+    const ex = x-px, ez = z-pz, distSq = ex*ex+ez*ez;
+    if (distSq < bestDistanceSq) { bestDistanceSq = distSq; bestAlong = track.cumulative[i] + Math.sqrt(lenSq)*t; }
+  }
+  return { distance: Math.sqrt(bestDistanceSq), along: bestAlong };
+}
 
 const rooms = new Map();
 const sockets = new Set();
@@ -40,62 +88,172 @@ function makeRoomCode() {
   } while (rooms.has(code));
   return code;
 }
+function raceStandings(room) {
+  return [...room.players.values()].sort((a, b) => {
+    if (a.finished !== b.finished) return a.finished ? -1 : 1;
+    if (a.finished && b.finished) return (a.finishTimeMs + a.penaltyMs) - (b.finishTimeMs + b.penaltyMs);
+    return b.raceProgress - a.raceProgress;
+  });
+}
 function roomPlayers(room) {
+  const positions = new Map(raceStandings(room).map((p, i) => [p.id, i + 1]));
   return [...room.players.values()].map(p => ({
     id: p.id, name: p.name, vehicleId: p.vehicleId,
-    host: p.id === room.hostId, admin: p.adminUnlocked, vip: p.vipUnlocked,
-    x: p.x, z: p.z, yaw: p.yaw, speed: p.speed,
+    host: p.id === room.hostId,
+    x: p.x, z: p.z, yaw: p.yaw, speed: p.speed, surface: p.surface || 'road',
     boostRemaining: Math.max(0, p.boostUntil - Date.now()) / 1000,
-    abilityCooldown: Math.max(0, p.abilityReadyAt - Date.now()) / 1000
+    abilityCooldown: Math.max(0, p.abilityReadyAt - Date.now()) / 1000,
+    boostsRemaining: Math.max(0, 5 - (p.boostsUsed || 0)),
+    tune: p.tune,
+    raceProgress: p.raceProgress || 0,
+    lapsCompleted: Math.min(room.race?.lapsToWin || room.lapsToWin || 3, Math.floor((p.raceProgress || 0) / (getTrackCache(room.mapId).length || 1))),
+    lapTimes: [...(p.lapTimes || [])],
+    bestLapMs: p.lapTimes && p.lapTimes.length ? Math.min(...p.lapTimes) : null,
+    collisions: p.collisions || 0,
+    penaltyMs: p.penaltyMs || 0,
+    finished: !!p.finished,
+    finishTimeMs: p.finishTimeMs,
+    position: positions.get(p.id) || 0
   }));
 }
 function sendRoomState(room) {
   const payload = {
     type: 'room-state', roomCode: room.code, hostId: room.hostId,
-    started: room.started, players: roomPlayers(room), maxPlayers: MAX_PLAYERS
+    started: room.started, mapId: room.mapId || DEFAULT_MAP_ID, lapsToWin: room.lapsToWin || 3, race: room.race || null,
+    players: roomPlayers(room), maxPlayers: MAX_PLAYERS
   };
   for (const p of room.players.values()) safeSend(p.ws, payload);
 }
 function sendError(ws, message) { safeSend(ws, { type: 'error', message }); }
-function hasAccess(ws, vehicle) {
-  if (vehicle.adminOnly && !ws.adminUnlocked) return false;
-  if (VIP_IDS.has(vehicle.id) && !ws.vipUnlocked) return false;
-  return true;
-}
-function pinMatches(input, expected) {
-  const a = Buffer.from(String(input || ''));
-  const b = Buffer.from(String(expected));
-  return a.length === b.length && crypto.timingSafeEqual(a, b);
-}
-function spawnPlayer(player, index, count) {
-  const lane = (index - (count - 1) / 2) * 4.2;
-  player.x = lane;
-  player.z = -TRACK_RZ;
-  player.yaw = Math.PI / 2;
+function spawnPlayer(player, index, count, now, track) {
+  const lane = (index % 4 - 1.5) * 4.8;
+  const row = Math.floor(index / 4);
+  const a = track.points[0], b = track.points[1];
+  const dx = b.x - a.x, dz = b.z - a.z, length = Math.max(0.001, Math.hypot(dx, dz));
+  const tx = dx / length, tz = dz / length;
+  const nx = tz, nz = -tx;
+  // 첫 번째 줄은 출발선 근처, 두 번째 줄은 그 뒤에 배치합니다.
+  player.x = a.x - tx * row * 8 + nx * lane;
+  player.z = a.z - tz * row * 8 + nz * lane;
+  player.yaw = Math.atan2(-tx, -tz); // 차량 앞(-Z)을 트랙 진행 방향에 맞춥니다.
   player.speed = 0;
+  player.surface = 'road';
   player.controls = { forward: false, reverse: false, left: false, right: false, brake: false };
   player.boostUntil = 0;
   player.abilityReadyAt = 0;
+  player.boostsUsed = 0; // 매 경기마다 5회로 초기화됩니다.
+  const projection = projectToTrack(player.x, player.z, track);
+  player.lastTrackDistance = projection.along;
+  player.raceProgress = 0;
+  player.collisions = 0;
+  player.penaltyMs = 0;
+  player.collisionReadyAt = 0;
+  player.finished = false;
+  player.finishTimeMs = null;
+  player.lapStartedAt = now;
+  player.lapTimes = [];
 }
 function canUseBoost(player, now) {
-  const vehicle = VEHICLE_MAP.get(player.vehicleId);
-  if (!vehicle || now < player.abilityReadyAt) return false;
-  if (vehicle.motorcycle) {
-    player.boostUntil = now + 2000;
-    player.abilityReadyAt = now + 10000;
-    return true;
+  if ((player.boostsUsed || 0) >= 5 || now < player.abilityReadyAt) return false;
+  player.boostUntil = now + 3000;       // 부스트는 정확히 3초 동안 유지됩니다.
+  player.abilityReadyAt = now + 10000;  // 사용 순간부터 10초 뒤 다시 사용할 수 있습니다.
+  player.boostsUsed = (player.boostsUsed || 0) + 1;
+  return true;
+}
+function startRace(room, now, requestedLaps) {
+  room.started = true;
+  const track = getTrackCache(room.mapId);
+  const laps = Math.max(1, Math.min(20, Math.round(Number(requestedLaps ?? room.lapsToWin ?? 3) || 3)));
+  room.lapsToWin = laps;
+  room.race = {
+    status: 'countdown', countdownEndsAt: now + 3000, startedAt: null,
+    firstFinisherId: null, finishWindowEndsAt: null,
+    lapsToWin: laps, trackLength: track.length, results: null
+  };
+  const players = [...room.players.values()];
+  players.forEach((p, i) => spawnPlayer(p, i, players.length, now + 3000, track));
+}
+function getRaceFeedback(rank, collisions, completed) {
+  if (!completed && rank === 1) return '가장 앞서 달렸어! 남은 랩을 완주하고 충돌을 줄이는 연습을 해 봐.';
+  if (rank === 1 && collisions === 0) return '완벽한 클린 레이스! 충돌 없이 1위를 차지했어.';
+  if (rank === 1) return '멋진 우승이야! 다음에는 충돌을 줄여 기록을 더 단축해 봐.';
+  if (completed && collisions <= 1) return '안정적인 주행이야. 코너 탈출 속도를 조금 더 높여 봐.';
+  if (completed) return '완주 성공! 코너 진입 전에 속도를 줄이고 충돌을 줄여 봐.';
+  return '이번에는 완주하지 못했지만 괜찮아. 트랙 안쪽을 유지하고 부드럽게 조향해 봐.';
+}
+function finishRace(room, now) {
+  if (!room.race || room.race.status !== 'running') return;
+  room.race.status = 'finished';
+  room.race.finishedAt = now;
+  for (const p of room.players.values()) { p.controls = { forward:false, reverse:false, left:false, right:false, brake:false }; p.speed = 0; }
+  const ordered = raceStandings(room);
+  const results = ordered.map((p, i) => {
+    const completedLaps = Math.min(room.race.lapsToWin || 3, Math.floor((p.raceProgress || 0) / (room.race.trackLength || 1)));
+    const finished = !!p.finished;
+    const elapsedMs = finished && Number.isFinite(p.finishTimeMs) ? p.finishTimeMs : now - room.race.startedAt;
+    return {
+      id: p.id, rank: i + 1, name: p.name,
+      vehicleName: (VEHICLE_MAP.get(p.vehicleId) || VEHICLES[0]).short,
+      completedLaps, finished, elapsedMs,
+      penaltyMs: p.penaltyMs || 0,
+      finalTimeMs: elapsedMs + (p.penaltyMs || 0),
+      collisions: p.collisions || 0,
+      lapTimes: p.lapTimes || [],
+      feedback: getRaceFeedback(i + 1, p.collisions || 0, finished)
+    };
+  });
+  room.race.results = results;
+  const payload = { type: 'race-finished', race: room.race, results };
+  for (const p of room.players.values()) safeSend(p.ws, payload);
+  sendRoomState(room);
+}
+function updateRaceProgress(room, player, now, track) {
+  if (!room.race || room.race.status !== 'running' || player.finished) return;
+  const nearest = projectToTrack(player.x, player.z, track);
+  const previous = player.lastTrackDistance ?? nearest.along;
+  let delta = nearest.along - previous;
+  if (delta < -track.length / 2) delta += track.length;
+  else if (delta > track.length / 2) delta -= track.length;
+  // 도로에서 너무 벗어나거나 한 프레임에 말이 안 되는 거리를 이동하면 랩을 올리지 않습니다.
+  const maxStep = Math.max(2.5, Math.abs(player.speed) * 2.2 * (1 / 30) + 1.5);
+  if (nearest.distance <= track.width / 2 + 7 && delta > 0 && delta <= maxStep) {
+    player.raceProgress = Math.max(0, (player.raceProgress || 0) + delta);
   }
-  if (vehicle.vipOverboost) {
-    player.boostUntil = now + 4000;
-    player.abilityReadyAt = now + 18000;
-    return true;
+  player.lastTrackDistance = nearest.along;
+  const completed = Math.floor((player.raceProgress || 0) / track.length);
+  while (player.lapTimes.length < completed) {
+    player.lapTimes.push(now - player.lapStartedAt);
+    player.lapStartedAt = now;
   }
-  if (vehicle.fast || vehicle.adminOnly) {
-    player.boostUntil = now + 3000;
-    player.abilityReadyAt = now + 12000;
-    return true;
+  if (completed >= room.race.lapsToWin) {
+    player.finished = true;
+    player.finishTimeMs = now - room.race.startedAt;
+    player.speed = 0;
+    player.controls = { forward:false, reverse:false, left:false, right:false, brake:false };
+    if (!room.race.firstFinisherId) {
+      room.race.firstFinisherId = player.id;
+      room.race.finishWindowEndsAt = now + 20000;
+    }
   }
-  return false;
+}
+function resolveCarCollisions(room, now) {
+  const players = [...room.players.values()].filter(p => !p.finished);
+  for (let i = 0; i < players.length; i++) for (let j = i + 1; j < players.length; j++) {
+    const a = players[i], b = players[j];
+    let dx = b.x - a.x, dz = b.z - a.z;
+    const distance = Math.hypot(dx, dz);
+    const minDistance = 4.6;
+    if (distance >= minDistance) continue;
+    if (distance < 0.001) { dx = 1; dz = 0; }
+    const len = Math.max(0.001, Math.hypot(dx, dz));
+    const nx = dx / len, nz = dz / len;
+    const overlap = minDistance - distance;
+    a.x -= nx * overlap * 0.52; a.z -= nz * overlap * 0.52;
+    b.x += nx * overlap * 0.52; b.z += nz * overlap * 0.52;
+    a.speed *= 0.82; b.speed *= 0.82;
+    if (now >= a.collisionReadyAt) { a.collisions++; a.penaltyMs += 500; a.collisionReadyAt = now + 900; }
+    if (now >= b.collisionReadyAt) { b.collisions++; b.penaltyMs += 500; b.collisionReadyAt = now + 900; }
+  }
 }
 function publicVehicleUpdate(room, player) {
   for (const other of room.players.values()) {
@@ -113,14 +271,13 @@ const server = http.createServer((req, res) => {
   let pathname = decodeURIComponent(url.pathname);
   if (pathname === '/') pathname = '/index.html';
   // 공개 서버는 게임 화면만 제공합니다. server.js와 환경 설정 파일은 다운로드할 수 없습니다.
-  if (pathname !== '/index.html') {
-    res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
-    return res.end('Not found');
-  }
-  const target = path.join(ROOT, 'index.html');
+  const allowedFiles = { '/index.html': ['index.html', 'text/html; charset=utf-8'], '/tracks.json': ['tracks.json', 'application/json; charset=utf-8'] };
+  const fileInfo = allowedFiles[pathname];
+  if (!fileInfo) { res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' }); return res.end('Not found'); }
+  const target = path.join(ROOT, fileInfo[0]);
   fs.readFile(target, (err, data) => {
-    if (err) { res.writeHead(500, { 'content-type': 'text/plain; charset=utf-8' }); return res.end('Game page could not be loaded'); }
-    res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-cache' });
+    if (err) { res.writeHead(500, { 'content-type': 'text/plain; charset=utf-8' }); return res.end('Game file could not be loaded'); }
+    res.writeHead(200, { 'content-type': fileInfo[1], 'cache-control': 'no-cache' });
     res.end(data);
   });
 });
@@ -208,10 +365,6 @@ function handleConnection(ws) {
   sockets.add(ws);
   ws.room = null;
   ws.player = null;
-  ws.adminUnlocked = false;
-  ws.vipUnlocked = false;
-  ws.pinFailures = 0;
-  ws.pinLockedUntil = 0;
   safeSend(ws, { type: 'connected', message: '온라인 서버에 연결되었습니다.' });
 
   ws.on('message', raw => {
@@ -219,38 +372,14 @@ function handleConnection(ws) {
     try { msg = JSON.parse(raw.toString()); } catch { return sendError(ws, '잘못된 메시지 형식입니다.'); }
     if (!msg || typeof msg.type !== 'string') return;
 
-    if (msg.type === 'unlock') {
-      const now = Date.now();
-      if (now < ws.pinLockedUntil) return safeSend(ws, { type: 'unlock-result', ok: false, role: msg.role, message: '인증 시도가 잠시 잠겼습니다. 2분 뒤 다시 시도해 주세요.' });
-      const role = msg.role === 'admin' ? 'admin' : msg.role === 'vip' ? 'vip' : null;
-      if (!role) return sendError(ws, '알 수 없는 잠금 종류입니다.');
-      const expected = role === 'admin' ? ADMIN_PIN : VIP_PIN;
-      const ok = pinMatches(msg.pin, expected);
-      if (!ok) {
-        ws.pinFailures++;
-        if (ws.pinFailures >= 5) { ws.pinLockedUntil = now + 120000; ws.pinFailures = 0; }
-        return safeSend(ws, { type: 'unlock-result', ok: false, role, message: '비밀번호가 맞지 않습니다.' });
-      }
-      if (role === 'admin') ws.adminUnlocked = true;
-      else ws.vipUnlocked = true;
-      ws.pinFailures = 0;
-      safeSend(ws, { type: 'unlock-result', ok: true, role, message: role === 'admin' ? '관리자 차량이 해금되었습니다.' : 'VIP 차량이 해금되었습니다.' });
-      if (ws.player) {
-        ws.player.adminUnlocked = ws.adminUnlocked;
-        ws.player.vipUnlocked = ws.vipUnlocked;
-        sendRoomState(ws.room);
-      }
-      return;
-    }
-
     if (msg.type === 'create-room') {
       if (ws.player) return sendError(ws, '이미 방에 참가 중입니다.');
       const name = sanitizeName(msg.name);
       const vehicle = VEHICLE_MAP.get(String(msg.vehicleId || 'grandeur')) || VEHICLES[0];
-      if (!hasAccess(ws, vehicle)) return sendError(ws, '선택한 차량의 잠금이 해제되지 않았습니다.');
       const code = makeRoomCode();
-      const player = makePlayer(ws, name, vehicle.id);
-      const room = { code, hostId: player.id, started: false, players: new Map() };
+      const player = makePlayer(ws, name, vehicle.id, msg.tune);
+      const mapId = TRACK_MAP.has(String(msg.mapId || '')) ? String(msg.mapId) : DEFAULT_MAP_ID;
+      const room = { code, hostId: player.id, started: false, mapId, players: new Map() };
       room.players.set(player.id, player);
       rooms.set(code, room);
       ws.room = room; ws.player = player;
@@ -268,8 +397,7 @@ function handleConnection(ws) {
       if (room.players.size >= MAX_PLAYERS) return sendError(ws, `방이 가득 찼습니다. 최대 ${MAX_PLAYERS}명까지 참가할 수 있습니다.`);
       const name = sanitizeName(msg.name);
       const vehicle = VEHICLE_MAP.get(String(msg.vehicleId || 'grandeur')) || VEHICLES[0];
-      if (!hasAccess(ws, vehicle)) return sendError(ws, '선택한 차량의 잠금이 해제되지 않았습니다.');
-      const player = makePlayer(ws, name, vehicle.id);
+      const player = makePlayer(ws, name, vehicle.id, msg.tune);
       room.players.set(player.id, player);
       ws.room = room; ws.player = player;
       safeSend(ws, { type: 'room-joined', roomCode: code, playerId: player.id });
@@ -282,9 +410,27 @@ function handleConnection(ws) {
       if (ws.room.started) return sendError(ws, '게임이 진행 중일 때는 차량을 바꿀 수 없습니다.');
       const vehicle = VEHICLE_MAP.get(String(msg.vehicleId || ''));
       if (!vehicle) return sendError(ws, '존재하지 않는 차량입니다.');
-      if (!hasAccess(ws, vehicle)) return sendError(ws, '이 차량은 VIP 또는 관리자 전용입니다.');
       ws.player.vehicleId = vehicle.id;
       publicVehicleUpdate(ws.room, ws.player);
+      return;
+    }
+
+    if (msg.type === 'tune') {
+      if (!ws.player || !ws.room) return sendError(ws, '먼저 온라인 방에 참가해 주세요.');
+      if (ws.room.started) return sendError(ws, '레이스 중에는 튜닝할 수 없습니다.');
+      ws.player.tune = sanitizeTune(msg.tune);
+      sendRoomState(ws.room);
+      return;
+    }
+
+    if (msg.type === 'select-map') {
+      if (!ws.player || !ws.room) return sendError(ws, '먼저 온라인 방을 만들어 주세요.');
+      if (ws.room.started) return sendError(ws, '레이스 중에는 맵을 바꿀 수 없습니다.');
+      if (ws.room.hostId !== ws.player.id) return sendError(ws, '방장만 맵을 선택할 수 있습니다.');
+      const mapId = String(msg.mapId || '');
+      if (!TRACK_MAP.has(mapId)) return sendError(ws, '존재하지 않는 맵입니다.');
+      ws.room.mapId = mapId;
+      sendRoomState(ws.room);
       return;
     }
 
@@ -292,9 +438,17 @@ function handleConnection(ws) {
       if (!ws.player || !ws.room) return sendError(ws, '온라인 방에 참가해 주세요.');
       if (ws.room.hostId !== ws.player.id) return sendError(ws, '방장만 게임을 시작할 수 있습니다.');
       if (ws.room.started) return;
-      ws.room.started = true;
-      const players = [...ws.room.players.values()];
-      players.forEach((p, i) => spawnPlayer(p, i, players.length));
+      if (ws.room.race && ['countdown','running'].includes(ws.room.race.status)) return sendError(ws, '레이스가 이미 진행 중입니다.');
+      ws.room.lapsToWin = Math.max(1, Math.min(20, Math.round(Number(msg.lapsToWin) || 3)));
+      startRace(ws.room, Date.now(), ws.room.lapsToWin);
+      sendRoomState(ws.room);
+      return;
+    }
+
+    if (msg.type === 'restart-race') {
+      if (!ws.player || !ws.room || ws.room.hostId !== ws.player.id) return sendError(ws, '방장만 재경기를 시작할 수 있습니다.');
+      if (!ws.room.race || ws.room.race.status !== 'finished') return sendError(ws, '현재 레이스가 끝난 뒤 다시 시작할 수 있습니다.');
+      startRace(ws.room, Date.now(), ws.room.lapsToWin || ws.room.race.lapsToWin || 3);
       sendRoomState(ws.room);
       return;
     }
@@ -302,6 +456,7 @@ function handleConnection(ws) {
     if (msg.type === 'stop-room') {
       if (!ws.player || !ws.room || ws.room.hostId !== ws.player.id) return sendError(ws, '방장만 대기실로 돌아갈 수 있습니다.');
       ws.room.started = false;
+      ws.room.race = null;
       for (const p of ws.room.players.values()) {
         p.speed = 0;
         p.controls = { forward: false, reverse: false, left: false, right: false, brake: false };
@@ -311,7 +466,7 @@ function handleConnection(ws) {
     }
 
     if (msg.type === 'input') {
-      if (!ws.player || !ws.room || !ws.room.started) return;
+      if (!ws.player || !ws.room || ws.room.race?.status !== 'running') return;
       const c = msg.controls || {};
       ws.player.controls = {
         forward: !!c.forward, reverse: !!c.reverse,
@@ -321,10 +476,10 @@ function handleConnection(ws) {
     }
 
     if (msg.type === 'ability') {
-      if (!ws.player || !ws.room || !ws.room.started) return;
+      if (!ws.player || !ws.room || ws.room.race?.status !== 'running') return;
       const now = Date.now();
       const ok = canUseBoost(ws.player, now);
-      safeSend(ws, { type: 'ability-result', ok, boostRemaining: Math.max(0, ws.player.boostUntil - now) / 1000, cooldown: Math.max(0, ws.player.abilityReadyAt - now) / 1000, message: ok ? '부스트 발동!' : '이 차량은 부스트를 사용할 수 없거나 재사용 대기 중입니다.' });
+      safeSend(ws, { type: 'ability-result', ok, boostRemaining: Math.max(0, ws.player.boostUntil - now) / 1000, cooldown: Math.max(0, ws.player.abilityReadyAt - now) / 1000, boostsRemaining: Math.max(0, 5 - ws.player.boostsUsed), message: ok ? '3초 부스트 발동! (경기당 최대 5회)' : (ws.player.boostsUsed >= 5 ? '이번 경기의 부스트 5회를 모두 사용했습니다.' : '부스트 대기 시간이 끝나면 다시 사용할 수 있어요.') });
       return;
     }
 
@@ -339,13 +494,12 @@ function handleConnection(ws) {
   ws.on('error', () => { sockets.delete(ws); leaveRoom(ws); });
 }
 
-function makePlayer(ws, name, vehicleId) {
+function makePlayer(ws, name, vehicleId, tuneInput) {
   return {
-    id: crypto.randomUUID(), ws, name, vehicleId,
-    adminUnlocked: ws.adminUnlocked, vipUnlocked: ws.vipUnlocked,
-    x: 0, z: -TRACK_RZ, yaw: Math.PI / 2, speed: 0,
+    id: crypto.randomUUID(), ws, name, vehicleId, tune: sanitizeTune(tuneInput),
+    x: 0, z: 0, yaw: -Math.PI / 2, speed: 0,
     controls: { forward: false, reverse: false, left: false, right: false, brake: false },
-    boostUntil: 0, abilityReadyAt: 0
+    boostUntil: 0, abilityReadyAt: 0, boostsUsed: 0, raceProgress: 0, lastTrackDistance: 0, collisions: 0, penaltyMs: 0, collisionReadyAt: 0, finished: false, finishTimeMs: null, lapStartedAt: 0, lapTimes: []
   };
 }
 function leaveRoom(ws) {
@@ -362,42 +516,75 @@ function leaveRoom(ws) {
 let lastTick = Date.now();
 setInterval(() => {
   const now = Date.now();
-  const dt = Math.min(0.06, Math.max(0.005, (now - lastTick) / 1000));
+  const dt = Math.min(0.045, Math.max(0, (now - lastTick) / 1000));
   lastTick = now;
+  if (dt <= 0) return;
   tickCount++;
   for (const room of rooms.values()) {
-    if (!room.started) continue;
+    if (!room.started || !room.race) continue;
+    if (room.race.status === 'countdown') {
+      if (now >= room.race.countdownEndsAt) {
+        room.race.status = 'running';
+        room.race.startedAt = now;
+        for (const p of room.players.values()) {
+          p.lapStartedAt = now;
+          p.controls = { forward:false, reverse:false, left:false, right:false, brake:false };
+        }
+      }
+      const countdownPayload = { type: 'snapshot', roomCode: room.code, players: roomPlayers(room), race: room.race, serverTime: now };
+      for (const p of room.players.values()) safeSend(p.ws, countdownPayload);
+      if (room.race.status !== 'running') continue;
+    }
+    if (room.race.status !== 'running') continue;
     for (const p of room.players.values()) {
-      const vehicle = VEHICLE_MAP.get(p.vehicleId) || VEHICLES[0];
+      if (p.finished) continue;
       const c = p.controls;
-      const boost = now < p.boostUntil;
-      const boostMax = boost ? (vehicle.vipOverboost ? 1.22 : 1.18) : 1;
-      const boostAccel = boost ? (vehicle.vipOverboost ? 1.52 : 1.65) : 1;
-      const maxSpeed = Number(vehicle.maxSpeed) * boostMax;
-      const accel = Number(vehicle.acceleration) * 0.82 * boostAccel;
-      const brake = Number(vehicle.brake) || 24;
-      const reverse = Number(vehicle.reverse) || 7;
+      const tune = p.tune || DEFAULT_TUNE;
+      const boosting = now < p.boostUntil;
+      // 노면별 효과는 모든 차량에 공통 적용하고, 플레이어별 튜닝값은 그대로 곱해집니다.
+      const surface = p.surface || 'road';
+      const surfaceGrip = surface === 'grass' ? 0.72 : surface === 'dirt' ? 0.48 : 1;
+      const surfacePower = surface === 'grass' ? 0.72 : surface === 'dirt' ? 0.48 : 1;
+      const maxSpeed = tune.topSpeed * (boosting ? 1.18 : 1) * surfacePower;
+      const accel = tune.acceleration * (boosting ? 1.25 : 1) * surfacePower;
+      const brake = tune.brake;
+      const reverse = tune.reverse * surfacePower;
       if (c.forward) p.speed = Math.min(maxSpeed, p.speed + accel * dt);
       if (c.reverse) {
         if (p.speed > 0.8) p.speed = Math.max(0, p.speed - brake * dt);
         else p.speed = Math.max(-reverse, p.speed - accel * 0.48 * dt);
       }
-      if (c.brake) p.speed = p.speed > 0 ? Math.max(0, p.speed - brake * 1.4 * dt) : Math.min(0, p.speed + brake * 1.4 * dt);
-      if (!c.forward && !c.reverse && !c.brake) p.speed *= Math.exp(-0.42 * dt);
-      if (Math.abs(p.speed) < 0.035 && !c.forward && !c.reverse) p.speed = 0;
-      const steer = (Number(vehicle.steering) || 1.3) * 0.30 * (0.23 + Math.min(1, Math.abs(p.speed) / Math.max(1, maxSpeed)) * 0.77);
+      if (c.brake) p.speed = p.speed > 0 ? Math.max(0, p.speed - brake * 1.45 * dt) : Math.min(0, p.speed + brake * 1.45 * dt);
+      if (!c.forward && !c.reverse && !c.brake) p.speed *= Math.exp(-tune.coastDrag * dt);
+      if (Math.abs(p.speed) < 0.025 && !c.forward && !c.reverse) p.speed = 0;
+      const speedRatio = Math.min(1, Math.abs(p.speed) / Math.max(1, tune.topSpeed));
+      // Grip(접지력)이 높을수록 같은 조향 입력이 조금 더 안정적으로 적용됩니다.
+      const steerRate = tune.steering * 0.30 * (0.23 + speedRatio * 0.77) * (0.78 + tune.grip * 0.22) * surfaceGrip;
       const direction = p.speed >= 0 ? 1 : -1;
-      if (c.left) p.yaw -= steer * direction * dt;
-      if (c.right) p.yaw += steer * direction * dt;
-      p.x += Math.sin(p.yaw) * p.speed * dt;
+      if (c.left) p.yaw += steerRate * direction * dt;
+      if (c.right) p.yaw -= steerRate * direction * dt;
+      if (c.left || c.right) p.speed *= Math.exp(-(0.035 / tune.grip / surfaceGrip) * dt);
+      // The vehicle model faces local -Z, so the physics vector must use -sin(yaw).
+      p.x -= Math.sin(p.yaw) * p.speed * dt;
       p.z -= Math.cos(p.yaw) * p.speed * dt;
-      const oval = Math.sqrt((p.x * p.x) / (TRACK_RX * TRACK_RX) + (p.z * p.z) / (TRACK_RZ * TRACK_RZ));
-      if (oval < 0.875 || oval > 1.13) p.speed *= Math.exp(-0.72 * dt);
+      const track = getTrackCache(room.mapId);
+      const roadDistance = projectToTrack(p.x, p.z, track).distance;
+      const roadEdge = track.width / 2;
+      // 도로 가장자리를 벗어나면 잔디, 더 멀리 벗어나면 흙/모래 노면으로 판정합니다.
+      p.surface = roadDistance <= roadEdge ? 'road' : roadDistance <= roadEdge + 18 ? 'grass' : 'dirt';
+      if (p.surface === 'grass') p.speed *= Math.exp(-2.0 * dt);
+      else if (p.surface === 'dirt') p.speed *= Math.exp(-3.2 * dt);
+      // 노면에 진입한 순간에도 해당 노면의 제한 속도를 넘지 않게 부드럽게 낮춥니다.
+      const surfaceLimit = tune.topSpeed * (boosting ? 1.18 : 1) * (p.surface === 'grass' ? 0.72 : p.surface === 'dirt' ? 0.48 : 1);
+      p.speed = Math.max(-tune.reverse * (p.surface === 'grass' ? 0.72 : p.surface === 'dirt' ? 0.48 : 1), Math.min(surfaceLimit, p.speed));
       p.x = Math.max(-420, Math.min(420, p.x));
       p.z = Math.max(-520, Math.min(520, p.z));
+      updateRaceProgress(room, p, now, track);
     }
-    if (tickCount % SNAPSHOT_EVERY === 0) {
-      const payload = { type: 'snapshot', roomCode: room.code, players: roomPlayers(room), serverTime: now };
+    resolveCarCollisions(room, now);
+    if (room.race.finishWindowEndsAt && now >= room.race.finishWindowEndsAt) finishRace(room, now);
+    if (room.race?.status === 'running' && tickCount % SNAPSHOT_EVERY === 0) {
+      const payload = { type: 'snapshot', roomCode: room.code, players: roomPlayers(room), race: room.race, serverTime: now };
       for (const p of room.players.values()) safeSend(p.ws, payload);
     }
   }
