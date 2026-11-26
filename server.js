@@ -12,6 +12,10 @@ const MAX_PLAYERS = 8;
 const MAX_SPECTATORS = 20;
 const TICK_MS = 1000 / 30;
 const SNAPSHOT_EVERY = 1;
+// 연결이 끊겼지만 TCP 종료 신호가 도착하지 않는 경우에도 빈 방을 정리하기 위한 하트비트
+const HEARTBEAT_INTERVAL_MS = 15000;
+const HEARTBEAT_TIMEOUT_MS = 45000;
+const ROOM_SWEEP_INTERVAL_MS = 10000;
 // F 부스트 중에만 적용하는 배율입니다. 기존보다 조금 강하게 조정했습니다.
 const BOOST_TOP_SPEED_MULTIPLIER = 1.21; // 최고 속도 +21% (기존 +18%)
 const BOOST_ACCELERATION_MULTIPLIER = 1.30; // 가속 +30% (기존 +25%)
@@ -440,6 +444,9 @@ class PeerSocket extends EventEmitter {
     this.buffer = Buffer.alloc(0);
     this.fragments = [];
     this.fragmentOpcode = 0;
+    this.lastPongAt = Date.now();
+    this.lastPingAt = 0;
+    try { socket.setNoDelay(true); socket.setKeepAlive(true, 30000); } catch {}
     socket.on('data', data => this._onData(data));
     socket.on('error', err => this.emit('error', err));
     socket.on('close', () => { this.readyState = 3; this.emit('close'); });
@@ -464,6 +471,16 @@ class PeerSocket extends EventEmitter {
     try { this.socket.write(Buffer.from([0x88, 0x00])); } catch {}
     this.socket.end();
   }
+  ping() {
+    if (this.readyState !== 1 || this.socket.destroyed) return;
+    this.lastPingAt = Date.now();
+    this._sendControl(0x9, Buffer.from([1]));
+  }
+  terminate() {
+    if (this.readyState === 3) return;
+    this.readyState = 3;
+    try { this.socket.destroy(); } catch {}
+  }
   _onData(chunk) {
     this.buffer = Buffer.concat([this.buffer, chunk]);
     while (this.buffer.length >= 2) {
@@ -480,8 +497,8 @@ class PeerSocket extends EventEmitter {
       this.buffer = this.buffer.subarray(offset + length);
       if (masked) for (let i = 0; i < payload.length; i++) payload[i] ^= mask[i % 4];
       if (opcode === 0x8) { this.close(); return; }
-      if (opcode === 0x9) { this._sendControl(0xA, payload); continue; }
-      if (opcode === 0xA) continue;
+      if (opcode === 0x9) { this._sendControl(0xA, payload); this.emit('ping'); continue; }
+      if (opcode === 0xA) { this.lastPongAt = Date.now(); this.emit('pong'); continue; }
       if (opcode === 0x1 || opcode === 0x2) {
         if (fin) this.emit('message', payload);
         else { this.fragments = [payload]; this.fragmentOpcode = opcode; }
@@ -515,6 +532,8 @@ function handleConnection(ws) {
   ws.player = null;
   ws.spectator = null;
   safeSend(ws, { type: 'connected', message: '온라인 서버에 연결되었습니다.' });
+
+  ws.on('pong', () => { ws.lastPongAt = Date.now(); });
 
   ws.on('message', raw => {
     let msg;
@@ -691,24 +710,44 @@ function makePlayer(ws, name, vehicleId, tuneInput) {
     boostUntil: 0, abilityReadyAt: 0, boostsUsed: 0, raceProgress: 0, lastTrackDistance: 0, collisions: 0, penaltyMs: 0, collisionReadyAt: 0, finished: false, finishTimeMs: null, lapStartedAt: 0, lapTimes: []
   };
 }
+function closeEmptyRoom(room, message = '참가자가 모두 나가 방이 종료되었습니다.') {
+  if (!room || rooms.get(room.code) !== room) return;
+  // 남아 있는 관전자에게 종료를 알리고, 소켓의 방 참조도 즉시 해제합니다.
+  for (const watcher of room.spectators?.values() || []) {
+    safeSend(watcher.ws, { type: 'room-closed', message });
+    if (watcher.ws.room === room) {
+      watcher.ws.room = null;
+      watcher.ws.player = null;
+      watcher.ws.spectator = null;
+    }
+  }
+  room.players.clear();
+  room.spectators?.clear();
+  rooms.delete(room.code);
+}
+
 function leaveRoom(ws) {
   const room = ws.room;
   if (!room) { ws.room = null; ws.player = null; ws.spectator = null; return; }
+
   if (ws.spectator) {
     room.spectators?.delete(ws.spectator.id);
     ws.room = null; ws.player = null; ws.spectator = null;
-    if (room.players.size === 0 && (room.spectators?.size || 0) === 0) rooms.delete(room.code);
-    else sendRoomState(room);
+    if (room.players.size === 0 && (room.spectators?.size || 0) === 0) {
+      closeEmptyRoom(room);
+    } else if (rooms.get(room.code) === room) {
+      sendRoomState(room);
+    }
     return;
   }
+
   const player = ws.player;
   if (!player) { ws.room = null; ws.spectator = null; return; }
   room.players.delete(player.id);
   ws.room = null; ws.player = null; ws.spectator = null;
+
   if (room.players.size === 0) {
-    for (const watcher of room.spectators?.values() || []) safeSend(watcher.ws, { type: 'room-closed', message: '레이서가 모두 나가 방이 종료되었습니다.' });
-    for (const watcher of room.spectators?.values() || []) { watcher.ws.room = null; watcher.ws.spectator = null; }
-    rooms.delete(room.code);
+    closeEmptyRoom(room, '레이서가 모두 나가 방이 종료되었습니다.');
     return;
   }
   if (room.hostId === player.id) {
@@ -716,8 +755,49 @@ function leaveRoom(ws) {
     const newHost = room.players.get(room.hostId);
     if (newHost) newHost.ready = true;
   }
-  sendRoomState(room);
+  if (rooms.get(room.code) === room) sendRoomState(room);
 }
+
+// 살아 있는 것처럼 남아 있는 끊긴 소켓을 주기적으로 제거해 방 목록의 유령 방을 방지합니다.
+function sweepStaleRoomMembers() {
+  for (const room of [...rooms.values()]) {
+    if (rooms.get(room.code) !== room) continue;
+    let changed = false;
+    for (const player of [...room.players.values()]) {
+      const memberSocket = player.ws;
+      const stale = !memberSocket || memberSocket.readyState !== 1 || memberSocket.socket?.destroyed || memberSocket.room !== room || memberSocket.player !== player;
+      if (!stale) continue;
+      room.players.delete(player.id);
+      if (memberSocket && memberSocket.room === room && memberSocket.player === player) {
+        memberSocket.room = null; memberSocket.player = null; memberSocket.spectator = null;
+      }
+      changed = true;
+    }
+    for (const spectator of [...(room.spectators?.values() || [])]) {
+      const memberSocket = spectator.ws;
+      const stale = !memberSocket || memberSocket.readyState !== 1 || memberSocket.socket?.destroyed || memberSocket.room !== room || memberSocket.spectator !== spectator;
+      if (!stale) continue;
+      room.spectators.delete(spectator.id);
+      if (memberSocket && memberSocket.room === room && memberSocket.spectator === spectator) {
+        memberSocket.room = null; memberSocket.player = null; memberSocket.spectator = null;
+      }
+      changed = true;
+    }
+    if (room.players.size === 0) {
+      if (changed || (room.spectators?.size || 0) > 0) closeEmptyRoom(room, '연결이 종료되었거나 참가자가 모두 나가 방이 종료되었습니다.');
+      else closeEmptyRoom(room);
+      continue;
+    }
+    if (!room.players.has(room.hostId)) {
+      room.hostId = room.players.keys().next().value;
+      const nextHost = room.players.get(room.hostId);
+      if (nextHost) nextHost.ready = true;
+      changed = true;
+    }
+    if (changed) sendRoomState(room);
+  }
+}
+
 
 
 let lastTick = Date.now();
@@ -803,6 +883,28 @@ setInterval(() => {
     }
   }
 }, TICK_MS);
+
+// 브라우저와 Node WebSocket 클라이언트는 Ping에 자동으로 Pong을 돌려줍니다.
+// 일정 시간 Pong이 오지 않으면 소켓을 종료해 close 이벤트에서 방 참가자를 정리합니다.
+const heartbeatTimer = setInterval(() => {
+  const now = Date.now();
+  for (const ws of [...sockets]) {
+    if (ws.readyState !== 1 || ws.socket?.destroyed) {
+      sockets.delete(ws);
+      leaveRoom(ws);
+      continue;
+    }
+    if (now - (ws.lastPongAt || now) > HEARTBEAT_TIMEOUT_MS) {
+      ws.terminate();
+      continue;
+    }
+    ws.ping();
+  }
+}, HEARTBEAT_INTERVAL_MS);
+heartbeatTimer.unref();
+
+const roomSweepTimer = setInterval(sweepStaleRoomMembers, ROOM_SWEEP_INTERVAL_MS);
+roomSweepTimer.unref();
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`MISTWOOD Online server listening on port ${PORT}`);
