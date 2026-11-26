@@ -130,13 +130,21 @@
  .home-live-pill{padding:6px 8px;font-size:7px}
 }
 
+
+/* Separate home entry and spectator-only controls. */
+.spectator-entry-box{margin:10px 0 14px;border-color:rgba(255,153,91,.28);background:linear-gradient(110deg,rgba(255,143,82,.075),rgba(255,255,255,.025))}
+.spectator-entry-row{margin-top:7px}.spectator-entry-row .field{max-width:180px}.spectator-entry-row .btn{flex:1}
+.spectator-hud{position:fixed;z-index:26;top:12px;left:50%;transform:translateX(-50%);display:none;width:min(760px,calc(100vw - 28px));padding:10px 12px;border:1px solid rgba(255,151,92,.42);border-radius:8px 16px 8px 16px;background:linear-gradient(125deg,rgba(15,24,25,.96),rgba(27,26,21,.94));box-shadow:0 12px 32px rgba(0,0,0,.4);backdrop-filter:blur(12px)}
+.spectator-hud.show{display:block}.spectator-toolbar-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.spectator-toolbar-top>div{display:flex;align-items:center;gap:12px;min-width:0}.spectator-toolbar-top b{color:#ffb27e;font-size:10px;font-weight:1000;letter-spacing:.16em}.spectator-toolbar-top span{color:#c5d9cf;font-size:9px;font-weight:800}.spectator-exit,.spectator-mode-btn{border:1px solid rgba(255,255,255,.17);border-radius:7px;padding:7px 10px;color:#f3fff8;background:rgba(255,255,255,.07);font-size:9px;font-weight:900;white-space:nowrap}.spectator-exit{border-color:rgba(255,135,105,.38);color:#ffc0a2}.spectator-toolbar-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:9px}.spectator-mode-btn.active{border-color:#ff9b60;color:#ffc093;background:rgba(255,130,70,.14)}.spectator-toolbar-actions select{min-width:150px;max-width:230px;padding:7px 9px;border:1px solid rgba(255,255,255,.2);border-radius:7px;background:#102320;color:#f4fff9;font-size:9px}.spectator-hint{margin-top:7px;color:#a9c5b8;font-size:8px;line-height:1.4}
+.spectator-board{position:fixed;z-index:25;right:12px;top:116px;display:none;width:min(230px,calc(100vw - 24px));padding:10px;border:1px solid rgba(255,255,255,.17);border-radius:8px 14px 8px 14px;background:rgba(4,17,19,.88);box-shadow:0 10px 30px rgba(0,0,0,.34);backdrop-filter:blur(10px);pointer-events:none}.spectator-board.show{display:block}.spectator-board-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:7px}.spectator-board-head b{font-size:9px;color:#ffb27e;letter-spacing:.12em}.spectator-board-head span{font-size:8px;color:#b2c9bf}.spectator-standing{display:grid;grid-template-columns:20px 1fr auto;gap:7px;align-items:center;padding:5px 2px;border-top:1px solid rgba(255,255,255,.07);font-size:9px}.spectator-standing strong{color:#f1fff7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.spectator-standing>span:first-child{color:#ffcb91;font-weight:1000}.spectator-standing small{font-size:8px;color:#9bb7aa;white-space:nowrap}
+@media(max-width:700px){.spectator-hud{top:7px;padding:8px;width:calc(100vw - 14px)}.spectator-toolbar-top b{font-size:9px}.spectator-toolbar-actions{gap:5px}.spectator-mode-btn,.spectator-exit{padding:6px 8px;font-size:8px}.spectator-toolbar-actions select{min-width:118px;max-width:calc(100vw - 200px);flex:1}.spectator-board{top:auto;right:7px;bottom:12px;width:185px;padding:8px}}
 </style>
 </head>
 <body>
 <canvas id="gameCanvas"></canvas>
 <div id="startOverlay" class="overlay">
  <main class="panel home-panel">
-  <div class="home-hero-top"><span class="home-series">MISTWOOD MOTORSPORT <i>·</i> ONLINE RACING SERIES</span><div class="home-hero-meta"><span class="home-season">SEASON 01 / MULTIPLAYER</span><span class="home-live-pill" aria-live="polite"><i></i><b id="homeOnlineCount">0</b><span>DRIVERS ONLINE</span></span></div></div>
+  <div class="home-hero-top"><span class="home-series">MISTWOOD MOTORSPORT <i>·</i> ONLINE RACING SERIES</span><div class="home-hero-meta"><span class="home-season">SEASON 01 / MULTIPLAYER</span><span class="home-live-pill" aria-live="polite"><i></i><b id="homeOnlineCount">0</b><span>PLAYERS ONLINE</span></span></div></div>
   <div class="brand"><div><div class="eyebrow">YOUR GRID. YOUR LINE. YOUR RACE.</div><h1>MISTWOOD <span class="race-word">ONLINE</span></h1><div class="sub">친구들과 같은 서킷에서 경쟁하는 실시간 멀티플레이 레이싱 · 선두 완주 후 20초 추가 주행</div></div><span id="connectionPill" class="connection-status">서버 연결 중...</span></div>
   <div class="home-stats"><div><b>08</b><span>MAX DRIVERS</span></div><div><b>10</b><span>RACE CIRCUITS</span></div><div><b>20</b><span>MAX LAPS</span></div><div><b>LIVE</b><span>ONLINE RACING</span></div></div>
   <div class="top-grid">
@@ -153,6 +161,11 @@
     <div id="connectionStatus" class="status">온라인 서버에 연결하는 중입니다.</div>
    </section>
   </div>
+  <section class="box spectator-entry-box">
+   <div class="box-title">LIVE SPECTATOR · WATCH A RACE</div>
+   <div class="row spectator-entry-row"><input id="spectatorRoomCodeInput" class="field small-field" maxlength="5" placeholder="관전할 방 코드" aria-label="관전할 방 코드"/><button id="spectateRoomBtn" class="btn secondary" disabled>관전 모드 입장</button></div>
+   <div class="fineprint">진행 중이거나 결과가 나온 레이스를 볼 수 있어요. 관전자는 레이서 8명 제한에 포함되지 않습니다.</div>
+  </section>
   <section class="box" style="margin:12px 0">
    <div class="box-title">03 / CIRCUIT SELECTION · 10 TRACKS</div>
    <select id="mapSelect" class="field" aria-label="레이스 맵 선택"></select>
@@ -186,6 +199,17 @@
 <div id="trackMapPanel" class="track-map"><div class="track-map-head"><b>LIVE TRACK MAP</b><span id="trackMapName">TRACK</span></div><canvas id="trackMapCanvas" width="480" height="358" aria-label="트랙과 플레이어 위치 지도"></canvas><div class="map-legend"><span><i class="map-dot"></i>ME</span><span><i class="map-dot other"></i>RIVALS</span><span id="mapPlayerCount">0 DRIVERS</span></div></div>
 <div id="dashDriverStrip" class="dash-driver-strip"><b>LIVE TELEMETRY</b><span id="dashCarName">차량 정보 대기 중</span><span id="dashStatusLine">온라인 연결 대기 중</span></div>
 <div id="rightHud" class="right-hud"><strong>ONLINE DRIVERS</strong><div id="onlineList" class="online-list"></div></div>
+<div id="spectatorHud" class="spectator-hud" aria-label="관전 카메라 제어">
+ <div class="spectator-toolbar-top"><div><b>LIVE SPECTATOR</b><span id="spectatorRoomLabel">ROOM -----</span></div><button id="spectatorExitBtn" class="spectator-exit">관전 종료 ×</button></div>
+ <div class="spectator-toolbar-actions">
+  <button id="spectatorLeaderBtn" class="spectator-mode-btn active">1위 자동 추적</button>
+  <select id="spectatorTargetSelect" aria-label="관전할 선수 선택"><option value="">선수 선택</option></select>
+  <button id="spectatorOverviewBtn" class="spectator-mode-btn">전체 맵</button>
+  <button id="spectatorFreeBtn" class="spectator-mode-btn">자유 카메라</button>
+ </div>
+ <div class="spectator-hint" id="spectatorHint">선수를 선택하거나 카메라 모드를 바꿔 보세요.</div>
+</div>
+<div id="spectatorBoard" class="spectator-board"><div class="spectator-board-head"><b>LIVE STANDINGS</b><span id="spectatorDriverCount">0 DRIVERS</span></div><div id="spectatorStandings"></div></div>
 <div id="gameButtons" class="game-buttons"><button id="returnLobbyBtn" class="mini-btn">대기실로</button></div>
 <div id="mobileControls" class="mobile-controls"><div class="dpad"><button class="touch-btn d-up" data-control="forward">▲</button><button class="touch-btn d-left" data-control="left">◀</button><button class="touch-btn d-down" data-control="reverse">▼</button><button class="touch-btn d-right" data-control="right">▶</button></div><div class="touch-actions"><button id="mobileBrake" class="touch-btn" data-control="brake">BRAKE</button><button id="mobileBoost" class="touch-btn boost">BOOST · F</button></div></div>
 <div id="raceResultOverlay" class="overlay result-overlay"><main class="panel result-panel"><div class="eyebrow">MISTWOOD ONLINE · RACE RESULTS</div><h1>레이스 종료</h1><div id="raceResultSummary" class="sub">최종 순위와 주행 피드백</div><div id="raceResultList" class="result-list"></div><div class="row result-actions"><button id="raceAgainBtn" class="btn">다시 레이스</button><button id="resultLobbyBtn" class="btn secondary">대기실로</button></div><div id="raceResultHint" class="fineprint"></div></main></div>
@@ -211,6 +235,15 @@ let scene, camera, renderer, clock;
 let car = null;
 let localRoot = null, localModel = null, localNameSprite = null;
 let localPlayerId = null;
+let spectatorMode = false;
+let spectatorId = null;
+let spectatorCameraMode = 'leader';
+let spectatorTargetId = null;
+let spectatorCameraKeys = new Set();
+let spectatorFreeYaw = 0;
+let spectatorFreePitch = -0.35;
+let spectatorDragging = false;
+let spectatorLastPointer = null;
 let selectedVehicleId = 'grandeur';
 let selectedVehicle = VEHICLES[0];
 let selectedDevice = 'pc';
@@ -324,21 +357,29 @@ function connectServer(){
  const protocol=location.protocol==='https:'?'wss:':'ws:';
  const url=`${protocol}//${location.host}`;
  try{ socket=new WebSocket(url); }catch(e){setStatus('연결을 시작하지 못했습니다.');return;}
- socket.addEventListener('open',()=>{connected=true;el('connectionPill').textContent='ONLINE SERVER CONNECTED';el('connectionPill').classList.add('online');el('createRoomBtn').disabled=false;el('joinRoomBtn').disabled=false;setStatus('서버 연결 완료! 차량을 선택하고 방을 만들거나 참가하세요.');});
+ socket.addEventListener('open',()=>{connected=true;el('connectionPill').textContent='ONLINE SERVER CONNECTED';el('connectionPill').classList.add('online');el('createRoomBtn').disabled=false;el('joinRoomBtn').disabled=false;el('spectateRoomBtn').disabled=false;setStatus('서버 연결 완료! 차량을 선택하고 방을 만들거나 관전할 수 있습니다.');});
  socket.addEventListener('message',event=>{let msg;try{msg=JSON.parse(event.data)}catch{return;} handleServerMessage(msg);});
- socket.addEventListener('close',()=>{connected=false;el('connectionPill').textContent='SERVER OFFLINE';el('connectionPill').classList.remove('online');el('createRoomBtn').disabled=true;el('joinRoomBtn').disabled=true;setStatus('서버 연결이 끊어졌습니다. 페이지를 새로고침해 주세요.');});
+ socket.addEventListener('close',()=>{connected=false;el('connectionPill').textContent='SERVER OFFLINE';el('connectionPill').classList.remove('online');el('createRoomBtn').disabled=true;el('joinRoomBtn').disabled=true;el('spectateRoomBtn').disabled=true;setStatus('서버 연결이 끊어졌습니다. 페이지를 새로고침해 주세요.');});
  socket.addEventListener('error',()=>{setStatus('서버에 연결할 수 없습니다. 아직 Node.js 서버를 배포하지 않았거나 서버가 꺼져 있을 수 있습니다.');});
 }
 function handleServerMessage(msg){
  if(Number.isFinite(msg.serverTime))syncServerClock(msg.serverTime);
  if(msg.type==='connected'){setStatus(msg.message||'연결 완료');return;}
  if(msg.type==='error'){setStatus(msg.message);showToast(msg.message);return;}
- if(msg.type==='room-created'||msg.type==='room-joined'){roomCode=msg.roomCode;localPlayerId=msg.playerId;el('roomCodeLabel').textContent=roomCode;showToast(msg.type==='room-created'?'레이스 방을 만들었습니다!':'레이스 방에 참가했습니다!');return;}
+ if(msg.type==='room-created'||msg.type==='room-joined'){spectatorMode=false;roomCode=msg.roomCode;localPlayerId=msg.playerId;el('roomCodeLabel').textContent=roomCode;showToast(msg.type==='room-created'?'레이스 방을 만들었습니다!':'레이스 방에 참가했습니다!');return;}
+ if(msg.type==='spectator-joined'){spectatorMode=true;spectatorId=msg.spectatorId;localPlayerId=null;roomCode=msg.roomCode;roomStarted=true;spectatorCameraMode='leader';spectatorTargetId=null;showToast('관전 모드에 입장했습니다!');return;}
+ if(msg.type==='room-closed'){showToast(msg.message||'관전 중인 방이 종료되었습니다.');resetToGarage();return;}
  if(msg.type==='left-room'){resetToGarage();return;}
  if(msg.type==='room-state'){
   const newRaceStart=!!msg.started&&['countdown','running'].includes(msg.race?.status)&&(!raceState||raceState.countdownEndsAt!==msg.race.countdownEndsAt);
   roomCode=msg.roomCode;hostId=msg.hostId;roomStarted=!!msg.started;latestPlayers=msg.players||[];raceState=msg.race||null;
   if(msg.mapId&&msg.mapId!==currentMapId)chooseMap(msg.mapId,true);
+  if(spectatorMode){
+   if(!roomStarted||!raceState){send({type:'leave-room'});showToast('관전 중인 레이스가 대기실로 돌아갔습니다.');return;}
+   enterSpectatorView();syncPlayerVisuals(latestPlayers);updateSpectatorHud();
+   if(raceState.status==='finished')showRaceResults(raceState.results||[]);
+   return;
+  }
   const me=latestPlayers.find(p=>p.id===localPlayerId);const sharedTune=msg.tune||me?.tune;if(sharedTune)updateTuneControls(sharedTune);
   if(!localPlayerId){const me=latestPlayers.find(p=>p.name===el('playerName').value.trim());if(me)localPlayerId=me.id;}
   updateLobby(msg); if(roomStarted) enterGame(); else returnToLobbyView();
@@ -348,7 +389,9 @@ function handleServerMessage(msg){
   return;
  }
  if(msg.type==='snapshot'){
-  latestPlayers=msg.players||[];raceState=msg.race||raceState;syncPlayerVisuals(latestPlayers);updateRaceHud(latestPlayers,raceState);updateRacingDashboard();const meForHud=latestPlayers.find(p=>p.id===localPlayerId);renderDraftHud(meForHud);renderBoostHud(meForHud);return;
+  latestPlayers=msg.players||[];raceState=msg.race||raceState;syncPlayerVisuals(latestPlayers);
+  if(spectatorMode){updateSpectatorHud();return;}
+  updateRaceHud(latestPlayers,raceState);updateRacingDashboard();const meForHud=latestPlayers.find(p=>p.id===localPlayerId);renderDraftHud(meForHud);renderBoostHud(meForHud);return;
  }
  if(msg.type==='race-finished'){
   raceState=msg.race||raceState;showRaceResults(msg.results||raceState?.results||[]);return;
@@ -561,13 +604,73 @@ function updateRacingDashboard(){
  el('dashBest').textContent=me.bestLapMs?formatTime(me.bestLapMs):'--:--';
  el('dashPenalty').textContent=`${((me.penaltyMs||0)/1000).toFixed(1)}s`;
 }
+function enterSpectatorView(){
+ el('startOverlay').style.display='none';
+ for(const id of ['gameHud','rightHud','gameButtons','mobileControls','raceHud','finishCountdownHud','controlGuide','lapTimesPanel','startCountdown','boostHud','draftHud','racingDash','trackMapPanel','dashDriverStrip'])el(id).classList.remove('show');
+ el('raceResultOverlay').classList.remove('show');raceResultsShown=false;
+ el('spectatorHud').classList.add('show');el('spectatorBoard').classList.add('show');
+ el('spectatorRoomLabel').textContent=`ROOM ${roomCode}`;
+ updateSpectatorHud();
+ if(scene&&latestPlayers.length)syncPlayerVisuals(latestPlayers,true);
+ if(camera&&spectatorCameraMode==='leader'&&!spectatorCameraInitialized){setSpectatorCamera('leader');spectatorCameraInitialized=true;}
+ if(document.activeElement&&typeof document.activeElement.blur==='function')document.activeElement.blur();
+}
+let spectatorCameraInitialized=false;
+function getSpectatorLeader(){return latestPlayers.slice().sort((a,b)=>(a.position||999)-(b.position||999))[0]||null;}
+function getSpectatorTarget(){
+ if(spectatorCameraMode==='selected')return latestPlayers.find(p=>p.id===spectatorTargetId)||getSpectatorLeader();
+ return getSpectatorLeader();
+}
+function updateSpectatorHud(){
+ const list=latestPlayers.slice().sort((a,b)=>(a.position||999)-(b.position||999));
+ const select=el('spectatorTargetSelect');if(!select)return;
+ const current=spectatorTargetId||'';
+ select.innerHTML='<option value="">선수 선택 · 1위 자동 추적</option>'+list.map(p=>`<option value="${p.id}">${p.position||'-'}위 · ${escapeHtml(p.name)}</option>`).join('');
+ select.value=spectatorCameraMode==='selected'&&list.some(p=>p.id===current)?current:'';
+ el('spectatorDriverCount').textContent=`${list.length} DRIVERS`;
+ el('spectatorStandings').innerHTML=list.map(p=>{
+  const laps=Math.min(raceState?.lapsToWin||3,p.lapsCompleted||0);
+  const status=p.finished?'FINISHED':`${laps}/${raceState?.lapsToWin||3} LAP`;
+  return `<div class="spectator-standing"><span>${p.position||'-'}</span><strong>${escapeHtml(p.name)}</strong><small>${status} · ${Math.round(Math.abs(p.speed||0)*3.6)} km/h</small></div>`;
+ }).join('')||'<div class="spectator-hint">현재 접속한 레이서가 없습니다.</div>';
+ el('spectatorHint').textContent=spectatorCameraMode==='leader'?'현재 1위 차량을 자동으로 따라갑니다.':spectatorCameraMode==='selected'?'선택한 드라이버를 따라갑니다.':spectatorCameraMode==='overview'?'트랙 전체를 위에서 내려다봅니다.':'자유 카메라 · 화면 드래그로 시점 회전, W/A/S/D 이동, Q/E 높이 조절, Shift 빠른 이동';
+ ['spectatorLeaderBtn','spectatorOverviewBtn','spectatorFreeBtn'].forEach(id=>el(id).classList.remove('active'));
+ if(spectatorCameraMode==='leader'||spectatorCameraMode==='selected')el('spectatorLeaderBtn').classList.toggle('active',spectatorCameraMode==='leader');
+ if(spectatorCameraMode==='overview')el('spectatorOverviewBtn').classList.add('active');
+ if(spectatorCameraMode==='free')el('spectatorFreeBtn').classList.add('active');
+}
+function spectatorRootFor(player){if(!player)return null;if(player.id===localPlayerId)return localRoot;return remotePlayers.get(player.id)?.root||null;}
+function getTrackOverview(){
+ const track=TRACK_BY_ID.get(currentMapId)||TRACKS[0],pts=track.points||[];
+ let minX=Infinity,maxX=-Infinity,minZ=Infinity,maxZ=-Infinity;
+ for(const p of pts){minX=Math.min(minX,p[0]);maxX=Math.max(maxX,p[0]);minZ=Math.min(minZ,p[1]);maxZ=Math.max(maxZ,p[1]);}
+ return {x:(minX+maxX)/2,z:(minZ+maxZ)/2,span:Math.max(maxX-minX,maxZ-minZ,80)};
+}
+function setSpectatorCamera(mode){
+ if(!spectatorMode)return;
+ spectatorCameraMode=mode;
+ if(mode==='selected')spectatorTargetId=el('spectatorTargetSelect').value||getSpectatorLeader()?.id||null;
+ if(mode==='leader')spectatorTargetId=null;
+ if(mode==='free'&&camera){
+  const bounds=getTrackOverview();camera.position.set(bounds.x,Math.max(42,bounds.span*.52),bounds.z+bounds.span*.52);
+  spectatorFreeYaw=0;spectatorFreePitch=-0.46;camera.up.set(0,1,0);
+ }
+ updateSpectatorHud();
+}
+function joinSpectatorRoom(){
+ if(!connected)return;
+ const code=el('spectatorRoomCodeInput').value.trim().toUpperCase();
+ if(code.length!==5){setStatus('관전 방 코드는 다섯 글자입니다.');return;}
+ send({type:'spectate-room',roomCode:code,name:el('playerName').value});
+}
 function showRaceResults(results){
  if(raceResultsShown)return;raceResultsShown=true;el('finishCountdownHud').classList.remove('show');el('controlGuide').classList.remove('show');el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');el('startCountdown').classList.remove('show');el('boostHud').classList.remove('show');
  const rows=[...(results||[])].sort((a,b)=>a.rank-b.rank);
  el('raceResultList').innerHTML=rows.map(r=>`<div class="result-row"><div class="result-rank">${r.rank}위</div><div class="result-name"><b>${escapeHtml(r.name)}</b><small>${escapeHtml(r.vehicleName||'차량')} · ${r.completedLaps||0}/${raceState?.lapsToWin||3}랩 · 충돌 ${r.collisions||0}회</small>${(r.lapTimes||[]).map((t,i)=>`<small>${i+1}랩 ${formatTime(t)}</small>`).join('')}</div><div class="result-metric"><strong>${r.finished?formatTime(r.finalTimeMs):'미완주'}</strong><span>주행 시간</span></div><div class="result-metric"><strong>+${((r.penaltyMs||0)/1000).toFixed(1)}s</strong><span>충돌 페널티</span></div><div class="result-feedback">${escapeHtml(r.feedback||'수고했어!')}</div></div>`).join('')||'<div class="sub">결과가 아직 없습니다.</div>';
  const mine=rows.find(r=>r.id===localPlayerId);el('raceResultSummary').textContent=mine?`${mine.rank}위 · ${mine.feedback}`:'레이스가 종료되었습니다.';
- el('raceAgainBtn').style.display=hostId===localPlayerId?'inline-block':'none';
- el('raceResultHint').textContent=hostId===localPlayerId?'방장이 재경기를 시작하거나 대기실로 돌아갈 수 있어요.':'대기실 버튼을 누르면 현재 방에서 나갑니다.';
+ el('raceAgainBtn').style.display=!spectatorMode&&hostId===localPlayerId?'inline-block':'none';
+ el('resultLobbyBtn').textContent=spectatorMode?'관전 종료':'대기실로';
+ el('raceResultHint').textContent=spectatorMode?'관전이 종료되었습니다. 관전 종료를 누르면 홈 화면으로 돌아갑니다.':(hostId===localPlayerId?'방장이 재경기를 시작하거나 대기실로 돌아갈 수 있어요.':'대기실 버튼을 누르면 현재 방에서 나갑니다.');
  el('raceResultOverlay').classList.add('show');
 }
 function renderBoostHud(info={}){
@@ -627,24 +730,32 @@ function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':
 function createRoom(){if(!connected)return;send({type:'create-room',name:el('playerName').value,vehicleId:selectedVehicleId,mapId:currentMapId,tune:currentTune});}
 function joinRoom(){if(!connected)return;const code=el('roomCodeInput').value.trim().toUpperCase();if(code.length!==5){setStatus('방 코드는 다섯 글자입니다.');return;}send({type:'join-room',name:el('playerName').value,vehicleId:selectedVehicleId,roomCode:code,tune:currentTune});}
 function enterGame(){
- el('startOverlay').style.display='none';el('gameHud').classList.add('show');el('rightHud').classList.add('show');el('gameButtons').classList.add('show');el('raceResultOverlay').classList.remove('show');raceResultsShown=false;
+ spectatorMode=false;spectatorCameraInitialized=false;
+ el('startOverlay').style.display='none';el('gameHud').classList.add('show');el('rightHud').classList.add('show');el('gameButtons').classList.add('show');el('raceResultOverlay').classList.remove('show');el('spectatorHud').classList.remove('show');el('spectatorBoard').classList.remove('show');raceResultsShown=false;
  if(document.activeElement&&typeof document.activeElement.blur==='function')document.activeElement.blur();
  el('mobileControls').classList.toggle('show',selectedDevice==='mobile');renderControlGuide();el('racingDash').classList.add('show');el('trackMapPanel').classList.add('show');el('dashDriverStrip').classList.add('show');renderDraftHud(latestPlayers.find(p=>p.id===localPlayerId));el('hudRoomCode').textContent=roomCode;drawTrackMap(latestPlayers);updateRacingDashboard();showToast('3초 카운트다운 후 출발합니다!');
 }
 function returnToLobbyView(){
- el('startOverlay').style.display='flex';el('controlGuide').classList.remove('show');el('finishCountdownHud').classList.remove('show');el('gameHud').classList.remove('show');el('rightHud').classList.remove('show');el('gameButtons').classList.remove('show');el('mobileControls').classList.remove('show');el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');el('startCountdown').classList.remove('show');el('boostHud').classList.remove('show');el('draftHud').classList.remove('show');el('racingDash').classList.remove('show');el('trackMapPanel').classList.remove('show');el('dashDriverStrip').classList.remove('show');el('raceResultOverlay').classList.remove('show');raceResultsShown=false;raceState=null;controls={forward:false,reverse:false,left:false,right:false,brake:false};
+ spectatorMode=false;spectatorId=null;spectatorCameraInitialized=false;spectatorCameraKeys.clear();
+ el('spectatorHud').classList.remove('show');el('spectatorBoard').classList.remove('show');el('startOverlay').style.display='flex';el('controlGuide').classList.remove('show');el('finishCountdownHud').classList.remove('show');el('gameHud').classList.remove('show');el('rightHud').classList.remove('show');el('gameButtons').classList.remove('show');el('mobileControls').classList.remove('show');el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');el('startCountdown').classList.remove('show');el('boostHud').classList.remove('show');el('draftHud').classList.remove('show');el('racingDash').classList.remove('show');el('trackMapPanel').classList.remove('show');el('dashDriverStrip').classList.remove('show');el('raceResultOverlay').classList.remove('show');raceResultsShown=false;raceState=null;controls={forward:false,reverse:false,left:false,right:false,brake:false};
 }
-function resetToGarage(){roomCode='';localPlayerId=null;hostId='';roomStarted=false;latestPlayers=[];for(const p of remotePlayers.values())scene?.remove(p.root);remotePlayers.clear();if(localRoot){scene?.remove(localRoot);localRoot=null;}el('roomLobby').classList.remove('show');returnToLobbyView();setStatus('방에서 나왔습니다. 새 방을 만들거나 다른 방에 참가할 수 있습니다.');}
+function resetToGarage(){roomCode='';localPlayerId=null;hostId='';roomStarted=false;latestPlayers=[];spectatorMode=false;spectatorId=null;spectatorCameraInitialized=false;for(const p of remotePlayers.values())scene?.remove(p.root);remotePlayers.clear();if(localRoot){scene?.remove(localRoot);localRoot=null;}el('roomLobby').classList.remove('show');returnToLobbyView();setStatus('방에서 나왔습니다. 새 방을 만들거나 다른 방에 참가할 수 있습니다.');}
+
 function copyRoomCode(){if(!roomCode)return;const text=roomCode;if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>showToast('방 코드를 복사했습니다.')).catch(()=>showToast(`방 코드: ${text}`));else showToast(`방 코드: ${text}`);}
 
 function setControl(name,value){controls[name]=value;}
 window.addEventListener('keydown',e=>{
- if(e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement||!roomStarted)return;
+ if(e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement)return;
+ if(spectatorMode){
+  if(spectatorCameraMode==='free'&&['KeyW','KeyA','KeyS','KeyD','KeyQ','KeyE','ShiftLeft','ShiftRight','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)){spectatorCameraKeys.add(e.code);e.preventDefault();}
+  return;
+ }
+ if(!roomStarted)return;
  const key=keyMap[e.code];if(key){e.preventDefault();setControl(key,true);} 
  if(e.code==='KeyF'&&!e.repeat){e.preventDefault();send({type:'ability'});}
 });
-window.addEventListener('keyup',e=>{const key=keyMap[e.code];if(key)setControl(key,false);});
-window.addEventListener('blur',()=>{controls={forward:false,reverse:false,left:false,right:false,brake:false};send({type:'input',controls});});
+window.addEventListener('keyup',e=>{spectatorCameraKeys.delete(e.code);const key=keyMap[e.code];if(key)setControl(key,false);});
+window.addEventListener('blur',()=>{spectatorCameraKeys.clear();controls={forward:false,reverse:false,left:false,right:false,brake:false};if(!spectatorMode)send({type:'input',controls});});
 document.querySelectorAll('[data-control]').forEach(btn=>{
  const key=btn.dataset.control;
  const down=e=>{e.preventDefault();btn.classList.add('pressed');setControl(key,true);try{btn.setPointerCapture(e.pointerId)}catch{}};
@@ -652,15 +763,19 @@ document.querySelectorAll('[data-control]').forEach(btn=>{
  btn.addEventListener('pointerdown',down);btn.addEventListener('pointerup',up);btn.addEventListener('pointercancel',up);btn.addEventListener('lostpointercapture',up);
 });
 el('mobileBoost').addEventListener('click',()=>send({type:'ability'}));
-setInterval(()=>{if(roomStarted&&socket?.readyState===WebSocket.OPEN&&raceState){updateRaceHud(latestPlayers,raceState);updateBoostHudDisplay();}if(roomStarted&&socket?.readyState===WebSocket.OPEN&&Date.now()-lastInputAt>28){send({type:'input',controls});lastInputAt=Date.now();}},33);
+setInterval(()=>{if(roomStarted&&!spectatorMode&&socket?.readyState===WebSocket.OPEN&&raceState){updateRaceHud(latestPlayers,raceState);updateBoostHudDisplay();}if(roomStarted&&!spectatorMode&&socket?.readyState===WebSocket.OPEN&&Date.now()-lastInputAt>28){send({type:'input',controls});lastInputAt=Date.now();}},33);
 
 el('mapSelect').addEventListener('change',()=>chooseMap(el('mapSelect').value));
 el('advancedToggle').addEventListener('click',()=>{isAdvancedTuning=!isAdvancedTuning;el('tuningAdvanced').style.display=isAdvancedTuning?'grid':'none';el('advancedToggle').textContent=isAdvancedTuning?'고급 튜닝 접기':'고급 튜닝 펼치기 (추가 4개 설정)';});
 el('pcChoice').addEventListener('click',()=>{selectedDevice='pc';el('pcChoice').classList.add('active');el('mobileChoice').classList.remove('active');renderControlGuide();});
 el('mobileChoice').addEventListener('click',()=>{selectedDevice='mobile';el('mobileChoice').classList.add('active');el('pcChoice').classList.remove('active');renderControlGuide();});
-el('createRoomBtn').addEventListener('click',createRoom);el('joinRoomBtn').addEventListener('click',joinRoom);el('startRoomBtn').addEventListener('click',()=>send({type:'start-room',lapsToWin:Number(el('lapCountSelect').value)||3}));
+el('createRoomBtn').addEventListener('click',createRoom);el('joinRoomBtn').addEventListener('click',joinRoom);el('spectateRoomBtn').addEventListener('click',joinSpectatorRoom);el('spectatorRoomCodeInput').addEventListener('keydown',e=>{if(e.key==='Enter')joinSpectatorRoom();});el('spectatorExitBtn').addEventListener('click',()=>send({type:'leave-room'}));el('spectatorLeaderBtn').addEventListener('click',()=>setSpectatorCamera('leader'));el('spectatorOverviewBtn').addEventListener('click',()=>setSpectatorCamera('overview'));el('spectatorFreeBtn').addEventListener('click',()=>setSpectatorCamera('free'));el('spectatorTargetSelect').addEventListener('change',()=>{if(el('spectatorTargetSelect').value)setSpectatorCamera('selected');else setSpectatorCamera('leader');});el('startRoomBtn').addEventListener('click',()=>send({type:'start-room',lapsToWin:Number(el('lapCountSelect').value)||3}));
 el('raceAgainBtn').addEventListener('click',()=>send({type:'restart-race'}));
 el('resultLobbyBtn').addEventListener('click',()=>{if(hostId===localPlayerId)send({type:'stop-room'});else send({type:'leave-room'});});el('copyCodeBtn').addEventListener('click',copyRoomCode);el('leaveRoomBtn').addEventListener('click',()=>send({type:'leave-room'}));el('returnLobbyBtn').addEventListener('click',()=>{if(hostId===localPlayerId)send({type:'stop-room'});else showToast('방장이 대기실로 돌아가면 함께 이동합니다.');});
+const spectatorCanvas=el('gameCanvas');
+spectatorCanvas.addEventListener('pointerdown',e=>{if(!spectatorMode||spectatorCameraMode!=='free')return;spectatorDragging=true;spectatorLastPointer={x:e.clientX,y:e.clientY};try{spectatorCanvas.setPointerCapture(e.pointerId)}catch{}});
+spectatorCanvas.addEventListener('pointermove',e=>{if(!spectatorDragging||!spectatorLastPointer)return;const dx=e.clientX-spectatorLastPointer.x,dy=e.clientY-spectatorLastPointer.y;spectatorLastPointer={x:e.clientX,y:e.clientY};spectatorFreeYaw-=dx*.004;spectatorFreePitch=Math.max(-1.15,Math.min(.65,spectatorFreePitch+dy*.003));});
+const endSpectatorDrag=()=>{spectatorDragging=false;spectatorLastPointer=null;};spectatorCanvas.addEventListener('pointerup',endSpectatorDrag);spectatorCanvas.addEventListener('pointercancel',endSpectatorDrag);
 fillMapSelector();renderTuneFields();renderGarage();connectServer();
 
 // ===== THREE.JS + MISTWOOD VEHICLE MODEL SYSTEM =====
@@ -1375,6 +1490,7 @@ function initScene(){
  const ground=new THREE.Mesh(new THREE.PlaneGeometry(1200,1400),new THREE.MeshStandardMaterial({color:0x315b3d,roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.18;ground.receiveShadow=true;scene.add(ground);
  buildForestTrack();
  clock=new THREE.Clock();window.addEventListener('resize',onResize);
+ if(spectatorMode&&latestPlayers.length){syncPlayerVisuals(latestPlayers,true);spectatorCameraInitialized=false;setSpectatorCamera(spectatorCameraMode);spectatorCameraInitialized=true;}
 }
 // ===== MAP SYSTEM: tracks.json의 웨이포인트로 10개 트랙을 그립니다. =====
 function sampleTrackForDrawing(track){
@@ -1494,7 +1610,30 @@ function animate(){requestAnimationFrame(animate);
  const localAlpha=1-Math.exp(-22*dt),remoteAlpha=1-Math.exp(-18*dt),cameraAlpha=1-Math.exp(-8*dt);
  if(localRoot&&targetLocal){localRoot.position.x+= (targetLocal.x-localRoot.position.x)*localAlpha;localRoot.position.z+=(targetLocal.z-localRoot.position.z)*localAlpha;localRoot.rotation.y=lerpAngle(localRoot.rotation.y,targetLocal.yaw,localAlpha);if(localRoot.userData.model?.userData?.mainRotor)localRoot.userData.model.userData.mainRotor.rotation.y+=dt*12;}
  for(const entry of remotePlayers.values()){const t=entry.target;entry.root.position.x+=(t.x-entry.root.position.x)*remoteAlpha;entry.root.position.z+=(t.z-entry.root.position.z)*remoteAlpha;entry.root.rotation.y=lerpAngle(entry.root.rotation.y,t.yaw,remoteAlpha);}
- if(localRoot){const yaw=localRoot.rotation.y;const desired=new THREE.Vector3(localRoot.position.x+Math.sin(yaw)*13,7.3,localRoot.position.z+Math.cos(yaw)*13);camera.position.lerp(desired,cameraAlpha);camera.lookAt(localRoot.position.x,1.5,localRoot.position.z);}
+ if(spectatorMode){
+  camera.up.set(0,1,0);
+  if(spectatorCameraMode==='overview'){
+   const bounds=getTrackOverview(),height=Math.max(115,bounds.span*1.02);
+   const desired=new THREE.Vector3(bounds.x,height,bounds.z+.01);
+   camera.position.lerp(desired,1-Math.exp(-2.8*dt));camera.up.set(0,0,-1);camera.lookAt(bounds.x,0,bounds.z);
+  }else if(spectatorCameraMode==='free'){
+   const yaw=spectatorFreeYaw,pitch=spectatorFreePitch;
+   const forward=new THREE.Vector3(Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch),-Math.cos(yaw)*Math.cos(pitch));
+   const right=new THREE.Vector3(Math.cos(yaw),0,Math.sin(yaw));
+   const speed=((spectatorCameraKeys.has('ShiftLeft')||spectatorCameraKeys.has('ShiftRight'))?72:38)*dt;
+   if(spectatorCameraKeys.has('KeyW')||spectatorCameraKeys.has('ArrowUp'))camera.position.addScaledVector(forward,speed);
+   if(spectatorCameraKeys.has('KeyS')||spectatorCameraKeys.has('ArrowDown'))camera.position.addScaledVector(forward,-speed);
+   if(spectatorCameraKeys.has('KeyA')||spectatorCameraKeys.has('ArrowLeft'))camera.position.addScaledVector(right,-speed);
+   if(spectatorCameraKeys.has('KeyD')||spectatorCameraKeys.has('ArrowRight'))camera.position.addScaledVector(right,speed);
+   if(spectatorCameraKeys.has('KeyQ'))camera.position.y-=speed;
+   if(spectatorCameraKeys.has('KeyE'))camera.position.y+=speed;
+   camera.lookAt(camera.position.clone().addScaledVector(forward,80));
+  }else{
+   const targetPlayer=getSpectatorTarget(),root=spectatorRootFor(targetPlayer);
+   if(root){const yaw=root.rotation.y;const desired=new THREE.Vector3(root.position.x+Math.sin(yaw)*14,8.2,root.position.z+Math.cos(yaw)*14);camera.position.lerp(desired,cameraAlpha);camera.lookAt(root.position.x,1.5,root.position.z);}
+   else {const bounds=getTrackOverview();const desired=new THREE.Vector3(bounds.x,70,bounds.z+70);camera.position.lerp(desired,cameraAlpha);camera.lookAt(bounds.x,0,bounds.z);}
+  }
+ }else if(localRoot){const yaw=localRoot.rotation.y;const desired=new THREE.Vector3(localRoot.position.x+Math.sin(yaw)*13,7.3,localRoot.position.z+Math.cos(yaw)*13);camera.position.lerp(desired,cameraAlpha);camera.lookAt(localRoot.position.x,1.5,localRoot.position.z);}
  renderer.render(scene,camera);
 }
 function onResize(){if(!renderer||!camera)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio||1,innerWidth<850?1.25:1.65));}

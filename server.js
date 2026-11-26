@@ -9,6 +9,7 @@ const EventEmitter = require('events');
 const ROOT = __dirname;
 const PORT = Number(process.env.PORT || 3000);
 const MAX_PLAYERS = 8;
+const MAX_SPECTATORS = 20;
 const TICK_MS = 1000 / 30;
 const SNAPSHOT_EVERY = 1;
 // 차량과 10개 트랙은 JSON 파일로 분리해 학생이 쉽게 수정할 수 있습니다.
@@ -115,8 +116,24 @@ let tickCount = 0;
 // 홈 화면에 표시할 온라인 인원은 WebSocket만 열린 방문자가 아니라 실제 방에 입장한 참가자 수입니다.
 function countOnlinePlayers() {
   let count = 0;
+  for (const room of rooms.values()) count += room.players.size + (room.spectators?.size || 0);
+  return count;
+}
+function countOnlineDrivers() {
+  let count = 0;
   for (const room of rooms.values()) count += room.players.size;
   return count;
+}
+function countOnlineSpectators() {
+  let count = 0;
+  for (const room of rooms.values()) count += room.spectators?.size || 0;
+  return count;
+}
+function roomRecipients(room) {
+  return [...room.players.values(), ...(room.spectators?.values() || [])];
+}
+function broadcastRoom(room, payload) {
+  for (const member of roomRecipients(room)) safeSend(member.ws, payload);
 }
 
 function safeSend(ws, payload) {
@@ -168,9 +185,11 @@ function sendRoomState(room) {
   const payload = {
     type: 'room-state', roomCode: room.code, hostId: room.hostId,
     started: room.started, mapId: room.mapId || DEFAULT_MAP_ID, lapsToWin: room.lapsToWin || 3, race: room.race || null,
-    players: roomPlayers(room), tune: room.tune || DEFAULT_TUNE, maxPlayers: MAX_PLAYERS, serverTime: Date.now()
+    players: roomPlayers(room), spectators: [...(room.spectators?.values() || [])].map(s => ({ id: s.id, name: s.name })),
+    spectatorCount: room.spectators?.size || 0,
+    tune: room.tune || DEFAULT_TUNE, maxPlayers: MAX_PLAYERS, maxSpectators: MAX_SPECTATORS, serverTime: Date.now()
   };
-  for (const p of room.players.values()) safeSend(p.ws, payload);
+  broadcastRoom(room, payload);
 }
 function sendError(ws, message) { safeSend(ws, { type: 'error', message }); }
 function spawnPlayer(player, index, count, now, track) {
@@ -275,7 +294,7 @@ function finishRace(room, now) {
   });
   room.race.results = results;
   const payload = { type: 'race-finished', race: room.race, results };
-  for (const p of room.players.values()) safeSend(p.ws, payload);
+  broadcastRoom(room, payload);
   sendRoomState(room);
 }
 function updateRaceProgress(room, player, now, track) {
@@ -355,6 +374,8 @@ const server = http.createServer((req, res) => {
       ok: true,
       rooms: rooms.size,
       onlinePlayers: countOnlinePlayers(),
+      onlineDrivers: countOnlineDrivers(),
+      onlineSpectators: countOnlineSpectators(),
       maxPlayers: MAX_PLAYERS,
       serverTime: Date.now()
     }));
@@ -456,6 +477,7 @@ function handleConnection(ws) {
   sockets.add(ws);
   ws.room = null;
   ws.player = null;
+  ws.spectator = null;
   safeSend(ws, { type: 'connected', message: '온라인 서버에 연결되었습니다.' });
 
   ws.on('message', raw => {
@@ -464,14 +486,14 @@ function handleConnection(ws) {
     if (!msg || typeof msg.type !== 'string') return;
 
     if (msg.type === 'create-room') {
-      if (ws.player) return sendError(ws, '이미 방에 참가 중입니다.');
+      if (ws.room) return sendError(ws, '이미 방에 참가 중입니다.');
       const name = sanitizeName(msg.name);
       const vehicle = VEHICLE_MAP.get(String(msg.vehicleId || 'grandeur')) || VEHICLES[0];
       const code = makeRoomCode();
       const sharedTune = sanitizeTune(msg.tune);
       const player = makePlayer(ws, name, vehicle.id, sharedTune);
       const mapId = TRACK_MAP.has(String(msg.mapId || '')) ? String(msg.mapId) : DEFAULT_MAP_ID;
-      const room = { code, hostId: player.id, started: false, mapId, tune: sharedTune, players: new Map() };
+      const room = { code, hostId: player.id, started: false, mapId, tune: sharedTune, players: new Map(), spectators: new Map() };
       room.players.set(player.id, player);
       rooms.set(code, room);
       ws.room = room; ws.player = player;
@@ -481,7 +503,7 @@ function handleConnection(ws) {
     }
 
     if (msg.type === 'join-room') {
-      if (ws.player) return sendError(ws, '이미 방에 참가 중입니다.');
+      if (ws.room) return sendError(ws, '이미 방에 참가 중입니다.');
       const code = String(msg.roomCode || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5);
       const room = rooms.get(code);
       if (!room) return sendError(ws, '방을 찾을 수 없습니다. 방 코드를 다시 확인해 주세요.');
@@ -493,6 +515,23 @@ function handleConnection(ws) {
       room.players.set(player.id, player);
       ws.room = room; ws.player = player;
       safeSend(ws, { type: 'room-joined', roomCode: code, playerId: player.id });
+      sendRoomState(room);
+      return;
+    }
+
+    if (msg.type === 'spectate-room') {
+      if (ws.room) return sendError(ws, '이미 방에 참가 중입니다.');
+      const code = String(msg.roomCode || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5);
+      const room = rooms.get(code);
+      if (!room) return sendError(ws, '관전할 방을 찾을 수 없습니다. 방 코드를 확인해 주세요.');
+      if (!room.started || !room.race || !['countdown', 'running', 'finished'].includes(room.race.status)) {
+        return sendError(ws, '아직 관전할 레이스가 시작되지 않았습니다.');
+      }
+      if (room.spectators.size >= MAX_SPECTATORS) return sendError(ws, `관전 인원이 가득 찼습니다. 최대 ${MAX_SPECTATORS}명까지 관전할 수 있습니다.`);
+      const spectator = { id: crypto.randomUUID(), ws, name: sanitizeName(msg.name || 'Spectator') };
+      room.spectators.set(spectator.id, spectator);
+      ws.room = room; ws.player = null; ws.spectator = spectator;
+      safeSend(ws, { type: 'spectator-joined', roomCode: code, spectatorId: spectator.id });
       sendRoomState(room);
       return;
     }
@@ -598,14 +637,28 @@ function makePlayer(ws, name, vehicleId, tuneInput) {
 }
 function leaveRoom(ws) {
   const room = ws.room;
+  if (!room) { ws.room = null; ws.player = null; ws.spectator = null; return; }
+  if (ws.spectator) {
+    room.spectators?.delete(ws.spectator.id);
+    ws.room = null; ws.player = null; ws.spectator = null;
+    if (room.players.size === 0 && (room.spectators?.size || 0) === 0) rooms.delete(room.code);
+    else sendRoomState(room);
+    return;
+  }
   const player = ws.player;
-  if (!room || !player) { ws.room = null; ws.player = null; return; }
+  if (!player) { ws.room = null; ws.spectator = null; return; }
   room.players.delete(player.id);
-  ws.room = null; ws.player = null;
-  if (room.players.size === 0) { rooms.delete(room.code); return; }
+  ws.room = null; ws.player = null; ws.spectator = null;
+  if (room.players.size === 0) {
+    for (const watcher of room.spectators?.values() || []) safeSend(watcher.ws, { type: 'room-closed', message: '레이서가 모두 나가 방이 종료되었습니다.' });
+    for (const watcher of room.spectators?.values() || []) { watcher.ws.room = null; watcher.ws.spectator = null; }
+    rooms.delete(room.code);
+    return;
+  }
   if (room.hostId === player.id) room.hostId = room.players.keys().next().value;
   sendRoomState(room);
 }
+
 
 let lastTick = Date.now();
 setInterval(() => {
@@ -627,7 +680,7 @@ setInterval(() => {
         }
       }
       const countdownPayload = { type: 'snapshot', roomCode: room.code, players: roomPlayers(room), race: room.race, serverTime: now };
-      for (const p of room.players.values()) safeSend(p.ws, countdownPayload);
+      broadcastRoom(room, countdownPayload);
       if (room.race.status !== 'running') continue;
     }
     if (room.race.status !== 'running') continue;
@@ -686,7 +739,7 @@ setInterval(() => {
     if (room.race.finishWindowEndsAt && now >= room.race.finishWindowEndsAt) finishRace(room, now);
     if (room.race?.status === 'running' && tickCount % SNAPSHOT_EVERY === 0) {
       const payload = { type: 'snapshot', roomCode: room.code, players: roomPlayers(room), race: room.race, serverTime: now };
-      for (const p of room.players.values()) safeSend(p.ws, payload);
+      broadcastRoom(room, payload);
     }
   }
 }, TICK_MS);
