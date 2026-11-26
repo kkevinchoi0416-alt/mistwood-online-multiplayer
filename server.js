@@ -194,7 +194,7 @@ function roomPlayers(room) {
   const positions = new Map(raceStandings(room).map((p, i) => [p.id, i + 1]));
   return [...room.players.values()].map(p => ({
     id: p.id, name: p.name, vehicleId: p.vehicleId,
-    host: p.id === room.hostId,
+    host: p.id === room.hostId, ready: p.id === room.hostId ? true : !!p.ready,
     x: p.x, z: p.z, yaw: p.yaw, speed: p.speed, surface: p.surface || 'road',
     controls: { ...(p.controls || {}) },
     boostRemaining: Math.max(0, p.boostUntil - Date.now()) / 1000,
@@ -307,7 +307,7 @@ function finishRace(room, now) {
   if (!room.race || room.race.status !== 'running') return;
   room.race.status = 'finished';
   room.race.finishedAt = now;
-  for (const p of room.players.values()) { p.controls = { forward:false, reverse:false, left:false, right:false, brake:false }; p.speed = 0; p.drafting = false; }
+  for (const p of room.players.values()) { p.controls = { forward:false, reverse:false, left:false, right:false, brake:false }; p.speed = 0; p.drafting = false; p.ready = p.id === room.hostId; }
   const ordered = raceStandings(room);
   const results = ordered.map((p, i) => {
     const completedLaps = Math.min(room.race.lapsToWin || 3, Math.floor((p.raceProgress || 0) / (room.race.trackLength || 1)));
@@ -528,6 +528,7 @@ function handleConnection(ws) {
       const code = makeRoomCode();
       const sharedTune = sanitizeTune(msg.tune);
       const player = makePlayer(ws, name, vehicle.id, sharedTune);
+      player.ready = true; // 방장은 방을 만들면 기본 준비 완료 상태입니다.
       const mapId = TRACK_MAP.has(String(msg.mapId || '')) ? String(msg.mapId) : DEFAULT_MAP_ID;
       const room = {
         code, name: sanitizeRoomName(msg.roomName, name),
@@ -607,11 +608,22 @@ function handleConnection(ws) {
       return;
     }
 
+    if (msg.type === 'set-ready') {
+      if (!ws.player || !ws.room) return sendError(ws, '먼저 온라인 방에 참가해 주세요.');
+      if (ws.room.started) return sendError(ws, '레이스가 시작된 뒤에는 준비 상태를 바꿀 수 없습니다.');
+      if (ws.room.hostId === ws.player.id) ws.player.ready = true;
+      else ws.player.ready = !!msg.ready;
+      sendRoomState(ws.room);
+      return;
+    }
+
     if (msg.type === 'start-room') {
       if (!ws.player || !ws.room) return sendError(ws, '온라인 방에 참가해 주세요.');
       if (ws.room.hostId !== ws.player.id) return sendError(ws, '방장만 게임을 시작할 수 있습니다.');
       if (ws.room.started) return;
       if (ws.room.race && ['countdown','running'].includes(ws.room.race.status)) return sendError(ws, '레이스가 이미 진행 중입니다.');
+      const notReady = [...ws.room.players.values()].filter(p => p.id !== ws.room.hostId && !p.ready);
+      if (notReady.length) return sendError(ws, `아직 준비하지 않은 참가자: ${notReady.map(p => p.name).join(', ')}`);
       ws.room.lapsToWin = Math.max(1, Math.min(20, Math.round(Number(msg.lapsToWin) || 3)));
       startRace(ws.room, Date.now(), ws.room.lapsToWin);
       sendRoomState(ws.room);
@@ -621,6 +633,8 @@ function handleConnection(ws) {
     if (msg.type === 'restart-race') {
       if (!ws.player || !ws.room || ws.room.hostId !== ws.player.id) return sendError(ws, '방장만 재경기를 시작할 수 있습니다.');
       if (!ws.room.race || ws.room.race.status !== 'finished') return sendError(ws, '현재 레이스가 끝난 뒤 다시 시작할 수 있습니다.');
+      const notReady = [...ws.room.players.values()].filter(p => p.id !== ws.room.hostId && !p.ready);
+      if (notReady.length) return sendError(ws, `아직 준비하지 않은 참가자: ${notReady.map(p => p.name).join(', ')}`);
       startRace(ws.room, Date.now(), ws.room.lapsToWin || ws.room.race.lapsToWin || 3);
       sendRoomState(ws.room);
       return;
@@ -632,6 +646,7 @@ function handleConnection(ws) {
       ws.room.race = null;
       for (const p of ws.room.players.values()) {
         p.speed = 0; p.drafting = false;
+        p.ready = p.id === ws.room.hostId; // 재경기는 모두 다시 준비해야 합니다.
         p.controls = { forward: false, reverse: false, left: false, right: false, brake: false };
       }
       sendRoomState(ws.room);
@@ -672,6 +687,7 @@ function makePlayer(ws, name, vehicleId, tuneInput) {
     id: crypto.randomUUID(), ws, name, vehicleId, tune: sanitizeTune(tuneInput), drafting: false,
     x: 0, z: 0, yaw: -Math.PI / 2, speed: 0,
     controls: { forward: false, reverse: false, left: false, right: false, brake: false },
+    ready: false,
     boostUntil: 0, abilityReadyAt: 0, boostsUsed: 0, raceProgress: 0, lastTrackDistance: 0, collisions: 0, penaltyMs: 0, collisionReadyAt: 0, finished: false, finishTimeMs: null, lapStartedAt: 0, lapTimes: []
   };
 }
@@ -695,7 +711,11 @@ function leaveRoom(ws) {
     rooms.delete(room.code);
     return;
   }
-  if (room.hostId === player.id) room.hostId = room.players.keys().next().value;
+  if (room.hostId === player.id) {
+    room.hostId = room.players.keys().next().value;
+    const newHost = room.players.get(room.hostId);
+    if (newHost) newHost.ready = true;
+  }
   sendRoomState(room);
 }
 
