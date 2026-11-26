@@ -112,6 +112,12 @@ function projectToTrack(x, z, track) {
 const rooms = new Map();
 const sockets = new Set();
 let tickCount = 0;
+// 홈 화면에 표시할 온라인 인원은 WebSocket만 열린 방문자가 아니라 실제 방에 입장한 참가자 수입니다.
+function countOnlinePlayers() {
+  let count = 0;
+  for (const room of rooms.values()) count += room.players.size;
+  return count;
+}
 
 function safeSend(ws, payload) {
   if (ws.readyState === 1) ws.send(JSON.stringify(payload));
@@ -343,9 +349,15 @@ function publicVehicleUpdate(room, player) {
 
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-  if (url.pathname === '/healthz') {
+  if (url.pathname === '/healthz' || url.pathname === '/api/status') {
     res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
-    return res.end(JSON.stringify({ ok: true, rooms: rooms.size, onlinePlayers: sockets.size }));
+    return res.end(JSON.stringify({
+      ok: true,
+      rooms: rooms.size,
+      onlinePlayers: countOnlinePlayers(),
+      maxPlayers: MAX_PLAYERS,
+      serverTime: Date.now()
+    }));
   }
   let pathname = decodeURIComponent(url.pathname);
   if (pathname === '/') pathname = '/index.html';
