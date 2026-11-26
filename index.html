@@ -16,7 +16,7 @@
 .right-hud{position:fixed;z-index:8;top:12px;right:12px;display:none;min-width:150px;max-width:220px;padding:10px 12px;border-radius:13px;background:var(--panel);border:1px solid var(--line);pointer-events:none}.right-hud.show{display:block}.right-hud strong{color:var(--mint);font-size:11px}.online-list{margin-top:5px;font-size:10px;line-height:1.6;color:#d3e8dc}.game-buttons{position:fixed;z-index:9;right:12px;bottom:12px;display:none;gap:7px}.game-buttons.show{display:flex}.mini-btn{border:1px solid #ffffff35;background:#071b1bd9;color:#effff6;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:850;backdrop-filter:blur(8px)}
 .mobile-controls{position:fixed;z-index:10;left:0;right:0;bottom:max(14px,env(safe-area-inset-bottom));display:none;align-items:end;justify-content:space-between;padding:0 16px;pointer-events:none}.mobile-controls.show{display:flex}.dpad{display:grid;grid-template-columns:repeat(3,54px);grid-template-rows:repeat(2,54px);gap:5px;pointer-events:auto}.touch-btn{border:1px solid #c8f6dc66;border-radius:14px;background:rgba(4,22,20,.72);color:#eafff4;font-size:18px;font-weight:950;touch-action:none;user-select:none;backdrop-filter:blur(8px)}.touch-btn:active,.touch-btn.pressed{background:#a7f3ce;color:#0b2b20}.d-up{grid-column:2}.d-left{grid-column:1;grid-row:2}.d-down{grid-column:2;grid-row:2}.d-right{grid-column:3;grid-row:2}.touch-actions{display:flex;flex-direction:column;gap:7px;pointer-events:auto}.touch-actions .touch-btn{min-width:74px;min-height:48px;padding:7px 10px;font-size:11px}.touch-actions .boost{border-color:#ffe08a88;color:#ffe08a}
 #toast{position:fixed;z-index:50;top:18%;left:50%;transform:translate(-50%,-10px);opacity:0;pointer-events:none;background:#071d1aeb;border:1px solid #a7f3ce55;color:#eafff4;border-radius:999px;padding:10px 16px;font-size:12px;font-weight:850;transition:.18s;max-width:90vw;text-align:center}#toast.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:850px){.garage{grid-template-columns:repeat(3,minmax(0,1fr))}.top-grid{grid-template-columns:1fr}.panel{padding:16px}.players{grid-template-columns:repeat(2,minmax(0,1fr))}.right-hud{top:auto;right:8px;bottom:125px;max-width:150px}.hud{top:7px;left:7px;gap:4px}.hud-card{min-width:68px;padding:6px 7px}.hud-card strong{font-size:16px}.hud-card small{font-size:8px}.game-buttons{top:7px;right:7px;bottom:auto}.mini-btn{padding:7px 9px}.mobile-controls.show{display:flex}}
+@media(max-width:850px){.garage{grid-template-columns:repeat(3,minmax(0,1fr))}.top-grid{grid-template-columns:1fr}.panel{padding:16px}.players{grid-template-columns:repeat(2,minmax(0,1fr))}.right-hud{top:auto;right:8px;bottom:125px;max-width:150px}.hud{top:7px;left:7px;gap:4px}.hud-card{min-width:68px;padding:6px 7px}.hud-card strong{font-size:16px}.hud-card small{font-size:8px}.game-buttons{top:7px;left:7px;right:auto;bottom:auto}.mini-btn{padding:7px 9px}.mobile-controls.show{display:flex}}
 @media(max-width:480px){.garage{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.car-card{min-height:108px;padding:8px}.car-card b{font-size:11px}.players{grid-template-columns:repeat(2,minmax(0,1fr))}.brand{align-items:start}.brand .pill{font-size:9px}.room-code{font-size:22px}.dpad{grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,48px)}.touch-actions .touch-btn{min-width:66px;min-height:43px}}
 
 .race-hud{position:fixed;z-index:9;top:12px;left:50%;transform:translateX(-50%);display:none;gap:6px;pointer-events:none;max-width:calc(100vw - 24px)}.race-hud.show{display:flex}.race-hud>div{min-width:78px;padding:7px 10px;border:1px solid #c9ead42c;border-radius:11px;background:rgba(4,20,19,.78);backdrop-filter:blur(9px);text-align:center}.race-hud small{display:block;color:#abcbbc;font-size:8px;font-weight:900;letter-spacing:.08em}.race-hud strong{display:block;color:#a7f3ce;font-size:15px;font-variant-numeric:tabular-nums}.result-overlay{z-index:42;display:none;background:linear-gradient(145deg,rgba(3,10,12,.68),rgba(2,20,16,.82))}.result-overlay.show{display:flex}.result-panel{width:min(760px,100%);max-height:calc(100dvh - 28px);overflow:auto}.result-list{margin-top:16px;display:grid;gap:7px}.result-row{display:grid;grid-template-columns:42px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:11px 12px;border:1px solid #ffffff1b;border-radius:12px;background:#ffffff08}.result-rank{font-size:20px;font-weight:1000;color:#a7f3ce}.result-name b{display:block;font-size:13px}.result-name small{display:block;color:#a9c5b8;font-size:10px;margin-top:3px}.result-metric{text-align:right;font-size:11px;color:#d9eee4}.result-metric strong{display:block;color:#fff;font-size:13px}.result-feedback{grid-column:2/-1;color:#a7f3ce;font-size:10px;line-height:1.4}.result-actions{margin-top:16px;justify-content:flex-end}
@@ -31,7 +31,7 @@
 
 /* ===== RACING DASHBOARD: 오리지널 모터스포츠 스타일 계기판 ===== */
 .right-hud{top:245px;right:12px}.racing-dash{position:fixed;z-index:12;left:50%;bottom:14px;transform:translateX(-50%);width:min(610px,calc(100vw - 300px));min-width:420px;display:none;grid-template-columns:112px 1fr 112px;gap:12px;align-items:center;padding:12px 16px;border:1px solid #d6fff04a;border-radius:18px;background:linear-gradient(145deg,rgba(3,14,17,.94),rgba(9,34,32,.88));box-shadow:0 12px 42px #0008,inset 0 1px #ffffff18;backdrop-filter:blur(12px);pointer-events:none}
-.racing-dash.show{display:grid}.dash-side{display:flex;flex-direction:column;gap:7px}.dash-label{font-size:8px;letter-spacing:.16em;font-weight:950;color:#9bbcaf}.dash-value{font-size:15px;font-weight:950;color:#f1fff7;font-variant-numeric:tabular-nums}.dash-value.mint{color:#9df5c9}.dash-value.gold{color:#ffdf83}.dash-center{text-align:center;min-width:0}.dash-speed{font-size:64px;line-height:.95;font-weight:1000;letter-spacing:-.06em;color:#f5fff9;font-variant-numeric:tabular-nums;text-shadow:0 0 24px #a7f3ce32}.dash-unit{font-size:10px;letter-spacing:.2em;color:#a7c5b6;font-weight:900}.dash-rpm{height:7px;background:#ffffff18;border-radius:99px;overflow:hidden;margin:9px 4px 4px}.dash-rpm>span{display:block;height:100%;width:0;background:linear-gradient(90deg,#a7f3ce 0%,#ffe08a 72%,#ff7474 100%);border-radius:99px;transition:width .12s}.dash-meta{display:flex;justify-content:center;gap:12px;font-size:9px;color:#c4dbce}.dash-meta b{color:#fff}.dash-gear{font-size:28px;line-height:1;font-weight:1000;color:#ffe08a}.dash-mini{display:grid;grid-template-columns:1fr 1fr;gap:5px}.dash-mini>div{padding:5px 6px;border:1px solid #ffffff14;border-radius:7px;background:#ffffff08}.dash-mini .dash-label{font-size:7px}.dash-mini .dash-value{font-size:11px}
+.racing-dash.show{display:grid}.dash-side{display:flex;flex-direction:column;gap:7px}.dash-label{font-size:8px;letter-spacing:.16em;font-weight:950;color:#9bbcaf}.dash-value{font-size:15px;font-weight:950;color:#f1fff7;font-variant-numeric:tabular-nums}.dash-value.mint{color:#9df5c9}.dash-value.gold{color:#ffdf83}.dash-center{text-align:center;min-width:0}.dash-speed{font-size:64px;line-height:.95;font-weight:1000;letter-spacing:-.06em;color:#f5fff9;font-variant-numeric:tabular-nums;text-shadow:0 0 24px #a7f3ce32}.dash-unit{font-size:10px;letter-spacing:.2em;color:#a7c5b6;font-weight:900}.dash-rpm{height:7px;background:#ffffff18;border-radius:99px;overflow:hidden;margin:9px 4px 4px}.dash-rpm>span{display:block;height:100%;width:0;background:linear-gradient(90deg,#a7f3ce 0%,#ffe08a 72%,#ff7474 100%);border-radius:99px;transition:width .12s}.dash-meta{display:flex;justify-content:center;gap:12px;font-size:9px;color:#c4dbce}.dash-meta b{color:#fff}.dash-gear{font-size:28px;line-height:1;font-weight:1000;color:#ffe08a}.dash-mini{display:grid;grid-template-columns:1fr 1fr;gap:5px}.dash-mini>div{padding:5px 6px;border:1px solid #ffffff14;border-radius:7px;background:#ffffff08}.dash-mini .dash-battery-cell{grid-column:1 / -1}.dash-mini .dash-label{font-size:7px}.dash-mini .dash-value{font-size:11px}
 .track-map{position:fixed;z-index:11;top:12px;right:12px;width:220px;padding:9px;border:1px solid #d6fff044;border-radius:15px;background:rgba(3,16,18,.88);box-shadow:0 10px 32px #0007;backdrop-filter:blur(10px);display:none;pointer-events:none}.track-map.show{display:block}.track-map-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}.track-map-head b{font-size:9px;letter-spacing:.14em;color:#dfffee}.track-map-head span{font-size:8px;color:#9bbcaf}.track-map canvas{width:100%;height:auto;aspect-ratio:440 / 328;display:block;border-radius:9px;background:radial-gradient(ellipse at center,#183b32,#081b1b)}.map-legend{display:flex;justify-content:space-between;gap:7px;margin-top:6px;font-size:8px;color:#c1d9cb}.map-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;background:#a7f3ce}.map-dot.other{background:#ffdc7a}
 .dash-driver-strip{position:fixed;z-index:10;left:12px;top:12px;display:none;max-width:180px;padding:8px 10px;border:1px solid #ffffff22;border-radius:12px;background:rgba(3,16,18,.82);backdrop-filter:blur(8px);pointer-events:none}.dash-driver-strip.show{display:block}.dash-driver-strip b{display:block;font-size:8px;letter-spacing:.12em;color:#a7f3ce}.dash-driver-strip span{display:block;font-size:10px;color:#e9fff2;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:850px){.track-map{top:7px;right:7px;width:146px;padding:6px}.track-map canvas{height:auto}.track-map-head b{font-size:8px}.map-legend{font-size:7px}.racing-dash{width:min(440px,calc(100vw - 18px));min-width:0;bottom:112px;grid-template-columns:64px 1fr 64px;gap:7px;padding:8px 10px}.dash-speed{font-size:44px}.dash-gear{font-size:22px}.dash-side{gap:4px}.dash-value{font-size:12px}.dash-mini{gap:3px}.dash-mini>div{padding:3px}.dash-mini .dash-value{font-size:9px}.dash-driver-strip{top:128px;left:7px;max-width:135px}.right-hud{top:220px;right:7px;bottom:auto;max-width:140px}}
@@ -42,6 +42,22 @@
 @media(max-width:850px){.lap-times-panel{top:112px;left:8px;max-width:145px;padding:7px 8px;font-size:9px}}
 @media(max-width:480px){.lap-times-panel{top:55px;left:7px;min-width:100px;max-width:122px;padding:6px 7px}.lap-times-panel>b{font-size:7px}.lap-time-row{gap:6px;font-size:8px}}
 
+
+/* ===== CLEAN RACE LAYOUT ===== */
+#gameHud,#raceHud,#dashDriverStrip,#rightHud{display:none!important}
+.track-map{width:254px;}
+.track-map canvas{aspect-ratio:480 / 358;}
+.dash-battery-bar{height:6px;margin-top:5px;border-radius:99px;background:#ffffff18;overflow:hidden}
+.dash-battery-bar>span{display:block;height:100%;width:100%;border-radius:99px;background:linear-gradient(90deg,#69d8a5,#b8f58c);transition:width .2s}
+.dash-mode-pill{display:inline-flex;align-items:center;justify-content:center;min-width:58px;padding:4px 8px;border-radius:7px;background:#a7f3ce18;border:1px solid #a7f3ce55;color:#a7f3ce;font-size:10px;font-weight:1000;letter-spacing:.08em}
+.dash-mode-pill.engine{background:#ffe08a18;border-color:#ffe08a66;color:#ffe08a}
+.dash-power{font-size:14px;font-weight:1000;color:#a7f3ce;font-variant-numeric:tabular-nums;white-space:nowrap}
+.dash-power-label{font-size:7px;letter-spacing:.12em;font-weight:950;color:#9bbcaf}
+.dash-gauge-caption{display:flex;justify-content:space-between;gap:8px;margin:8px 4px 3px;font-size:8px;color:#9bbcaf;font-weight:900;letter-spacing:.08em}
+.dash-gauge-caption b{color:#eafff4;font-variant-numeric:tabular-nums}
+.dash-rpm>span{transition:width .12s}
+@media(max-width:850px){.track-map{width:164px;top:7px;right:7px;padding:6px}.track-map-head b{font-size:8px}.map-legend{font-size:7px}.dash-mode-pill{min-width:48px;padding:3px 5px;font-size:8px}.dash-power{font-size:11px}.dash-power-label{font-size:6px}.game-buttons.show{left:7px;right:auto;top:7px;bottom:auto}}
+@media(max-width:480px){.track-map{width:144px;top:7px;right:7px}.track-map canvas{height:auto}.dash-mode-pill{min-width:42px;font-size:7px}.dash-power{font-size:9px}}
 </style>
 </head>
 <body>
@@ -91,12 +107,8 @@
 </div>
 <div id="gameHud" class="hud"><div class="hud-card"><small>SPEED</small><strong class="mint"><span id="speedValue">0</span><span style="font-size:10px"> km/h</span></strong></div><div class="hud-card"><small>ROOM</small><strong id="hudRoomCode" style="font-size:16px">-----</strong></div><div class="hud-card"><small>DRIVERS</small><strong id="driverCount">1/8</strong></div></div>
 <div id="raceHud" class="race-hud"><div><small>RACE STATUS</small><strong id="raceTimeValue">대기 중</strong></div><div><small>LAP</small><strong id="raceLapValue">1 / 3</strong></div><div><small>POSITION</small><strong id="racePositionValue">1 / 1</strong></div><div><small>COLLISIONS</small><strong id="raceCollisionValue">0</strong></div></div><div id="lapTimesPanel" class="lap-times-panel"><b>MY LAP TIMES</b><div id="lapTimesList">아직 기록이 없습니다.</div></div><div id="startCountdown" class="start-countdown"><div class="countdown-kicker">MISTWOOD ONLINE · GET READY</div><strong id="countdownNumber">3</strong><span>출발 준비</span></div><div id="boostHud" class="boost-hud"><span>BOOST · F</span><strong id="boostValue">5회 남음</strong><span id="boostCooldownValue">사용 가능</span></div>
-<div id="racingDash" class="racing-dash" aria-label="레이싱 계기판">
- <div class="dash-side"><div><div class="dash-label">GEAR</div><div id="dashGear" class="dash-gear">N</div></div><div><div class="dash-label">RPM</div><div id="dashRpmText" class="dash-value gold">0</div></div></div>
- <div class="dash-center"><div id="dashSpeed" class="dash-speed">000</div><div class="dash-unit">KM / H</div><div class="dash-rpm"><span id="dashRpmBar"></span></div><div class="dash-meta"><span>THR <b id="dashThrottle">0%</b></span><span>BRK <b id="dashBrake">0%</b></span><span>STEER <b id="dashSteer">0%</b></span></div></div>
- <div class="dash-side"><div class="dash-mini"><div><div class="dash-label">LAP</div><div id="dashLap" class="dash-value mint">1/3</div></div><div><div class="dash-label">POS</div><div id="dashPosition" class="dash-value">1/1</div></div><div><div class="dash-label">BEST LAP</div><div id="dashBest" class="dash-value">--:--</div></div><div><div class="dash-label">PENALTY</div><div id="dashPenalty" class="dash-value">0.0s</div></div></div></div>
-</div>
-<div id="trackMapPanel" class="track-map"><div class="track-map-head"><b>LIVE TRACK MAP</b><span id="trackMapName">TRACK</span></div><canvas id="trackMapCanvas" width="440" height="328" aria-label="트랙과 플레이어 위치 지도"></canvas><div class="map-legend"><span><i class="map-dot"></i>ME</span><span><i class="map-dot other"></i>RIVALS</span><span id="mapPlayerCount">0 DRIVERS</span></div></div>
+<div id="racingDash" class="racing-dash" aria-label="차량 구동 방식별 레이싱 계기판"><div id="dashDynamicContent" style="display:contents"></div></div>
+<div id="trackMapPanel" class="track-map"><div class="track-map-head"><b>LIVE TRACK MAP</b><span id="trackMapName">TRACK</span></div><canvas id="trackMapCanvas" width="480" height="358" aria-label="트랙과 플레이어 위치 지도"></canvas><div class="map-legend"><span><i class="map-dot"></i>ME</span><span><i class="map-dot other"></i>RIVALS</span><span id="mapPlayerCount">0 DRIVERS</span></div></div>
 <div id="dashDriverStrip" class="dash-driver-strip"><b>LIVE TELEMETRY</b><span id="dashCarName">차량 정보 대기 중</span><span id="dashStatusLine">온라인 연결 대기 중</span></div>
 <div id="rightHud" class="right-hud"><strong>ONLINE DRIVERS</strong><div id="onlineList" class="online-list"></div></div>
 <div id="gameButtons" class="game-buttons"><button id="returnLobbyBtn" class="mini-btn">대기실로</button></div>
@@ -104,7 +116,7 @@
 <div id="raceResultOverlay" class="overlay result-overlay"><main class="panel result-panel"><div class="eyebrow">MISTWOOD ONLINE · RACE RESULTS</div><h1>레이스 종료</h1><div id="raceResultSummary" class="sub">최종 순위와 주행 피드백</div><div id="raceResultList" class="result-list"></div><div class="row result-actions"><button id="raceAgainBtn" class="btn">다시 레이스</button><button id="resultLobbyBtn" class="btn secondary">대기실로</button></div><div id="raceResultHint" class="fineprint"></div></main></div>
 <div id="toast"></div>
 <script type="module">
-const VEHICLES = [{"id":"grandeur","name":"2023 현대 그랜저","short":"그랜저","kind":"대형 세단 · 균형형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12108744,"body":"sedan","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"tesla3","name":"테슬라 모델 3","short":"모델 3","kind":"전기 세단 · 가속형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":10135476,"body":"sedan","scale":0.97,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"ioniq6","name":"현대 아이오닉 6","short":"아이오닉 6","kind":"전기 세단 · 안정형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":5464427,"body":"streamline","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"ev6","name":"기아 EV6","short":"EV6","kind":"전기 크로스오버 · 다목적형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":7440255,"body":"crossover","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"taycan","name":"포르쉐 타이칸","short":"타이칸","kind":"전기 스포츠 세단 · 고속형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":3767226,"body":"sports","scale":0.94,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"supra","name":"토요타 GR 수프라","short":"GR 수프라","kind":"스포츠 쿠페 · 민첩형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":14240562,"body":"coupe","scale":0.92,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"toyotaPriusHybrid","name":"토요타 프리우스 하이브리드","short":"프리우스","kind":"하이브리드 해치백 · 전기/연료 자동 전환","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":7248515,"body":"hatchback","scale":0.98,"hybrid":true,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"jeepWrangler","name":"지프 랭글러 루비콘","short":"랭글러","kind":"정통 오프로드 SUV · 높은 차체와 안정감","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12684101,"body":"offroad","scale":1.04,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"mazdaMx5","name":"마쓰다 MX-5 미아타","short":"MX-5","kind":"경량 2인승 로드스터 · 민첩한 코너링","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12005186,"body":"lightRoadster","scale":0.92,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"eventTruck","name":"숲속 탐험 트럭","short":"이벤트 트럭","kind":"이벤트 전용 · 무겁고 안정적","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":14001732,"body":"truck","scale":1.13,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"},{"id":"subaruWRX","name":"스바루 WRX STI 랠리","short":"WRX 랠리","kind":"AWD 랠리 세단 · 접지력과 가속 특화","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":2652375,"body":"sedan","scale":0.98,"rally":true,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일"}];
+const VEHICLES = [{"id":"grandeur","name":"2023 현대 그랜저","short":"그랜저","kind":"대형 세단 · 균형형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12108744,"body":"sedan","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":5.0,"collisionWidth":2.0,"powertrain":"combustion"},{"id":"tesla3","name":"테슬라 모델 3","short":"모델 3","kind":"전기 세단 · 가속형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":10135476,"body":"sedan","scale":0.97,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.9,"collisionWidth":1.98,"powertrain":"electric"},{"id":"ioniq6","name":"현대 아이오닉 6","short":"아이오닉 6","kind":"전기 세단 · 안정형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":5464427,"body":"streamline","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":5.16,"collisionWidth":1.96,"powertrain":"electric"},{"id":"ev6","name":"기아 EV6","short":"EV6","kind":"전기 크로스오버 · 다목적형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":7440255,"body":"crossover","scale":1,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.78,"collisionWidth":2.12,"powertrain":"electric"},{"id":"taycan","name":"포르쉐 타이칸","short":"타이칸","kind":"전기 스포츠 세단 · 고속형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":3767226,"body":"sports","scale":0.94,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.96,"collisionWidth":2.02,"powertrain":"electric"},{"id":"supra","name":"토요타 GR 수프라","short":"GR 수프라","kind":"스포츠 쿠페 · 민첩형","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":14240562,"body":"coupe","scale":0.92,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.48,"collisionWidth":2.04,"powertrain":"combustion"},{"id":"toyotaPriusHybrid","name":"토요타 프리우스 하이브리드","short":"프리우스","kind":"하이브리드 해치백 · 전기/연료 자동 전환","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":7248515,"body":"hatchback","scale":0.98,"hybrid":true,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.65,"collisionWidth":1.84,"powertrain":"hybrid"},{"id":"jeepWrangler","name":"지프 랭글러 루비콘","short":"랭글러","kind":"정통 오프로드 SUV · 높은 차체와 안정감","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12684101,"body":"offroad","scale":1.04,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.35,"collisionWidth":1.96,"powertrain":"combustion"},{"id":"mazdaMx5","name":"마쓰다 MX-5 미아타","short":"MX-5","kind":"경량 2인승 로드스터 · 민첩한 코너링","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":12005186,"body":"lightRoadster","scale":0.92,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":3.92,"collisionWidth":1.76,"powertrain":"combustion"},{"id":"eventTruck","name":"숲속 탐험 트럭","short":"이벤트 트럭","kind":"이벤트 전용 · 무겁고 안정적","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":14001732,"body":"truck","scale":1.13,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":5.9,"collisionWidth":2.35,"powertrain":"combustion"},{"id":"subaruWRX","name":"스바루 WRX STI 랠리","short":"WRX 랠리","kind":"AWD 랠리 세단 · 접지력과 가속 특화","maxSpeed":32,"acceleration":12.5,"steering":1.55,"brake":27,"reverse":8,"mass":"동일 성능","color":2652375,"body":"sedan","scale":0.98,"rally":true,"specialAbility":"공정 레이스 세팅 · 모든 차량의 주행 성능 동일","collisionLength":4.72,"collisionWidth":1.96,"powertrain":"combustion"}];
 // 같은 tracks.json을 서버와 공유해 맵 모양과 랩 판정이 어긋나지 않게 합니다.
 const TRACKS = await fetch('/tracks.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('tracks.json을 불러오지 못했습니다.'); return r.json(); });
 const TRACK_BY_ID = new Map(TRACKS.map(track => [track.id, track]));
@@ -149,6 +161,13 @@ let lastRaceHudUpdate = 0;
 let serverClockOffsetMs = 0;
 let hasServerClock = false;
 let displayedRpm = 850;
+let dashLayoutType = '';
+let dashBatteryPercent = 92;
+let dashHybridMode = 'EV';
+let dashHybridModeSince = 0;
+let dashLastTelemetryAt = 0;
+let dashRaceKey = null;
+let dashVehicleKey = '';
 let countdownAnchorKey = null;
 let countdownStartedAtPerf = 0;
 let goBannerKey = null;
@@ -286,8 +305,9 @@ function updateRaceHud(players,race){
  drawTrackMap(list);
 }
 
-function sampleTrackForMap(track, steps=18){
- const pts=track.points||[],out=[],n=pts.length;if(n<2)return pts.map(p=>({x:p[0],z:p[1]}));
+function sampleTrackForMap(track, steps=12){
+ const pts=track.points||[],out=[],n=pts.length;
+ if(n<3)return pts.map(p=>({x:p[0],z:p[1]}));
  for(let i=0;i<n;i++){
   const p0=pts[(i-1+n)%n],p1=pts[i],p2=pts[(i+1)%n],p3=pts[(i+2)%n];
   for(let step=0;step<steps;step++){
@@ -304,7 +324,7 @@ function drawTrackMap(players){
  const ctx=canvas.getContext('2d');if(!ctx)return;
  const map=TRACK_BY_ID.get(currentMapId)||TRACKS[0];
  const points=sampleTrackForMap(map);
- const w=canvas.width,h=canvas.height,pad=34;
+ const w=canvas.width,h=canvas.height,pad=40;
  ctx.clearRect(0,0,w,h);ctx.fillStyle='#0b201d';ctx.fillRect(0,0,w,h);
  if(points.length<2){ctx.fillStyle='#c8ded2';ctx.font='18px system-ui';ctx.textAlign='center';ctx.fillText('MAP DATA NOT FOUND',w/2,h/2);return;}
  let minX=Infinity,maxX=-Infinity,minZ=Infinity,maxZ=-Infinity;
@@ -331,49 +351,113 @@ function drawTrackMap(players){
   ctx.save();ctx.translate(q.x,q.y);ctx.rotate(-Number(p.yaw||0));
   ctx.shadowColor=isMe?'#a7f3ce':'#ffdc7a';ctx.shadowBlur=9;
   ctx.fillStyle=isMe?'#a7f3ce':'#ffdc7a';
-  ctx.beginPath();ctx.moveTo(0,-8);ctx.lineTo(-5,5);ctx.lineTo(0,3);ctx.lineTo(5,5);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(0,-10);ctx.lineTo(-6,6);ctx.lineTo(0,3);ctx.lineTo(6,6);ctx.closePath();ctx.fill();
   ctx.restore();
  }
  el('trackMapName').textContent=map.name||'TRACK';
  el('mapPlayerCount').textContent=`${(players||[]).length} DRIVERS`;
 }
 
+function dashCommonMiniMarkup(withBattery){
+ const battery=withBattery?`<div class="dash-battery-cell"><div class="dash-label">BATTERY</div><div id="dashBattery" class="dash-value mint">92%</div><div class="dash-battery-bar"><span id="dashBatteryBar"></span></div></div>`:'';
+ return `<div class="dash-side"><div class="dash-mini">${battery}<div><div class="dash-label">LAP</div><div id="dashLap" class="dash-value mint">1/3</div></div><div><div class="dash-label">POS</div><div id="dashPosition" class="dash-value">1/1</div></div><div><div class="dash-label">BEST LAP</div><div id="dashBest" class="dash-value">--:--</div></div><div><div class="dash-label">PENALTY</div><div id="dashPenalty" class="dash-value">0.0s</div></div></div></div>`;
+}
+function ensureDashboardLayout(vehicle){
+ const type=vehicle.powertrain||(vehicle.hybrid?'hybrid':(String(vehicle.kind||'').includes('전기')?'electric':'combustion'));
+ if(type===dashLayoutType)return type;
+ dashLayoutType=type;
+ const right=dashCommonMiniMarkup(type!=='combustion');
+ if(type==='electric'){
+  el('dashDynamicContent').innerHTML=`<div class="dash-side"><div><div class="dash-label">GEAR</div><div id="dashGear" class="dash-gear">D</div></div><div><div class="dash-power-label">MOTOR POWER</div><div id="dashPowerValue" class="dash-power">0 W</div></div><div><div class="dash-label">DRIVE</div><div class="dash-mode-pill">ELECTRIC</div></div></div><div class="dash-center"><div id="dashSpeed" class="dash-speed">000</div><div class="dash-unit">KM / H</div><div class="dash-gauge-caption"><span>MOTOR OUTPUT</span><b id="dashPowerPercent">0%</b></div><div class="dash-rpm"><span id="dashPowerBar"></span></div><div class="dash-meta"><span>THR <b id="dashThrottle">0%</b></span><span>BRK <b id="dashBrake">0%</b></span><span>STEER <b id="dashSteer">0%</b></span></div></div>${right}`;
+ }else if(type==='hybrid'){
+  el('dashDynamicContent').innerHTML=`<div class="dash-side"><div><div class="dash-label">HYBRID MODE</div><div id="dashModeBadge" class="dash-mode-pill">EV DRIVE</div></div><div><div class="dash-label">ENGINE RPM</div><div id="dashEngineRpm" class="dash-value gold">0</div></div><div><div class="dash-label">GEAR</div><div id="dashGear" class="dash-gear">D</div></div></div><div class="dash-center"><div id="dashSpeed" class="dash-speed">000</div><div class="dash-unit">KM / H</div><div class="dash-gauge-caption"><span>MOTOR POWER</span><b id="dashPowerPercent">0%</b></div><div class="dash-rpm"><span id="dashPowerBar"></span></div><div id="dashPowerValue" class="dash-power">0 W</div><div class="dash-meta"><span>THR <b id="dashThrottle">0%</b></span><span>BRK <b id="dashBrake">0%</b></span><span>STEER <b id="dashSteer">0%</b></span></div></div>${right}`;
+ }else{
+  el('dashDynamicContent').innerHTML=`<div class="dash-side"><div><div class="dash-label">GEAR</div><div id="dashGear" class="dash-gear">N</div></div><div><div class="dash-label">ENGINE RPM</div><div id="dashPowerValue" class="dash-value gold">850</div></div></div><div class="dash-center"><div id="dashSpeed" class="dash-speed">000</div><div class="dash-unit">KM / H</div><div class="dash-gauge-caption"><span>ENGINE RPM</span><b id="dashPowerPercent">12%</b></div><div class="dash-rpm"><span id="dashPowerBar"></span></div><div class="dash-meta"><span>THR <b id="dashThrottle">0%</b></span><span>BRK <b id="dashBrake">0%</b></span><span>STEER <b id="dashSteer">0%</b></span></div></div>${right}`;
+ }
+ return type;
+}
+function updateDashBattery(dt, powerKw, brake, speedKmh, hybridMode){
+ if(dt<=0)return;
+ if(brake>0 && speedKmh>5){
+  dashBatteryPercent=Math.min(100,dashBatteryPercent+dt*(hybridMode==='ENGINE'?0.28:0.48));
+ }else if(hybridMode==='ENGINE'){
+  dashBatteryPercent=Math.min(100,dashBatteryPercent+dt*0.22);
+ }else if(powerKw>0){
+  dashBatteryPercent=Math.max(8,dashBatteryPercent-dt*(powerKw/150)*0.085);
+ }
+}
 function updateRacingDashboard(){
  if(!roomStarted)return;
- const me=latestPlayers.find(p=>p.id===localPlayerId);
- if(!me)return;
- const speedMs=Number(me.speed)||0;
- const speedKmh=Math.abs(speedMs)*3.6;
+ const me=latestPlayers.find(p=>p.id===localPlayerId);if(!me)return;
+ const vehicle=VEHICLES.find(v=>v.id===me.vehicleId)||VEHICLES[0];
+ const type=ensureDashboardLayout(vehicle);
+ const now=performance.now();
+ const dt=dashLastTelemetryAt?Math.min(.25,Math.max(0,(now-dashLastTelemetryAt)/1000)):0;
+ dashLastTelemetryAt=now;
+ const newRaceKey=raceState?.countdownEndsAt??null;
+ if(dashVehicleKey!==vehicle.id||dashRaceKey!==newRaceKey){
+  dashVehicleKey=vehicle.id;dashRaceKey=newRaceKey;dashBatteryPercent=type==='hybrid'?82:96;dashHybridMode='EV';dashHybridModeSince=now;displayedRpm=850;
+ }
+ const speedMs=Number(me.speed)||0,speedKmh=Math.abs(speedMs)*3.6;
  const tune=me.tune||DEFAULT_TUNE;
  const maxKmh=Math.max(1,(Number(tune.topSpeed)||DEFAULT_TUNE.topSpeed)*3.6);
- const vehicle=VEHICLES.find(v=>v.id===me.vehicleId)||VEHICLES[0];
  const input=me.id===localPlayerId?controls:(me.controls||{});
  const throttle=input.forward?100:(input.reverse&&speedMs<=0?35:0);
  const brake=(input.brake||(input.reverse&&speedMs>0.4))?100:0;
  const steer=input.left?-100:(input.right?100:0);
- const gear=(speedMs < -0.6||(input.reverse&&speedMs<=0.6))?'R':(speedKmh<1.2&&!input.forward?'N':String(Math.max(1,Math.min(6,Math.floor(speedKmh/Math.max(1,maxKmh/6))+1))));
- const gearNumber=Number(gear)||1;
- const gearFraction=gear==='R'?Math.min(1,speedKmh/24):Math.max(0,Math.min(1,(speedKmh-(gearNumber-1)*(maxKmh/6))/(maxKmh/6)));
- const rpmTarget=gear==='N'?850:Math.round(850+gearFraction*6000+(throttle>0&&speedKmh<5?900:0));
- displayedRpm+=(rpmTarget-displayedRpm)*0.24;
+ const gear=(speedMs < -0.6||(input.reverse&&speedMs<=0.6))?'R':(speedKmh<1.2&&!input.forward?'N':'D');
  const shownSpeed=Math.round(speedKmh);
  el('dashSpeed').textContent=String(shownSpeed).padStart(3,'0');
- if(el('speedValue'))el('speedValue').textContent=String(shownSpeed);
  el('dashGear').textContent=gear;
- el('dashRpmText').textContent=String(Math.round(displayedRpm)).replace(/\B(?=(\d{3})+(?!\d))/g,',');
- el('dashRpmBar').style.width=`${Math.max(0,Math.min(100,displayedRpm/7000*100))}%`;
  el('dashThrottle').textContent=`${throttle}%`;el('dashBrake').textContent=`${brake}%`;el('dashSteer').textContent=`${steer}%`;
+ let motorKw=0,rpm=0,barPercent=0;
+ if(type==='electric'){
+  motorKw=throttle>0?Math.round(Math.min(165,(throttle/100)*42+speedKmh*0.72)):0;
+  updateDashBattery(dt,motorKw,brake,speedKmh,'EV');
+  el('dashPowerValue').textContent=motorKw>0?`${motorKw} kW`:'0 W';
+  barPercent=Math.min(100,motorKw/165*100);
+  el('dashBattery').textContent=`${Math.round(dashBatteryPercent)}%`;
+  el('dashBatteryBar').style.width=`${dashBatteryPercent}%`;
+ }else if(type==='hybrid'){
+  if(dashHybridMode==='EV'){
+   if(speedKmh>66||throttle>=78||dashBatteryPercent<=18){dashHybridMode='ENGINE';dashHybridModeSince=now;}
+  }else if(now-dashHybridModeSince>2600&&speedKmh<46&&throttle<42&&dashBatteryPercent>=20){
+   dashHybridMode='EV';dashHybridModeSince=now;
+  }
+  if(dashHybridMode==='EV'){
+   motorKw=throttle>0?Math.round(Math.min(105,(throttle/100)*30+speedKmh*0.58)):0;
+   rpm=0;
+  }else{
+   motorKw=0;
+   const rpmTarget= Math.round(900+Math.min(4700,throttle*40+speedKmh*17));
+   displayedRpm+=(rpmTarget-displayedRpm)*0.18;
+   rpm=Math.round(displayedRpm);
+  }
+  updateDashBattery(dt,motorKw,brake,speedKmh,dashHybridMode);
+  el('dashModeBadge').textContent=dashHybridMode==='EV'?'EV DRIVE':'ENGINE';
+  el('dashModeBadge').classList.toggle('engine',dashHybridMode==='ENGINE');
+  el('dashEngineRpm').textContent=`${dashHybridMode==='EV'?0:rpm.toLocaleString('en-US')}`;
+  el('dashPowerValue').textContent=dashHybridMode==='EV'?(motorKw>0?`${motorKw} kW`:'0 W'):'0 W';
+  barPercent=dashHybridMode==='EV'?Math.min(100,motorKw/105*100):0;
+  el('dashBattery').textContent=`${Math.round(dashBatteryPercent)}%`;
+  el('dashBatteryBar').style.width=`${dashBatteryPercent}%`;
+ }else{
+  const gearNumber=Math.max(1,Math.min(6,Math.floor(speedKmh/Math.max(1,maxKmh/6))+1));
+  const gearFraction=Math.max(0,Math.min(1,(speedKmh-(gearNumber-1)*(maxKmh/6))/(maxKmh/6)));
+  const rpmTarget=gear==='N'?850:Math.round(900+gearFraction*5700+(throttle>0&&speedKmh<5?700:0));
+  displayedRpm+=(rpmTarget-displayedRpm)*0.22;
+  rpm=Math.round(displayedRpm);
+  el('dashPowerValue').textContent=rpm.toLocaleString('en-US');
+  barPercent=Math.max(0,Math.min(100,rpm/7000*100));
+ }
+ el('dashPowerBar').style.width=`${barPercent}%`;
+ el('dashPowerPercent').textContent=`${Math.round(barPercent)}%`;
  const laps=Number(raceState?.lapsToWin||3);
  el('dashLap').textContent=me.finished?`FIN ${laps}/${laps}`:`${Math.min(laps,(me.lapsCompleted||0)+1)}/${laps}`;
  el('dashPosition').textContent=`${me.position||1}/${latestPlayers.length||1}`;
  el('dashBest').textContent=me.bestLapMs?formatTime(me.bestLapMs):'--:--';
  el('dashPenalty').textContent=`${((me.penaltyMs||0)/1000).toFixed(1)}s`;
- el('dashCarName').textContent=`${vehicle.short||vehicle.name} · ${vehicle.kind||'차량'}`;
- const surface=me.surface==='grass'?'잔디':(me.surface==='dirt'?'흙·모래':'아스팔트');
- const boost=Number(me.boostRemaining)>0?` · BOOST ${Number(me.boostRemaining).toFixed(1)}s`:'';
- el('dashStatusLine').textContent=`${surface} · ${me.finished?'완주':(raceState?.status==='countdown'?'출발 대기':'주행 중')}${boost}`;
 }
-
 function showRaceResults(results){
  if(raceResultsShown)return;raceResultsShown=true;el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');el('startCountdown').classList.remove('show');el('boostHud').classList.remove('show');
  const rows=[...(results||[])].sort((a,b)=>a.rank-b.rank);
@@ -1150,7 +1234,8 @@ function initScene(){
 }
 // ===== MAP SYSTEM: tracks.json의 웨이포인트로 10개 트랙을 그립니다. =====
 function sampleTrackForDrawing(track){
- const pts=track.points,out=[],steps=24,n=pts.length;
+ const pts=track.points||[],out=[],steps=12,n=pts.length;
+ if(n<3)return pts.map(p=>new THREE.Vector3(p[0],0,p[1]));
  for(let i=0;i<n;i++){
   const p0=pts[(i-1+n)%n],p1=pts[i],p2=pts[(i+1)%n],p3=pts[(i+2)%n];
   for(let step=0;step<steps;step++){
@@ -1160,7 +1245,7 @@ function sampleTrackForDrawing(track){
    out.push(new THREE.Vector3(x,0,z));
   }
  }
- out.push(out[0].clone());return out;
+ return out;
 }
 function disposeGroup(group){
  if(!group)return;
@@ -1169,29 +1254,48 @@ function disposeGroup(group){
 }
 function makeSelectedTrack(track){
  const samples=sampleTrackForDrawing(track),halfWidth=track.width/2,positions=[],indices=[];
- const segments=samples.length-1;
- for(let i=0;i<=segments;i++){
-  const before=samples[Math.max(0,i-1)],after=samples[Math.min(segments,i+1)];
+ const count=samples.length;
+ // 모든 지점을 순환 방식으로 계산해 출발선의 도로 가장자리와 법선이 정확히 이어집니다.
+ for(let i=0;i<count;i++){
+  const before=samples[(i-1+count)%count],after=samples[(i+1)%count],p=samples[i];
   let tx=after.x-before.x,tz=after.z-before.z,len=Math.max(.001,Math.hypot(tx,tz));tx/=len;tz/=len;
-  const nx=tz,nz=-tx,p=samples[i];
+  const nx=tz,nz=-tx;
   positions.push(p.x+nx*halfWidth,.015,p.z+nz*halfWidth,p.x-nx*halfWidth,.015,p.z-nz*halfWidth);
  }
- for(let i=0;i<segments;i++){const a=i*2,b=a+1,c=a+2,d=a+3;indices.push(a,c,b,b,c,d);}
+ for(let i=0;i<count;i++){
+  const j=(i+1)%count,a=i*2,b=a+1,c=j*2,d=c+1;
+  indices.push(a,c,b,b,c,d);
+ }
  const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geo.setIndex(indices);geo.computeVertexNormals();
  const road=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:0x30383a,roughness:.93,side:THREE.DoubleSide}));road.receiveShadow=true;trackGroup.add(road);
  const edgeMat=new THREE.LineBasicMaterial({color:0xdce4d6});
- for(const side of [-1,1]){const edge=[];for(let i=0;i<=segments;i++){const a=samples[Math.max(0,i-1)],b=samples[Math.min(segments,i+1)],p=samples[i];let tx=b.x-a.x,tz=b.z-a.z,len=Math.max(.001,Math.hypot(tx,tz));tx/=len;tz/=len;edge.push(new THREE.Vector3(p.x+tz*halfWidth*side,.06,p.z-tx*halfWidth*side));}trackGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(edge),edgeMat));}
- // 일정한 거리마다 중앙 차선 표시를 놓아 직선과 코너에서 길을 읽기 쉽게 합니다.
+ for(const side of [-1,1]){
+  const edge=[];
+  for(let i=0;i<count;i++){
+   const before=samples[(i-1+count)%count],after=samples[(i+1)%count],p=samples[i];
+   let tx=after.x-before.x,tz=after.z-before.z,len=Math.max(.001,Math.hypot(tx,tz));tx/=len;tz/=len;
+   edge.push(new THREE.Vector3(p.x+tz*halfWidth*side,.06,p.z-tx*halfWidth*side));
+  }
+  edge.push(edge[0].clone());
+  trackGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(edge),edgeMat));
+ }
+ // 차선 표시는 닫힌 코스의 마지막 구간부터 첫 구간까지도 같은 간격으로 이어집니다.
  const dashMat=new THREE.MeshStandardMaterial({color:0xf5e9be,emissive:0x332a15,roughness:.7});
  let distanceSinceDash=0;
- for(let i=1;i<samples.length-1;i++){const a=samples[i-1],b=samples[i],dx=b.x-a.x,dz=b.z-a.z,step=Math.hypot(dx,dz);distanceSinceDash+=step;if(distanceSinceDash>=13){distanceSinceDash=0;const dash=new THREE.Mesh(new THREE.BoxGeometry(.18,.035,3),dashMat);dash.position.set(b.x,.065,b.z);dash.rotation.y=Math.atan2(dx,dz);trackGroup.add(dash);}}
- // 첫 웨이포인트가 출발선입니다. 도로 폭 전체를 가로지르는 선으로 표시합니다.
- const p=samples[0],next=samples[1],yaw=Math.atan2(next.x-p.x,next.z-p.z);
+ for(let i=0;i<count;i++){
+  const a=samples[i],b=samples[(i+1)%count],dx=b.x-a.x,dz=b.z-a.z,step=Math.hypot(dx,dz);distanceSinceDash+=step;
+  if(distanceSinceDash>=13){distanceSinceDash=0;const dash=new THREE.Mesh(new THREE.BoxGeometry(.18,.035,3),dashMat);dash.position.set(b.x,.065,b.z);dash.rotation.y=Math.atan2(dx,dz);trackGroup.add(dash);}
+ }
+ // 시작/결승선은 첫 지점의 접선 방향을 사용하므로 폐곡선 연결부와 일치합니다.
+ const p=samples[0],next=samples[1],before=samples[count-1],yaw=Math.atan2(next.x-before.x,next.z-before.z);
  const finish=new THREE.Mesh(new THREE.BoxGeometry(track.width,.10,1.5),new THREE.MeshStandardMaterial({color:0xe23a45,emissive:0x4f0508,emissiveIntensity:.55}));finish.position.set(p.x,.09,p.z);finish.rotation.y=yaw;trackGroup.add(finish);
  const checkerA=new THREE.MeshStandardMaterial({color:0xffffff}),checkerB=new THREE.MeshStandardMaterial({color:0xb20f21});
- for(let col=0;col<10;col++){const tile=new THREE.Mesh(new THREE.BoxGeometry(track.width/10,.035,1.45),(col%2)?checkerA:checkerB);tile.position.set(p.x,.15,p.z);tile.rotation.y=yaw;tile.position.x+=(Math.cos(yaw)*((col-4.5)*track.width/10));tile.position.z+=(-Math.sin(yaw)*((col-4.5)*track.width/10));trackGroup.add(tile);}
+ for(let col=0;col<10;col++){
+  const tile=new THREE.Mesh(new THREE.BoxGeometry(track.width/10,.035,1.45),(col%2)?checkerA:checkerB);tile.position.set(p.x,.15,p.z);tile.rotation.y=yaw;
+  tile.position.x+=Math.cos(yaw)*((col-4.5)*track.width/10);tile.position.z+=-Math.sin(yaw)*((col-4.5)*track.width/10);trackGroup.add(tile);
+ }
 }
-function distanceToPath(x,z,samples){let best=Infinity;for(let i=0;i<samples.length-1;i++){const a=samples[i],b=samples[i+1],dx=b.x-a.x,dz=b.z-a.z,len=dx*dx+dz*dz,t=len?Math.max(0,Math.min(1,((x-a.x)*dx+(z-a.z)*dz)/len)):0;const d=Math.hypot(x-(a.x+dx*t),z-(a.z+dz*t));if(d<best)best=d;}return best;}
+function distanceToPath(x,z,samples){let best=Infinity;const n=samples.length;for(let i=0;i<n;i++){const a=samples[i],b=samples[(i+1)%n],dx=b.x-a.x,dz=b.z-a.z,len=dx*dx+dz*dz,t=len?Math.max(0,Math.min(1,((x-a.x)*dx+(z-a.z)*dz)/len)):0;const d=Math.hypot(x-(a.x+dx*t),z-(a.z+dz*t));if(d<best)best=d;}return best;}
 function buildForestTrack(){
  const map=TRACK_BY_ID.get(currentMapId)||TRACKS[0];
  disposeGroup(trackGroup);disposeGroup(forestGroup);

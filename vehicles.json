@@ -15,7 +15,8 @@
     "scale": 1,
     "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
     "collisionLength": 5.0,
-    "collisionWidth": 2.0
+    "collisionWidth": 2.0,
+    "powertrain": "combustion"
   },
   {
     "id": "tesla3",
@@ -33,7 +34,8 @@
     "scale": 0.97,
     "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
     "collisionLength": 4.9,
-    "collisionWidth": 1.98
+    "collisionWidth": 1.98,
+    "powertrain": "electric"
   },
   {
     "id": "ioniq6",
@@ -51,7 +53,8 @@
     "scale": 1,
     "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
     "collisionLength": 5.16,
-    "collisionWidth": 1.96
+    "collisionWidth": 1.96,
+    "powertrain": "electric"
   },
   {
     "id": "ev6",
@@ -69,7 +72,8 @@
     "scale": 1,
     "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
     "collisionLength": 4.78,
-    "collisionWidth": 2.12
+    "collisionWidth": 2.12,
+    "powertrain": "electric"
   },
   {
     "id": "taycan",
@@ -87,7 +91,8 @@
     "scale": 0.94,
     "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
     "collisionLength": 4.96,
-    "collisionWidth": 2.02
+    "collisionWidth": 2.02,
+    "powertrain": "electric"
   },
   {
     "id": "supra",
@@ -105,7 +110,8 @@
     "scale": 0.92,
     "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
     "collisionLength": 4.48,
-    "collisionWidth": 2.04
+    "collisionWidth": 2.04,
+    "powertrain": "combustion"
   },
   {
     "id": "toyotaPriusHybrid",
@@ -124,7 +130,8 @@
     "hybrid": true,
     "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
     "collisionLength": 4.65,
-    "collisionWidth": 1.84
+    "collisionWidth": 1.84,
+    "powertrain": "hybrid"
   },
   {
     "id": "jeepWrangler",
@@ -142,7 +149,8 @@
     "scale": 1.04,
     "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
     "collisionLength": 4.35,
-    "collisionWidth": 1.96
+    "collisionWidth": 1.96,
+    "powertrain": "combustion"
   },
   {
     "id": "mazdaMx5",
@@ -160,7 +168,8 @@
     "scale": 0.92,
     "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
     "collisionLength": 3.92,
-    "collisionWidth": 1.76
+    "collisionWidth": 1.76,
+    "powertrain": "combustion"
   },
   {
     "id": "eventTruck",
@@ -178,7 +187,8 @@
     "scale": 1.13,
     "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
     "collisionLength": 5.9,
-    "collisionWidth": 2.35
+    "collisionWidth": 2.35,
+    "powertrain": "combustion"
   },
   {
     "id": "subaruWRX",
@@ -197,6 +207,7 @@
     "rally": true,
     "specialAbility": "공정 레이스 세팅 · 모든 차량의 주행 성능 동일",
     "collisionLength": 4.72,
-    "collisionWidth": 1.96
+    "collisionWidth": 1.96,
+    "powertrain": "combustion"
   }
 ]

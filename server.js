@@ -57,7 +57,7 @@ function orientedBoxContact(a, b) {
 const TRACKS = JSON.parse(fs.readFileSync(path.join(ROOT, 'tracks.json'), 'utf8'));
 const TRACK_MAP = new Map(TRACKS.map(t => [t.id, t]));
 const DEFAULT_MAP_ID = TRACKS[0].id;
-const TRACK_STEPS = 24;
+const TRACK_STEPS = 12;
 
 // 튜닝 범위는 서버에서 다시 검사해 비정상적으로 큰 값을 막습니다.
 const DEFAULT_TUNE = Object.freeze({ topSpeed: 32, acceleration: 12.5, steering: 1.55, brake: 27, grip: 1, reverse: 8, coastDrag: 0.62 });
@@ -169,8 +169,9 @@ function sendError(ws, message) { safeSend(ws, { type: 'error', message }); }
 function spawnPlayer(player, index, count, now, track) {
   const lane = (index % 4 - 1.5) * 4.8;
   const row = Math.floor(index / 4);
-  const a = track.points[0], b = track.points[1];
-  const dx = b.x - a.x, dz = b.z - a.z, length = Math.max(0.001, Math.hypot(dx, dz));
+  const a = track.points[0], b = track.points[1], previous = track.points[track.points.length - 2];
+  // 출발 위치의 접선은 앞/뒤 샘플을 함께 사용해 도로 중심선과 같은 방향으로 맞춥니다.
+  const dx = b.x - previous.x, dz = b.z - previous.z, length = Math.max(0.001, Math.hypot(dx, dz));
   const tx = dx / length, tz = dz / length;
   const nx = tz, nz = -tx;
   // 첫 번째 줄은 출발선 근처, 두 번째 줄은 그 뒤에 배치합니다.
