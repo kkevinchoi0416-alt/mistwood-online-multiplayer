@@ -28,20 +28,20 @@
 .readiness-copy{min-width:0}.readiness-copy strong{display:block;color:#eafff4;font-size:12px}.readiness-copy small{display:block;margin-top:3px;color:#a9c5b8;font-size:10px;line-height:1.45}.readiness-count{flex:none;padding:7px 10px;border:1px solid #ffe08a55;border-radius:9px;background:#ffe08a12;color:#ffe08a;font-size:10px;font-weight:1000;letter-spacing:.06em;font-variant-numeric:tabular-nums}.readiness-count.all-ready{border-color:#a7f3ce70;background:#a7f3ce18;color:#a7f3ce}
 .player-chip{position:relative;padding-right:8px}.player-chip .player-ready-state{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:9px;font-weight:950;letter-spacing:.05em;color:#ffca8b}.player-chip .player-ready-state:before{content:"";width:6px;height:6px;border-radius:50%;background:#ffb15f;box-shadow:0 0 8px #ffb15f88}.player-chip .player-ready-state.ready{color:#a7f3ce}.player-chip .player-ready-state.ready:before{background:#65f5b2;box-shadow:0 0 9px #65f5b288}
 #readyRoomBtn{min-width:132px}#readyRoomBtn.is-ready{border-color:#65f5b2;background:#0e3c2b;color:#baffd9;box-shadow:inset 0 0 0 1px #65f5b233}
-/* START LIGHTS · three-second synchronized start sequence */
-.start-countdown{background:radial-gradient(ellipse at 50% 46%,rgba(29,82,69,.38),rgba(2,8,10,.88) 72%);backdrop-filter:blur(7px)}
-.start-countdown-card{width:min(430px,calc(100vw - 32px));padding:clamp(22px,5vw,34px);border:1px solid #c9ead43b;border-radius:24px;background:linear-gradient(145deg,rgba(8,32,29,.97),rgba(3,13,16,.97));box-shadow:0 24px 90px #000b,inset 0 1px #ffffff13;text-align:center}
-.start-countdown-card .countdown-kicker{font-size:10px;letter-spacing:.24em}.start-light-panel{display:flex;align-items:center;justify-content:center;gap:26px;margin:20px 0 12px}
-.start-lights{display:flex;gap:7px;padding:10px 12px;border:1px solid #ffffff20;border-radius:14px;background:linear-gradient(180deg,#142020,#080f11);box-shadow:inset 0 2px 10px #0008,0 6px 18px #0005}
-.start-lights i{display:block;width:19px;height:19px;border-radius:50%;background:#4b1d22;border:1px solid #ff8d8d30;box-shadow:inset 0 2px 5px #000a;opacity:.55;transition:background .12s,box-shadow .12s,opacity .12s}
+/* START LIGHTS · responsive layout keeps GO text inside the card */
+.start-countdown{background:radial-gradient(ellipse at 50% 46%,rgba(29,82,69,.38),rgba(2,8,10,.88) 72%);backdrop-filter:blur(7px);padding:14px;overflow:hidden}
+.start-countdown-card{width:min(430px,calc(100vw - 28px));max-width:100%;min-width:0;overflow:hidden;padding:clamp(18px,4vw,30px);border:1px solid #c9ead43b;border-radius:24px;background:linear-gradient(145deg,rgba(8,32,29,.97),rgba(3,13,16,.97));box-shadow:0 24px 90px #000b,inset 0 1px #ffffff13;text-align:center}
+.start-countdown-card .countdown-kicker{font-size:clamp(8px,2vw,10px);letter-spacing:.18em;overflow-wrap:anywhere}.start-light-panel{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;justify-items:center;gap:clamp(8px,2vw,16px);width:100%;min-width:0;margin:20px 0 12px}
+.start-lights{display:flex;justify-content:center;gap:clamp(3px,1vw,7px);max-width:100%;min-width:0;padding:clamp(7px,1.8vw,10px) clamp(8px,2vw,12px);border:1px solid #ffffff20;border-radius:14px;background:linear-gradient(180deg,#142020,#080f11);box-shadow:inset 0 2px 10px #0008,0 6px 18px #0005}
+.start-lights i{display:block;flex:0 1 19px;width:clamp(11px,2.3vw,19px);height:clamp(11px,2.3vw,19px);border-radius:50%;background:#4b1d22;border:1px solid #ff8d8d30;box-shadow:inset 0 2px 5px #000a;opacity:.55;transition:background .12s,box-shadow .12s,opacity .12s}
 .start-lights i.on{background:#ff414c;opacity:1;box-shadow:0 0 8px #ff414c,0 0 19px #ff414c99,inset 0 1px 4px #fff8;border-color:#ffafb3}
 .start-lights.go i{background:#4dffb0;opacity:1;border-color:#b9ffe0;box-shadow:0 0 9px #4dffb0,0 0 22px #4dffb099,inset 0 1px 4px #fff9}
-.start-light-panel>strong{min-width:90px;font-size:clamp(76px,15vw,110px);line-height:.9;font-weight:1000;letter-spacing:-.08em;color:#fff;text-shadow:0 0 34px #a7f3ce66;font-variant-numeric:tabular-nums}
-#startCountdownState{display:block;color:#d4f5e5;font-size:12px;font-weight:900;letter-spacing:.08em}#startCountdownState.go{color:#70ffc0;text-shadow:0 0 18px #4dffb088}
-.start-countdown-footer{display:block;margin-top:18px;color:#809e91;font-size:8px;font-weight:900;letter-spacing:.2em}
+.start-light-panel>strong{display:block;min-width:0;width:auto;max-width:100%;font-size:clamp(52px,10vw,88px);line-height:1;font-weight:1000;letter-spacing:-.1em;white-space:nowrap;overflow:hidden;color:#fff;text-shadow:0 0 34px #a7f3ce66;font-variant-numeric:tabular-nums}
+#startCountdownState{display:block;max-width:100%;overflow-wrap:anywhere;color:#d4f5e5;font-size:clamp(10px,2.5vw,12px);font-weight:900;letter-spacing:.06em}#startCountdownState.go{color:#70ffc0;text-shadow:0 0 18px #4dffb088}
+.start-countdown-footer{display:block;margin-top:18px;color:#809e91;font-size:8px;font-weight:900;letter-spacing:.14em;overflow-wrap:anywhere}
 /* RESULTS · podium, event statistics and readable timing table */
 .result-panel{width:min(900px,100%);padding:clamp(18px,3vw,30px)}.result-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.result-checkered{font-size:42px;filter:drop-shadow(0 8px 15px #0008)}.result-heading h1{margin:6px 0 5px}.result-stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:16px 0}.result-stat{padding:10px 12px;border:1px solid #ffffff1b;border-radius:12px;background:#ffffff08}.result-stat small{display:block;color:#9dbbad;font-size:9px;font-weight:900;letter-spacing:.08em}.result-stat strong{display:block;margin-top:5px;color:#eafff4;font-size:17px;font-variant-numeric:tabular-nums}.result-podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 18px;align-items:stretch}.podium-card{position:relative;min-width:0;padding:13px 10px;border:1px solid #ffffff20;border-radius:14px;background:linear-gradient(145deg,#ffffff10,#ffffff05);text-align:center;overflow:hidden}.podium-card.first{border-color:#ffe08a88;background:linear-gradient(145deg,#ffe08a20,#ffffff06);box-shadow:inset 0 1px #fff2,0 8px 24px #0003}.podium-medal{font-size:23px;line-height:1.2}.podium-rank{margin-top:5px;color:#ffe08a;font-size:9px;font-weight:1000;letter-spacing:.13em}.podium-card strong{display:block;margin:6px 0 3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}.podium-card small{display:block;color:#a9c5b8;font-size:9px}.podium-time{margin-top:8px;color:#fff;font-size:14px;font-weight:1000;font-variant-numeric:tabular-nums}.result-table-heading{display:flex;justify-content:space-between;align-items:end;gap:8px;margin:18px 0 8px}.result-table-heading strong{font-size:13px;color:#eafff4}.result-table-heading span{font-size:9px;color:#9dbbad}.result-row{grid-template-columns:42px minmax(0,1fr) auto auto;}.result-gap{grid-column:3;grid-row:1;color:#a7f3ce;font-size:11px;font-weight:950;text-align:right;white-space:nowrap}.result-lap-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.result-lap-chip{padding:3px 6px;border-radius:6px;background:#ffffff0b;color:#b7d7c8;font-size:9px;font-variant-numeric:tabular-nums}.result-lap-chip.best{background:#ffe08a18;color:#ffe08a;border:1px solid #ffe08a36}.result-metric strong{font-variant-numeric:tabular-nums}.result-feedback{grid-column:2/-1}.result-actions{justify-content:flex-end}.result-actions .btn{min-width:138px}
-@media(max-width:600px){.readiness-bar{align-items:flex-start}.readiness-count{font-size:9px;padding:6px 7px}.start-light-panel{flex-direction:column;gap:18px}.start-light-panel>strong{font-size:88px}.start-lights{gap:6px}.start-lights i{width:16px;height:16px}.result-stat-grid{gap:5px}.result-stat{padding:8px}.result-stat strong{font-size:14px}.result-podium{gap:5px}.podium-card{padding:10px 6px}.podium-card strong{font-size:10px}.podium-time{font-size:11px}.result-row{grid-template-columns:28px minmax(0,1fr) auto;}.result-metric{grid-column:3;grid-row:1}.result-gap{grid-column:3;grid-row:2;font-size:9px}.result-metric{font-size:9px}.result-metric strong{font-size:11px}.result-feedback{grid-column:2/-1}.result-checkered{font-size:32px}}
+@media(max-width:600px){.readiness-bar{align-items:flex-start}.readiness-count{font-size:9px;padding:6px 7px}.start-light-panel{grid-template-columns:minmax(0,1fr);gap:12px}.start-light-panel>strong{font-size:clamp(48px,19vw,78px)}.start-lights{gap:5px}.start-lights i{width:clamp(13px,4vw,17px);height:clamp(13px,4vw,17px)}.result-stat-grid{gap:5px}.result-stat{padding:8px}.result-stat strong{font-size:14px}.result-podium{gap:5px}.podium-card{padding:10px 6px}.podium-card strong{font-size:10px}.podium-time{font-size:11px}.result-row{grid-template-columns:28px minmax(0,1fr) auto;}.result-metric{grid-column:3;grid-row:1}.result-gap{grid-column:3;grid-row:2;font-size:9px}.result-metric{font-size:9px}.result-metric strong{font-size:11px}.result-feedback{grid-column:2/-1}.result-checkered{font-size:32px}}
 
 
 .tune-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}.tune-item{padding:10px;border:1px solid #ffffff18;border-radius:11px;background:#ffffff06;min-width:0}.tune-item label{display:flex;justify-content:space-between;gap:8px;font-size:11px;font-weight:900;color:#eafff4}.tune-item output{color:var(--gold);font-variant-numeric:tabular-nums}.tune-item input{width:100%;accent-color:#a7f3ce;margin:8px 0 4px}.tune-item small{display:block;color:#9fbaad;font-size:9px;line-height:1.35}.map-description{color:#b8d2c5;font-size:10px;line-height:1.5;margin-top:7px}.advanced-toggle{margin-top:9px;border:1px solid #ffffff25;border-radius:9px;padding:7px 10px;background:#ffffff0a;color:#dff8eb;font-size:10px;font-weight:850}.map-meta{font-size:10px;color:#a9c5b8;margin-top:6px}.boost-hud{position:fixed;z-index:9;left:12px;top:86px;display:none;min-width:132px;padding:8px 11px;border:1px solid #ffe08a55;border-radius:12px;background:rgba(7,25,25,.86);backdrop-filter:blur(8px);color:#ffe08a;font-size:10px;font-weight:900}.boost-hud.show{display:block}.boost-hud strong{display:block;font-size:14px;font-variant-numeric:tabular-nums}.draft-hud{position:fixed;z-index:9;left:12px;top:140px;display:none;padding:9px 12px;border:1px solid #a7f3ce66;border-radius:12px;background:rgba(7,25,25,.90);color:#a7f3ce;backdrop-filter:blur(8px);font-size:10px;font-weight:900}.draft-hud.show{display:block}.draft-hud strong{display:block;color:#effff6;font-size:12px;margin-top:3px}@media(max-width:850px){.draft-hud{top:160px;left:8px}}.touch-actions .boost{font-size:10px}
@@ -90,7 +90,7 @@
 .home-panel .brand{align-items:center;margin-bottom:13px}.home-panel .eyebrow{color:var(--race-orange);font-size:10px}.home-panel h1{font-style:italic;font-size:clamp(32px,5.6vw,52px);font-weight:1000;letter-spacing:-.055em;text-shadow:0 5px 28px rgba(255,130,70,.12)}.home-panel .race-word{color:#ff995c;text-shadow:0 0 24px rgba(255,130,70,.28)}
 .connection-status{display:inline-flex;align-items:center;gap:7px;max-width:230px;padding:9px 12px;border:1px solid rgba(255,160,105,.35);border-radius:5px;background:rgba(255,130,70,.08);color:#ffd5bc;font-size:9px;font-weight:950;letter-spacing:.06em;text-align:center}
 .connection-status:before{content:"";width:7px;height:7px;flex:none;border-radius:50%;background:#ffb16d;box-shadow:0 0 10px currentColor}.connection-status.online{border-color:rgba(167,243,206,.4);background:rgba(167,243,206,.09);color:#b9f5d7}.connection-status.online:before{background:#a7f3ce}
-.home-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:13px 0 17px}.home-stats>div{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid rgba(255,255,255,.1);border-left:2px solid rgba(255,130,70,.65);border-radius:5px;background:linear-gradient(110deg,rgba(255,255,255,.065),rgba(255,255,255,.018))}.home-stats b{font-size:19px;line-height:1;color:#ffb27e;font-weight:1000;font-variant-numeric:tabular-nums}.home-stats span{font-size:8px;line-height:1.25;color:#9fb9ad;font-weight:950;letter-spacing:.08em}
+.server-status-panel{flex:0 1 350px;min-width:220px;max-width:350px;padding:10px 12px;border:1px solid rgba(167,243,206,.22);border-radius:8px 14px 8px 14px;background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025));box-shadow:inset 0 1px rgba(255,255,255,.04)}.server-status-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.server-status-panel .connection-status{max-width:100%;padding:6px 9px}.server-online-count{display:inline-flex;align-items:baseline;gap:5px;color:#adcbbd;font-size:9px;font-weight:900;white-space:nowrap}.server-online-count b{color:#fff;font-size:17px;font-variant-numeric:tabular-nums}.server-status-panel .status{margin:7px 0 0;min-height:0;color:#a9c5b8;font-size:10px;line-height:1.45}
 .home-panel .box{border-radius:7px 13px 7px 13px;border-color:rgba(202,232,218,.16);background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));box-shadow:inset 0 1px rgba(255,255,255,.025)}.home-panel .box-title{color:#ffb17a;letter-spacing:.12em}.home-panel .btn{border-radius:5px 11px 5px 11px;background:linear-gradient(100deg,#ff9457,#ffb36b);border-color:#ffc28c;color:#24140b;box-shadow:0 5px 18px rgba(255,130,70,.15);transition:transform .12s,filter .12s}.home-panel .btn:hover{transform:translateY(-1px);filter:brightness(1.08)}.home-panel .btn.secondary{background:linear-gradient(145deg,#243a39,#132523);border-color:rgba(255,255,255,.18);color:#eafff4;box-shadow:none}.home-panel .device-btn.active{border-color:#ff9b60;color:#ffc093;background:rgba(255,130,70,.11)}.home-panel .field:focus{border-color:#ff9b60;box-shadow:0 0 0 3px rgba(255,130,70,.12)}.home-panel .tune-item output{color:#ffc093}.home-panel .tune-item input{accent-color:#ff9457}.home-panel .car-card.selected{border-color:#ff9b60;background:rgba(255,130,70,.10);box-shadow:inset 0 0 0 1px rgba(255,155,96,.35)}.home-panel .car-card:hover{border-color:rgba(255,155,96,.7)}.home-panel .car-tag.normal{background:rgba(255,130,70,.12);color:#ffbd91}.home-panel .selected-info{border-color:rgba(255,155,96,.25);background:rgba(255,130,70,.06)}.home-panel .lobby{border-color:rgba(255,155,96,.3);background:rgba(3,16,18,.8)}.home-panel .room-code{color:#ffc093}
 /* Top-of-screen race countdown shared by all clients */
 .finish-countdown-hud{position:fixed;z-index:16;top:12px;left:50%;transform:translateX(-50%);display:none;width:min(330px,calc(100vw - 32px));padding:9px 13px 8px;border:1px solid rgba(255,143,82,.65);border-radius:7px 14px 7px 14px;background:linear-gradient(110deg,rgba(37,19,13,.94),rgba(19,24,24,.94));box-shadow:0 8px 28px rgba(0,0,0,.38),inset 3px 0 #ff894c;backdrop-filter:blur(10px);pointer-events:none;color:#fff0e4}
@@ -100,16 +100,11 @@
 /* Boost usage and reload readout */
 .boost-hud{top:164px;min-width:178px;padding:9px 11px;border-color:rgba(255,208,122,.55);border-radius:7px 12px 7px 12px;background:linear-gradient(125deg,rgba(30,23,13,.94),rgba(7,25,25,.92));color:#ffe0a0}.boost-hud-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.boost-hud-head>span{font-size:9px;font-weight:1000;letter-spacing:.1em}.boost-hud-head strong{font-size:14px;color:#fff;font-variant-numeric:tabular-nums}.boost-reload-track{height:5px;margin:7px 0 6px;border-radius:99px;background:rgba(255,255,255,.15);overflow:hidden}.boost-reload-track i{display:block;width:100%;height:100%;border-radius:99px;background:linear-gradient(90deg,#ff9e52,#ffe08a);transition:width .08s linear}.boost-hud>span:last-child{display:block;font-size:9px;color:#f3d9a9;font-weight:850}
 @media(max-width:1000px){.control-guide{top:58px;left:8px;max-width:calc(100vw - 190px)}.finish-countdown-hud{top:8px;width:min(280px,calc(100vw - 190px))}.boost-hud{top:174px;left:8px}.draft-hud{top:232px;left:8px}.lap-times-panel{top:116px;left:8px}}
-@media(max-width:600px){.home-hero-top{align-items:flex-start;flex-direction:column;gap:4px}.home-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.home-stats>div{padding:7px 8px}.home-stats b{font-size:16px}.home-panel .brand{align-items:flex-start;flex-direction:column}.connection-status{max-width:100%}.control-guide{top:54px;left:7px;max-width:calc(100vw - 164px);padding:6px 7px}.control-guide-items{gap:4px 6px}.control-guide-items span{font-size:8px}.control-guide-items b{font-size:7px;padding:2px 3px}.finish-countdown-hud{top:7px;left:7px;transform:none;width:calc(100vw - 164px);padding:7px 8px}.finish-countdown-top span{font-size:7px}.finish-countdown-top strong{font-size:16px}.finish-countdown-caption{font-size:7px}.lap-times-panel{top:114px;left:7px;max-width:calc(100vw - 164px)}.boost-hud{top:190px;left:7px;min-width:150px;max-width:calc(100vw - 164px);padding:7px 8px}.draft-hud{top:270px;left:7px;max-width:calc(100vw - 164px)}}
-@media(max-width:380px){.control-guide-items span:nth-child(4){display:none}.home-stats span{font-size:7px}.finish-countdown-hud{width:calc(100vw - 156px)}.control-guide{max-width:calc(100vw - 156px)}}
+@media(max-width:600px){.home-hero-top{align-items:flex-start;flex-direction:column;gap:4px}home-panel .brand{align-items:flex-start;flex-direction:column}.server-status-panel{width:100%;max-width:none;min-width:0}.connection-status{max-width:100%}.control-guide{top:54px;left:7px;max-width:calc(100vw - 164px);padding:6px 7px}.control-guide-items{gap:4px 6px}.control-guide-items span{font-size:8px}.control-guide-items b{font-size:7px;padding:2px 3px}.finish-countdown-hud{top:7px;left:7px;transform:none;width:calc(100vw - 164px);padding:7px 8px}.finish-countdown-top span{font-size:7px}.finish-countdown-top strong{font-size:16px}.finish-countdown-caption{font-size:7px}.lap-times-panel{top:114px;left:7px;max-width:calc(100vw - 164px)}.boost-hud{top:190px;left:7px;min-width:150px;max-width:calc(100vw - 164px);padding:7px 8px}.draft-hud{top:270px;left:7px;max-width:calc(100vw - 164px)}}
+@media(max-width:380px){.control-guide-items span:nth-child(4){display:none}finish-countdown-hud{width:calc(100vw - 156px)}.control-guide{max-width:calc(100vw - 156px)}}
 
 
 /* ===== FINAL HUD SPACING: top overlays use separate lanes ===== */
-.home-hero-meta{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
-.home-live-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid rgba(167,243,206,.32);border-radius:5px;background:rgba(167,243,206,.08);color:#c8ffe2;font-size:8px;font-weight:1000;letter-spacing:.1em;white-space:nowrap;font-variant-numeric:tabular-nums}
-.home-live-pill i{width:7px;height:7px;flex:none;border-radius:50%;background:#7df0ae;box-shadow:0 0 10px #7df0ae;animation:onlinePulse 1.8s infinite}
-.home-live-pill b{font-size:14px;color:#fff;min-width:1ch}
-@keyframes onlinePulse{50%{opacity:.45;box-shadow:0 0 3px #7df0ae}}
 #controlGuide.control-guide{top:12px;left:12px;right:auto;max-width:340px;width:max-content}
 #finishCountdownHud.finish-countdown-hud{top:12px;left:50%;right:auto;transform:translateX(-50%);width:min(300px,calc(100vw - 620px));max-width:none}
 #lapTimesPanel.lap-times-panel{top:78px;left:12px;right:auto;max-width:190px}
@@ -127,7 +122,6 @@
 }
 @media(max-width:760px){
  .home-hero-top{align-items:flex-start;flex-direction:column;gap:8px}
- .home-hero-meta{width:100%;justify-content:space-between;gap:7px}
  #controlGuide.control-guide{top:58px;left:7px;right:auto;width:calc(100vw - 164px);max-width:calc(100vw - 164px);padding:6px 7px}
  .control-guide-items{display:grid;grid-template-columns:repeat(2,minmax(0,max-content));gap:5px 7px}
  .control-guide-items span{font-size:8px}
@@ -147,7 +141,6 @@
  #lapTimesPanel.lap-times-panel{top:140px}
  #boostHud.boost-hud{top:222px}
  #draftHud.draft-hud{top:310px}
- .home-live-pill{padding:6px 8px;font-size:7px}
 }
 
 
@@ -186,9 +179,8 @@
 <canvas id="gameCanvas"></canvas>
 <div id="startOverlay" class="overlay">
  <main class="panel home-panel">
-  <div class="home-hero-top"><span class="home-series">MISTWOOD MOTORSPORT <i>·</i> ONLINE RACING SERIES</span><div class="home-hero-meta"><span class="home-season">SEASON 01 / MULTIPLAYER</span><span class="home-live-pill" aria-live="polite"><i></i><b id="homeOnlineCount">0</b><span>PLAYERS ONLINE</span></span></div></div>
-  <div class="brand"><div><div class="eyebrow">YOUR GRID. YOUR LINE. YOUR RACE.</div><h1>MISTWOOD <span class="race-word">ONLINE</span></h1><div class="sub">친구들과 같은 서킷에서 경쟁하는 실시간 멀티플레이 레이싱 · 선두 완주 후 20초 추가 주행</div></div><span id="connectionPill" class="connection-status">서버 연결 중...</span></div>
-  <div class="home-stats"><div><b>08</b><span>MAX DRIVERS</span></div><div><b>10</b><span>RACE CIRCUITS</span></div><div><b>20</b><span>MAX LAPS</span></div><div><b>LIVE</b><span>ONLINE RACING</span></div></div>
+  <div class="home-hero-top"><span class="home-series">MISTWOOD MOTORSPORT <i>·</i> ONLINE RACING SERIES</span></div>
+  <div class="brand"><div><div class="eyebrow">YOUR GRID. YOUR LINE. YOUR RACE.</div><h1>MISTWOOD <span class="race-word">ONLINE</span></h1></div><div id="serverStatusPanel" class="server-status-panel" aria-live="polite"><div class="server-status-head"><span id="connectionPill" class="connection-status">서버 연결 중...</span><span class="server-online-count"><b id="homeOnlineCount">0</b>명 참가 중</span></div><div id="connectionStatus" class="status">온라인 서버에 연결하는 중입니다.</div></div></div>
   <div class="top-grid">
    <section class="box">
     <div class="box-title">01 / DRIVER PROFILE</div>
@@ -200,7 +192,6 @@
     <div class="box-title">02 / CREATE RACE ROOM</div>
     <input id="roomNameInput" class="field" maxlength="28" placeholder="방 이름 (예: 친구들과 그랑프리)" value="" />
     <button id="createRoomBtn" class="btn" style="width:100%;margin-top:9px" disabled>새 온라인 방 만들기</button>
-    <div id="connectionStatus" class="status">온라인 서버에 연결하는 중입니다.</div>
    </section>
   </div>
   <section class="box room-browser-box">
@@ -334,7 +325,7 @@ function showToast(message){ const t=el('toast'); t.textContent=message; t.class
 function syncServerClock(serverTime){ if(!Number.isFinite(Number(serverTime)))return; const sample=Number(serverTime)-Date.now(); serverClockOffsetMs=hasServerClock?serverClockOffsetMs*0.7+sample*0.3:sample; hasServerClock=true; }
 function serverNow(){ return Date.now()+(hasServerClock?serverClockOffsetMs:0); }
 // 홈 화면 온라인 인원과 공개 방 목록은 /api/rooms 한 번으로 함께 갱신합니다.
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshRoomBrowser();});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){refreshServerStatus();refreshRoomBrowser();}});
 
 // 모든 방은 공개로 운영하며, 서버에서 받은 방 요약만 목록에 표시합니다.
 let roomBrowserBusy = false;
@@ -346,12 +337,28 @@ async function refreshRoomBrowser(){
   const response=await fetch(`/api/rooms?_=${Date.now()}`,{cache:'no-store'});
   if(!response.ok)throw new Error(`rooms ${response.status}`);
   const payload=await response.json();
-  const onlineCount=el('homeOnlineCount');
-  if(onlineCount){onlineCount.textContent=String(Math.max(0,Number(payload.onlinePlayers)||0));onlineCount.title=`현재 ${onlineCount.textContent}명이 온라인 방에 접속해 있습니다.`;}
+  updateServerOnlineCount(payload.onlinePlayers);
   renderRoomBrowser(Array.isArray(payload.rooms)?payload.rooms:[]);
  }catch(error){list.innerHTML='<div class="room-browser-empty">방 목록을 불러오지 못했습니다. 새로고침을 눌러 다시 시도해 주세요.</div>';}
  finally{roomBrowserBusy=false;}
 }
+function updateServerOnlineCount(value){
+ const onlineCount=el('homeOnlineCount');if(!onlineCount)return;
+ const count=Math.max(0,Number(value)||0);onlineCount.textContent=String(count);
+ onlineCount.title=`현재 서버에 ${count}명이 접속해 있습니다.`;
+}
+let serverStatusBusy=false;
+async function refreshServerStatus(){
+ if(serverStatusBusy)return;serverStatusBusy=true;
+ try{
+  const response=await fetch(`/api/status?_=${Date.now()}`,{cache:'no-store'});
+  if(!response.ok)throw new Error(`status ${response.status}`);
+  const payload=await response.json();updateServerOnlineCount(payload.onlinePlayers);
+ }catch(error){if(!connected)el('homeOnlineCount').textContent='—';}
+ finally{serverStatusBusy=false;}
+}
+setInterval(()=>{if(!document.hidden)refreshServerStatus();},5000);
+
 function renderRoomBrowser(rooms){
  const list=el('roomBrowserList');if(!list)return;
  if(!rooms.length){list.innerHTML='<div class="room-browser-empty">현재 공개된 방이 없습니다. 첫 번째 방을 만들어 보세요!</div>';return;}
@@ -429,11 +436,11 @@ function connectServer(){
  const url=`${protocol}//${location.host}`;
  try{ socket=new WebSocket(url); }catch(e){setStatus('연결을 시작하지 못했습니다.');return;}
  socket.addEventListener('open',()=>{
-  connected=true;el('connectionPill').textContent='ONLINE SERVER CONNECTED';el('connectionPill').classList.add('online');el('createRoomBtn').disabled=false;
-  setStatus('서버 연결 완료! 공개 방 목록에서 참가하거나 새 방을 만들 수 있습니다.');refreshRoomBrowser();
+  connected=true;el('connectionPill').textContent='SERVER CONNECTED';el('connectionPill').classList.add('online');el('createRoomBtn').disabled=false;
+  setStatus('서버 연결 완료 · 공개 방 목록에서 참가하거나 새 방을 만들 수 있습니다.');refreshServerStatus();refreshRoomBrowser();
  });
  socket.addEventListener('message',event=>{let msg;try{msg=JSON.parse(event.data)}catch{return;} handleServerMessage(msg);});
- socket.addEventListener('close',()=>{connected=false;roomEntryPending=false;el('connectionPill').textContent='SERVER OFFLINE';el('connectionPill').classList.remove('online');el('createRoomBtn').disabled=true;setStatus('서버 연결이 끊어졌습니다. 페이지를 새로고침해 주세요.');refreshRoomBrowser();});
+ socket.addEventListener('close',()=>{connected=false;roomEntryPending=false;el('connectionPill').textContent='SERVER OFFLINE';el('connectionPill').classList.remove('online');el('homeOnlineCount').textContent='—';el('createRoomBtn').disabled=true;setStatus('서버 연결이 끊어졌습니다. 페이지를 새로고침해 주세요.');refreshRoomBrowser();});
  socket.addEventListener('error',()=>{setStatus('서버에 연결할 수 없습니다. 아직 Node.js 서버를 배포하지 않았거나 서버가 꺼져 있을 수 있습니다.');});
 }
 function handleServerMessage(msg){
