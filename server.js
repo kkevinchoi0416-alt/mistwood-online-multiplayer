@@ -12,6 +12,9 @@ const MAX_PLAYERS = 8;
 const MAX_SPECTATORS = 20;
 const TICK_MS = 1000 / 30;
 const SNAPSHOT_EVERY = 1;
+// F 부스트 중에만 적용하는 배율입니다. 기존보다 조금 강하게 조정했습니다.
+const BOOST_TOP_SPEED_MULTIPLIER = 1.21; // 최고 속도 +21% (기존 +18%)
+const BOOST_ACCELERATION_MULTIPLIER = 1.30; // 가속 +30% (기존 +25%)
 // 차량과 10개 트랙은 JSON 파일로 분리해 학생이 쉽게 수정할 수 있습니다.
 const VEHICLES = JSON.parse(fs.readFileSync(path.join(ROOT, 'vehicles.json'), 'utf8'));
 const VEHICLE_MAP = new Map(VEHICLES.map(v => [v.id, v]));
@@ -649,7 +652,7 @@ function handleConnection(ws) {
       if (!ws.player || !ws.room || ws.room.race?.status !== 'running') return;
       const now = Date.now();
       const ok = canUseBoost(ws.player, now);
-      safeSend(ws, { type: 'ability-result', ok, boostRemaining: Math.max(0, ws.player.boostUntil - now) / 1000, cooldown: Math.max(0, ws.player.abilityReadyAt - now) / 1000, boostsRemaining: Math.max(0, 5 - ws.player.boostsUsed), message: ok ? '3초 부스트 발동! (경기당 최대 5회)' : (ws.player.boostsUsed >= 5 ? '이번 경기의 부스트 5회를 모두 사용했습니다.' : '부스트 대기 시간이 끝나면 다시 사용할 수 있어요.') });
+      safeSend(ws, { type: 'ability-result', ok, boostRemaining: Math.max(0, ws.player.boostUntil - now) / 1000, cooldown: Math.max(0, ws.player.abilityReadyAt - now) / 1000, boostsRemaining: Math.max(0, 5 - ws.player.boostsUsed), message: ok ? '3초 부스트 발동! (최고 속도 +21%, 가속 +30% · 경기당 최대 5회)' : (ws.player.boostsUsed >= 5 ? '이번 경기의 부스트 5회를 모두 사용했습니다.' : '부스트 대기 시간이 끝나면 다시 사용할 수 있어요.') });
       return;
     }
 
@@ -735,8 +738,8 @@ setInterval(() => {
       p.drafting = drafting;
       const draftTopSpeed = drafting ? 1.025 : 1;
       const draftAcceleration = drafting ? 1.08 : 1;
-      const maxSpeed = tune.topSpeed * (boosting ? 1.18 : 1) * surfacePower * draftTopSpeed;
-      const accel = tune.acceleration * (boosting ? 1.25 : 1) * surfacePower * draftAcceleration;
+      const maxSpeed = tune.topSpeed * (boosting ? BOOST_TOP_SPEED_MULTIPLIER : 1) * surfacePower * draftTopSpeed;
+      const accel = tune.acceleration * (boosting ? BOOST_ACCELERATION_MULTIPLIER : 1) * surfacePower * draftAcceleration;
       const brake = tune.brake;
       const reverse = tune.reverse * surfacePower;
       if (c.forward) p.speed = Math.min(maxSpeed, p.speed + accel * dt);
@@ -766,7 +769,7 @@ setInterval(() => {
       else if (p.surface === 'dirt') p.speed *= Math.exp(-0.55 * dt);
       // 노면 제한은 살짝만 적용합니다. 도로로 복귀할 수 있도록 속도를 크게 깎지 않습니다.
       const surfaceRatio = p.surface === 'grass' ? 0.92 : p.surface === 'dirt' ? 0.82 : 1;
-      const surfaceLimit = tune.topSpeed * (boosting ? 1.18 : 1) * surfaceRatio * (p.drafting && !boosting ? 1.025 : 1);
+      const surfaceLimit = tune.topSpeed * (boosting ? BOOST_TOP_SPEED_MULTIPLIER : 1) * surfaceRatio * (p.drafting && !boosting ? 1.025 : 1);
       p.speed = Math.max(-tune.reverse * surfaceRatio, Math.min(surfaceLimit, p.speed));
       p.x = Math.max(-420, Math.min(420, p.x));
       p.z = Math.max(-520, Math.min(520, p.z));

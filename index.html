@@ -791,7 +791,7 @@ function returnToLobbyView(){
  spectatorMode=false;spectatorId=null;spectatorCameraInitialized=false;spectatorCameraKeys.clear();
  el('spectatorHud').classList.remove('show');el('spectatorBoard').classList.remove('show');el('startOverlay').style.display='flex';el('controlGuide').classList.remove('show');el('finishCountdownHud').classList.remove('show');el('gameHud').classList.remove('show');el('rightHud').classList.remove('show');el('gameButtons').classList.remove('show');el('mobileControls').classList.remove('show');el('raceHud').classList.remove('show');el('lapTimesPanel').classList.remove('show');el('startCountdown').classList.remove('show');el('boostHud').classList.remove('show');el('draftHud').classList.remove('show');el('racingDash').classList.remove('show');el('trackMapPanel').classList.remove('show');el('dashDriverStrip').classList.remove('show');el('raceResultOverlay').classList.remove('show');raceResultsShown=false;raceState=null;controls={forward:false,reverse:false,left:false,right:false,brake:false};
 }
-function resetToGarage(){roomCode='';localPlayerId=null;hostId='';roomStarted=false;latestPlayers=[];roomEntryPending=false;spectatorMode=false;spectatorId=null;spectatorCameraInitialized=false;for(const p of remotePlayers.values())scene?.remove(p.root);remotePlayers.clear();if(localRoot){scene?.remove(localRoot);localRoot=null;}el('roomLobby').classList.remove('show');returnToLobbyView();setStatus('방에서 나왔습니다. 공개 방 목록을 새로고침합니다.');refreshRoomBrowser();}
+function resetToGarage(){roomCode='';localPlayerId=null;hostId='';roomStarted=false;latestPlayers=[];roomEntryPending=false;spectatorMode=false;spectatorId=null;spectatorCameraInitialized=false;for(const p of remotePlayers.values()){disposeBoostSmokeEmitter(p.root);scene?.remove(p.root);}remotePlayers.clear();if(localRoot){disposeBoostSmokeEmitter(localRoot);scene?.remove(localRoot);localRoot=null;}el('roomLobby').classList.remove('show');returnToLobbyView();setStatus('방에서 나왔습니다. 공개 방 목록을 새로고침합니다.');refreshRoomBrowser();}
 
 function setControl(name,value){controls[name]=value;}
 window.addEventListener('keydown',e=>{
@@ -1730,10 +1730,83 @@ function buildModel(root,vehicleId){
  let built;try{built=buildSelectableVehicle(vehicle);}finally{car=oldCar;}
  built.group.visible=true;return built.group;
 }
+// 연기 스프라이트가 부드럽게 사라지도록 가운데가 밝고 가장자리가 투명한 작은 텍스처를 만듭니다.
+let boostSmokeTexture=null;
+function getBoostSmokeTexture(){
+ if(boostSmokeTexture)return boostSmokeTexture;
+ const canvas=document.createElement('canvas');canvas.width=64;canvas.height=64;
+ const ctx=canvas.getContext('2d');
+ const gradient=ctx.createRadialGradient(32,32,2,32,32,31);
+ gradient.addColorStop(0,'rgba(246,250,248,0.78)');
+ gradient.addColorStop(.34,'rgba(213,222,220,0.55)');
+ gradient.addColorStop(.72,'rgba(176,190,188,0.20)');
+ gradient.addColorStop(1,'rgba(160,175,173,0)');
+ ctx.fillStyle=gradient;ctx.fillRect(0,0,64,64);
+ boostSmokeTexture=new THREE.CanvasTexture(canvas);boostSmokeTexture.colorSpace=THREE.SRGBColorSpace;
+ return boostSmokeTexture;
+}
+// 각 레이서에게 고정 개수의 연기 파티클을 준비해, 경기 중 매 프레임 새 오브젝트를 만들지 않습니다.
+function createBoostSmokeEmitter(root){
+ const texture=getBoostSmokeTexture();
+ const particles=Array.from({length:26},()=>{
+  const material=new THREE.SpriteMaterial({map:texture,color:0xd3dcda,transparent:true,opacity:0,depthWrite:false});
+  const sprite=new THREE.Sprite(material);sprite.visible=false;sprite.renderOrder=4;scene.add(sprite);
+  return {sprite,velocity:new THREE.Vector3(),age:0,life:1,baseScale:.5,active:false};
+ });
+ root.userData.boostSmoke={particles,nextEmitAt:0,nextExhaust:0};
+}
+function disposeBoostSmokeEmitter(root){
+ const emitter=root?.userData?.boostSmoke;if(!emitter)return;
+ for(const particle of emitter.particles){scene?.remove(particle.sprite);particle.sprite.material?.dispose();}
+ root.userData.boostSmoke=null;
+}
+function updatePlayerBoostVisual(root,player){
+ if(!root)return;
+ root.userData.visualSpeed=Number(player.speed)||0;
+ const remaining=Math.max(0,Number(player.boostRemaining)||0);
+ root.userData.boostUntilPerf=remaining>0?performance.now()+remaining*1000:0;
+}
+// 부스트 중 뒤쪽 배기 위치에서 연기를 뿜고, 차량의 이동 방향을 따라 자연스럽게 뒤로 흘립니다.
+function spawnBoostSmokePuff(root,emitter,now){
+ const model=root.userData.model;if(!model)return;
+ const vehicle=VEHICLES.find(v=>v.id===root.userData.vehicleId)||VEHICLES[0];
+ const width=Number(vehicle.collisionWidth)||2,length=Number(vehicle.collisionLength)||5;
+ const exhaustSide=(emitter.nextExhaust++%2===0)?-1:1;
+ const localPos=new THREE.Vector3(exhaustSide*width*.31,.53,length*.43);
+ root.updateMatrixWorld(true);model.localToWorld(localPos);
+ const particle=emitter.particles.find(item=>!item.active)||emitter.particles.reduce((old,item)=>item.age>old.age?item:old,emitter.particles[0]);
+ const yaw=root.rotation.y;
+ const rear=new THREE.Vector3(Math.sin(yaw),0,Math.cos(yaw));
+ const side=new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));
+ const speed=Number(root.userData.visualSpeed)||0;
+ const carVelocity=new THREE.Vector3(-Math.sin(yaw)*speed,0,-Math.cos(yaw)*speed);
+ particle.sprite.position.copy(localPos);
+ particle.velocity.copy(carVelocity).addScaledVector(rear,2.8+Math.random()*1.5).addScaledVector(side,(Math.random()-.5)*1.15);
+ particle.velocity.y=.35+Math.random()*.65;
+ particle.age=0;particle.life=.82+Math.random()*.34;particle.baseScale=.42+Math.random()*.22;particle.active=true;
+ particle.sprite.scale.setScalar(particle.baseScale);particle.sprite.material.opacity=.48+Math.random()*.10;
+ particle.sprite.material.rotation=Math.random()*Math.PI*2;particle.sprite.visible=true;
+}
+function updateBoostSmoke(root,dt,now){
+ const emitter=root?.userData?.boostSmoke;if(!emitter)return;
+ if((root.userData.boostUntilPerf||0)>now&&now>=emitter.nextEmitAt){
+  spawnBoostSmokePuff(root,emitter,now);emitter.nextEmitAt=now+43;
+ }
+ for(const particle of emitter.particles){
+  if(!particle.active)continue;
+  particle.age+=dt;
+  if(particle.age>=particle.life){particle.active=false;particle.sprite.visible=false;continue;}
+  particle.sprite.position.addScaledVector(particle.velocity,dt);
+  particle.velocity.y-=.12*dt;
+  const fade=1-particle.age/particle.life;
+  particle.sprite.scale.setScalar(particle.baseScale+.95*(1-fade));
+  particle.sprite.material.opacity=.54*Math.pow(fade,1.35);
+ }
+}
 function makePlayerRoot(player){
  const root=new THREE.Group();root.userData.playerId=player.id;root.userData.vehicleId=player.vehicleId;
  const shadow=new THREE.Mesh(new THREE.CircleGeometry(2.6,32),new THREE.MeshBasicMaterial({color:0x08110d,transparent:true,opacity:.30,depthWrite:false}));shadow.rotation.x=-Math.PI/2;shadow.position.y=-.105;root.add(shadow);
- const model=buildModel(root,player.vehicleId);const label=createNameSprite(player.name);label.visible=player.id!==localPlayerId;root.add(label);root.userData.model=model;root.userData.label=label;scene.add(root);return root;
+ const model=buildModel(root,player.vehicleId);const label=createNameSprite(player.name);label.visible=player.id!==localPlayerId;root.add(label);root.userData.model=model;root.userData.label=label;scene.add(root);createBoostSmokeEmitter(root);return root;
 }
 function updateVehicleOnRoot(root,vehicleId){
  const current=root.userData.model;if(current)root.remove(current);const model=buildModel(root,vehicleId);root.userData.model=model;}
@@ -1741,10 +1814,10 @@ function syncPlayerVisuals(players,snap=false){
  if(!scene||!players)return;
  const seen=new Set();
  for(const p of players){seen.add(p.id);
-  if(p.id===localPlayerId){if(!localRoot){localRoot=makePlayerRoot(p);localRoot.userData.isLocal=true;localRoot.position.set(p.x,0,p.z);localRoot.rotation.y=p.yaw;}if(localRoot.userData.label)localRoot.userData.label.visible=false;if(localRoot.userData.vehicleId!==p.vehicleId){updateVehicleOnRoot(localRoot,p.vehicleId);localRoot.userData.vehicleId=p.vehicleId;}if(snap){localRoot.position.set(p.x,0,p.z);localRoot.rotation.y=p.yaw;}targetLocal={x:p.x,z:p.z,yaw:p.yaw,speed:p.speed};el('speedValue').textContent=String(Math.round(Math.abs(p.speed)*3.6));}
-  else{let entry=remotePlayers.get(p.id);if(!entry){const root=makePlayerRoot(p);root.userData.vehicleId=p.vehicleId;root.position.set(p.x,0,p.z);root.rotation.y=p.yaw;entry={root,target:{x:p.x,z:p.z,yaw:p.yaw},name:p.name};remotePlayers.set(p.id,entry);}if(entry.root.userData.label)entry.root.userData.label.visible=true;if(entry.root.userData.vehicleId!==p.vehicleId){updateVehicleOnRoot(entry.root,p.vehicleId);entry.root.userData.vehicleId=p.vehicleId;}if(snap){entry.root.position.set(p.x,0,p.z);entry.root.rotation.y=p.yaw;}entry.target={x:p.x,z:p.z,yaw:p.yaw};entry.root.userData.label.material.rotation=0;}
+  if(p.id===localPlayerId){if(!localRoot){localRoot=makePlayerRoot(p);localRoot.userData.isLocal=true;localRoot.position.set(p.x,0,p.z);localRoot.rotation.y=p.yaw;}if(localRoot.userData.label)localRoot.userData.label.visible=false;if(localRoot.userData.vehicleId!==p.vehicleId){updateVehicleOnRoot(localRoot,p.vehicleId);localRoot.userData.vehicleId=p.vehicleId;}if(snap){localRoot.position.set(p.x,0,p.z);localRoot.rotation.y=p.yaw;}updatePlayerBoostVisual(localRoot,p);targetLocal={x:p.x,z:p.z,yaw:p.yaw,speed:p.speed};el('speedValue').textContent=String(Math.round(Math.abs(p.speed)*3.6));}
+  else{let entry=remotePlayers.get(p.id);if(!entry){const root=makePlayerRoot(p);root.userData.vehicleId=p.vehicleId;root.position.set(p.x,0,p.z);root.rotation.y=p.yaw;entry={root,target:{x:p.x,z:p.z,yaw:p.yaw},name:p.name};remotePlayers.set(p.id,entry);}if(entry.root.userData.label)entry.root.userData.label.visible=true;if(entry.root.userData.vehicleId!==p.vehicleId){updateVehicleOnRoot(entry.root,p.vehicleId);entry.root.userData.vehicleId=p.vehicleId;}if(snap){entry.root.position.set(p.x,0,p.z);entry.root.rotation.y=p.yaw;}updatePlayerBoostVisual(entry.root,p);entry.target={x:p.x,z:p.z,yaw:p.yaw};entry.root.userData.label.material.rotation=0;}
  }
- for(const [id,entry] of remotePlayers){if(!seen.has(id)){scene.remove(entry.root);entry.root.traverse(o=>{if(o.isSprite)o.material.map?.dispose();});remotePlayers.delete(id);}}
+ for(const [id,entry] of remotePlayers){if(!seen.has(id)){disposeBoostSmokeEmitter(entry.root);scene.remove(entry.root);entry.root.traverse(o=>{if(o.isSprite)o.material.map?.dispose();});remotePlayers.delete(id);}}
  const list=players.slice().sort((a,b)=>(a.position||99)-(b.position||99)).map(p=>`<div>${p.position||'-'}. ${p.host?'👑 ':''}${escapeHtml(p.name)}${p.id===localPlayerId?' (나)':''}</div>`).join('');el('onlineList').innerHTML=list;el('driverCount').textContent=`${players.length}/8`;
 }
 function lerpAngle(a,b,t){let d=((b-a+Math.PI*3)%(Math.PI*2))-Math.PI;return a+d*t;}
@@ -1755,8 +1828,8 @@ function animate(){requestAnimationFrame(animate);
  if(!renderer||!scene||!camera||!clock)return;
  const dt=Math.min(.05,clock.getDelta());
  const localAlpha=1-Math.exp(-22*dt),remoteAlpha=1-Math.exp(-18*dt),cameraAlpha=1-Math.exp(-8*dt);
- if(localRoot&&targetLocal){localRoot.position.x+= (targetLocal.x-localRoot.position.x)*localAlpha;localRoot.position.z+=(targetLocal.z-localRoot.position.z)*localAlpha;localRoot.rotation.y=lerpAngle(localRoot.rotation.y,targetLocal.yaw,localAlpha);if(localRoot.userData.model?.userData?.mainRotor)localRoot.userData.model.userData.mainRotor.rotation.y+=dt*12;}
- for(const entry of remotePlayers.values()){const t=entry.target;entry.root.position.x+=(t.x-entry.root.position.x)*remoteAlpha;entry.root.position.z+=(t.z-entry.root.position.z)*remoteAlpha;entry.root.rotation.y=lerpAngle(entry.root.rotation.y,t.yaw,remoteAlpha);}
+ if(localRoot&&targetLocal){localRoot.position.x+= (targetLocal.x-localRoot.position.x)*localAlpha;localRoot.position.z+=(targetLocal.z-localRoot.position.z)*localAlpha;localRoot.rotation.y=lerpAngle(localRoot.rotation.y,targetLocal.yaw,localAlpha);if(localRoot.userData.model?.userData?.mainRotor)localRoot.userData.model.userData.mainRotor.rotation.y+=dt*12;updateBoostSmoke(localRoot,dt,performance.now());}
+ for(const entry of remotePlayers.values()){const t=entry.target;entry.root.position.x+=(t.x-entry.root.position.x)*remoteAlpha;entry.root.position.z+=(t.z-entry.root.position.z)*remoteAlpha;entry.root.rotation.y=lerpAngle(entry.root.rotation.y,t.yaw,remoteAlpha);updateBoostSmoke(entry.root,dt,performance.now());}
  if(spectatorMode){
   camera.up.set(0,1,0);
   if(spectatorCameraMode==='overview'){
